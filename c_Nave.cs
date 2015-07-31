@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 namespace Quantum_Game
 {
 	
@@ -30,26 +30,19 @@ namespace Quantum_Game
 	public class Nave
 	{
 		private bool _ingioco, _mossa;
-		private e_color _color;
+	//	private e_color _color;
 		private e_nave _tipo;
+		private Giocatore _proprietario;
 		
-		// i tiri di dado avvengono tutti a proposito dei metodi delle navi, per cui incorporo nella classe nave il RNG:
-		private static Random _dado;
-		private static int Dadi (int num = 1) {
-			int res = 0;
-			for (int i = 0; i < num; i++) {
-				res += _dado.Next(1,6);
-			}
-			return res;
-		}
+		
 		
 		//costruttore
-		public Nave (e_color c)
+		public Nave (Giocatore prop)
 		{
+			this._proprietario = prop;
 			_ingioco = _mossa = false;
-			_color = c;
 			_tipo = e_nave.Rottame;
-			_dado = new Random();
+			
 		}
 		
 		//inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
@@ -67,13 +60,13 @@ namespace Quantum_Game
 		
 		//riconfigurazione delle navi (o primo roll se viene chiamata senza argomenti)
 		public void Riconfig () {
-			int res = 0;
+			int risultato = 0;
 			var prov = this._tipo;
 			
 			do {
-				res = Dadi(1);
-			} while (res == (int)prov);
-			this._tipo = (e_nave) res;
+				risultato = util.Dadi(1);
+			} while (risultato == (int)prov);
+			this._tipo = (e_nave) risultato;
 			
 		
 		}
@@ -85,7 +78,7 @@ namespace Quantum_Game
 		
 		public bool Attacco (Nave target){
 			this._mossa= true;
-			if (this.Pwr + Dadi(1) <= target.Pwr + Dadi(1)) {
+			if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1)) {
 				target.Distr();
 				return true;
 			}
@@ -109,6 +102,8 @@ namespace Quantum_Game
 			this._ingioco = true;
 		}
 		
+		public e_color Colore {get {return this._proprietario.Colore;}}
+		
 	}
 	
 	/* Test per vedere se funzia
@@ -120,3 +115,5 @@ namespace Quantum_Game
 	
 		
 	}
+	
+
