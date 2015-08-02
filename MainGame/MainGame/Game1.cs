@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MainGame
+namespace Quantum_Game
 {
     /// <summary>
     /// This is the main type for your game.
@@ -11,11 +11,16 @@ namespace MainGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Tabellone tabellone;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 900;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = 900;   // set this value to the desired height of your window
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -39,6 +44,8 @@ namespace MainGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Texture2D textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
+            tabellone = new Tabellone(textureCaselle, 1, 1);
 
             // TODO: use this.Content to load your game content here
         }
@@ -74,6 +81,15 @@ namespace MainGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 1);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 4);
+            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 7);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 1);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 4);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 7);
+            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 1);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 4);
+            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 7);
 
             // TODO: Add your drawing code here
 
