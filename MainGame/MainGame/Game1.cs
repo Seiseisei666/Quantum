@@ -81,15 +81,16 @@ namespace Quantum_Game
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 1);
+
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 1);
             tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 4);
-            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 7);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 7);
             tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 1);
             tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 4);
             tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 7);
-            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 1);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 1);
             tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 4);
-            //tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 7);
+            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 7);
 
             // TODO: Add your drawing code here
 
