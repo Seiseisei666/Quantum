@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MainGame
+namespace Quantum_Game
 {
 #if WINDOWS || LINUX
     /// <summary>
