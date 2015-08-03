@@ -29,7 +29,7 @@ namespace Quantum_Game
 
 	public class Nave
 	{
-		private bool _ingioco, _mossa;
+        private bool _ingioco, _mossa, _special;
 	//	private e_color _color;
 		private e_nave _tipo;
 		private Giocatore _proprietario;
@@ -48,6 +48,7 @@ namespace Quantum_Game
 		//inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
 		public void init (){
 			this._mossa = false;
+            this._special = false;
 		}
 		
 		//metodo get per leggere il valore della nave
@@ -71,19 +72,29 @@ namespace Quantum_Game
 		
 		}
 		
-		public void Movim () {
+		public void Movim (Casella CasellaTarget) {
 			//fare cose varie per muovere la nave...
 			this._mossa = true;
+            Giocatore.Azione();
+           
 		}
 		
 		public bool Attacco (Nave target){
 			this._mossa= true;
+            Giocatore.Azione();
+            
 			if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1)) {
 				target.Distr();
 				return true;
 			}
 			return false;
 		}
+
+        public void Special()
+        {
+            //usare la special
+            this._special = true;
+        }
 		
 		public bool Viva {
 			get {return (this._tipo > 0);}
@@ -106,11 +117,7 @@ namespace Quantum_Game
 		
 	}
 	
-	/* Test per vedere se funzia
-	 * 
-	 * 
-	 * 
-	*/
+	
 	
 	
 		
