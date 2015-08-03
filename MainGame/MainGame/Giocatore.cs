@@ -19,10 +19,14 @@ public class Giocatore {
 		
 		public List<Nave> Flotta;
 		
-		
+		//costruttore del giocatore
 		public Giocatore (){
-			this._colore = (e_color)((_count++) % 4)+1;
-			_azioni = 0;
+            if (_count >= 4)
+            {
+                throw new System.Exception("Il numero massimo di giocatori è 4!!!");
+            } 
+
+			this._colore = (e_color) (++_count); //assegna il colore
 			_ricerca = _dominio = _punti = 0;
 			Flotta = new List<Nave> ();
 			
@@ -30,15 +34,18 @@ public class Giocatore {
 		
 		public void GlobalInit () {
 		// inizializzazione prima che inizi il gioco 
+
+
 		}
 		
-		
-		public void PiazzaNave() {
+		//metodo generale per piazzare una NUOVA nave
+		public void PiazzaNuovaNave() {
 			Nave n = new Nave(this);
 				Flotta.Add (n);
 				Flotta[Flotta.Count-1].Gioca();
 				Flotta[Flotta.Count-1].Riconfig();
-				//Interazione del giocatore: richiediamo il click per posizionare la nave
+            //Qua aspettiamo l'interazione del giocatore: 
+            //richiediamo il click per posizionare la nave
 				
 			}
 		
@@ -50,13 +57,27 @@ public class Giocatore {
 			_azioni = NUM_AZIONI;
 			
 		}
-		
-		public void cleanup() {
-			if (_punti>=PUNTI_x_VINCERE) {
-				
-				//Fine Gioco
-				
-			}
+
+        public void cleanup()
+        {
+            if (_punti >= PUNTI_x_VINCERE)
+            {
+
+                //Fine Gioco
+
+            }
+        }
+     
+            // diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
+            public static void Azione (bool colonizzazione = false)
+        {
+            _azioni--;
+            if (colonizzazione) _azioni--;
+            if (_azioni <= 0)
+            {
+                //finisce il turno
+            }
+        }
 			
 			
 		}
