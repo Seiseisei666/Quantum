@@ -67,6 +67,13 @@ public class Giocatore {
 
             }
         }
+
+        public bool PuòAgire(bool colonizzazione = false)
+        {
+            if (colonizzazione) return _azioni >= 2;
+            return _azioni > 0;
+
+        }
      
             // diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
             public static void Azione (bool colonizzazione = false)
