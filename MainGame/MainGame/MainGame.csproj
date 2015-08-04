@@ -40,13 +40,13 @@
   <ItemGroup>
     <Compile Include="Casella.cs" />
     <Compile Include="Settore.cs" />
+    <Compile Include="Tabellone2.cs" />
     <Compile Include="Tabellone.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Giocatore.cs" />
     <Compile Include="Nave.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tileRef.cs" />
     <Compile Include="util.cs" />
   </ItemGroup>
   <ItemGroup>
