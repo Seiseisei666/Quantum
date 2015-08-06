@@ -33,6 +33,7 @@ namespace Quantum_Game
         public Casella (QuantumTile tipo)
         {
             _tipo = tipo;
+            _occupante = null;
         }
     }
 }

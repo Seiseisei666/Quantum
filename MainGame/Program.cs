@@ -8,7 +8,7 @@ namespace Quantum_Game
     /// </summary>
     public static class Program
     {
-        /// <summary>
+        /// <summary>C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\MainGame\Program.cs
         /// The main entry point for the application.
         /// </summary>
         [STAThread]

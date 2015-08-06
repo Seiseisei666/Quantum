@@ -18,7 +18,10 @@ using System.Diagnostics;
 /// </summary>
 /*
     MODIFICA BY EMA
-    Come stabilito ieri sera il tabellone è 
+    Come stabilito ieri sera il tabellone è costituito da una lista di caselle, 
+    generata dall'oggetto MapGenerator
+    Le caselle possono essere vuote (non disegnate), pianeti, oppure caselle normali
+    in questo caso mantengono un riferimento ad un oggetto nave (il campo .Occupante).
 
     */
 
