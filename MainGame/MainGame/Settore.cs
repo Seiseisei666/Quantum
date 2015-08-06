@@ -36,14 +36,7 @@ namespace Quantum_Game
 
     }
 
-    /// <summary>
-    /// Settore vuoto
-    /// </summary>
-    public class Vuoto: Zona
-    {
-        public Vuoto ()
-        { _tipo = e_sett.vuoto; }
-    }
+
 
     /// <summary>
     /// La casellona 3x3 del settore
