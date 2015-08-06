@@ -37,9 +37,10 @@ public class Giocatore {
 
 
 		}
-		
-		//metodo generale per piazzare una NUOVA nave
-		public void PiazzaNuovaNave() {
+        /// <summary>
+        /// metodo generale per mettere in gioco e riconfigurare una NUOVA nave
+        /// </summary>
+        public void PiazzaNuovaNave() {
 			Nave n = new Nave(this);
 				Flotta.Add (n);
 				Flotta[Flotta.Count-1].Gioca();
@@ -48,10 +49,12 @@ public class Giocatore {
             //richiediamo il click per posizionare la nave
 				
 			}
-		
-		
-		//inizializzazione prima di ogni turno
-		public void init () {
+
+
+        /// <summary>
+        /// inizializzazione, da chiamare prima di ogni turno
+        /// </summary>
+        public void init () {
 			
 			foreach (var n in Flotta) {n.init();}
 			_azioni = NUM_AZIONI;
@@ -68,15 +71,22 @@ public class Giocatore {
             }
         }
 
+        /// <summary>
+        /// Restituisce True se il giocatore ha abbastanza punti azione
+        /// </summary>
+        /// <param name="colonizzazione">Se l'azione è una colonizzazione passare questo parametro True</param>
         public bool PuòAgire(bool colonizzazione = false)
         {
             if (colonizzazione) return _azioni >= 2;
             return _azioni > 0;
 
         }
-     
-            // diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
-            public static void Azione (bool colonizzazione = false)
+
+        /// <summary>
+        /// diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
+        /// </summary>
+        /// <param name="colonizzazione">Se l'azione da fare è una colonizzazione passare True come parametro</param>
+        public static void Azione (bool colonizzazione = false)
         {
             _azioni--;
             if (colonizzazione) _azioni--;

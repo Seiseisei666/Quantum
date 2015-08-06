@@ -1,26 +1,56 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System;
+
 
 namespace Quantum_Game
 {
+  
+
+
     /// <summary>
-    /// This is the main type for your game.
+    /// Il gioco vero e proprio
     /// </summary>
     public class Game1 : Game
     {
+         
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private Tabellone tabellone;
+        private Texture2D textureCaselle;
+        private MouseState mouseState, oldState;
+
+        static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
+        static public event EventHandler<MouseEvntArgs> MouseClick;
+        //metodi x far partire gli eventi!!!
+        protected virtual void OnRidimensionamento(ResizeEvntArgs args) //evento ipotetico per gestire il ridimensionamento delle finestre
+        {
+            if (Ridimensionamento != null)
+                Ridimensionamento(this, args);
+        }
+        protected virtual void OnMouseClick (MouseEvntArgs args) // evento per gestire i cilck del mouse
+        {
+            if (MouseClick != null)
+                MouseClick(this, args);
+        }
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 900;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = 900;   // set this value to the desired height of your window
+            graphics.PreferredBackBufferWidth = 800;  
+            graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
+            //graphics.ToggleFullScreen;
+
+
+            this.IsMouseVisible = true;
+
         }
 
         /// <summary>
@@ -31,70 +61,66 @@ namespace Quantum_Game
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            MapGenerator gen = new MapGenerator(9, 9);
+            tabellone = new Tabellone(gen.GeneraMappa(), 9, 9, new Point(0, 0), 450, 450);
+           
             base.Initialize();
+
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
+
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
-            tabellone = new Tabellone(textureCaselle, 1, 1);
+            textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
+  
 
             // TODO: use this.Content to load your game content here
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
+
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+     
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
+            
+            mouseState = Mouse.GetState();
+            if (mouseState.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            {
+                //  int x = mouseState.X; int y = mouseState.Y;
+
+                OnMouseClick(new MouseEvntArgs(mouseState.X, mouseState.Y, true, false));
+
+            }
+            oldState = mouseState;
+
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+   
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 1);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 4);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 1, 7);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 1);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 4);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 4, 7);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 1);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 4);
-            tabellone.DisegnaCaselleQuadrante(spriteBatch, 100, 100, 7, 7);
-
-            // TODO: Add your drawing code here
-
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
+            tabellone.Draw(spriteBatch, textureCaselle);
+            spriteBatch.End();
             base.Draw(gameTime);
+            
         }
+
+      
     }
 }

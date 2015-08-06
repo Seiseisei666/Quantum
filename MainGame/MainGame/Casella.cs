@@ -10,21 +10,29 @@ using System.Text;
 
 namespace Quantum_Game
 {
-    public class Casella
+   
+
+    /// <summary>
+    /// Tutti i tipi di caselle ereditano da un modello astratto, la classe Tile,
+    /// che contiene il campo pubblico Tipo e un altro paio di cosette overridabili
+    /// </summary>
+    public class Casella : Tile
     {
-        public int ID_riga { get; set; }
-        public int ID_colonna { get; set; }
-        public int Tipo { get; set; }
+        // override di Tile
+        public override bool Attraversabile { get { return (this._occupante == null); } }
+        public override bool Esistente { get { return true; } }
 
+        //campi propri
+        private Nave _occupante;
+        public Nave Occupante { get { return _occupante; } }
 
-        public Casella(int id_riga, int id_colonna, int tipo)
+        private bool _orbita;
+        public bool Orbita { get { return _tipo == QuantumTile.orbita; } }
+
+        //costruttore
+        public Casella (QuantumTile tipo)
         {
-            ID_riga = id_riga;
-            ID_colonna = id_colonna;
-            Tipo = tipo;
-    
+            _tipo = tipo;
         }
-
-        //andrebbe spostato qui il metodo che crea le caselle del tabellone (ora si trova nella classe Tabellone)
     }
 }

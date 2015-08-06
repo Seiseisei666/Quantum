@@ -1,7 +1,9 @@
 ﻿using System;
 namespace Quantum_Game
 {
-	
+	/// <summary>
+    /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
+    /// </summary>
 	public enum e_color: byte {
 		incolore,
 		Blu,
@@ -11,6 +13,9 @@ namespace Quantum_Game
 		
 	}
 	
+    /// <summary>
+    /// Tipi di nave. Rottame == 0 == nave nel cimitero (o non ancora giocata)
+    /// </summary>
 	public enum e_nave: byte {
 		Rottame,
 		Battlestation,
@@ -25,18 +30,18 @@ namespace Quantum_Game
 	/// <summary>
 	/// Classe Nave - le pedine del gioco
 	/// </summary>
-	/// 
-
 	public class Nave
 	{
         private bool _ingioco, _mossa, _special;
-	//	private e_color _color;
 		private e_nave _tipo;
 		private Giocatore _proprietario;
 		
 		
 		
-		//costruttore
+		/// <summary>
+        /// Costruttore.
+        /// </summary>
+        /// <param name="prop">riferimento al giocatore proprietario della pedina</param>
 		public Nave (Giocatore prop)
 		{
 			this._proprietario = prop;
@@ -44,32 +49,39 @@ namespace Quantum_Game
 			_tipo = e_nave.Rottame;
 			
 		}
-		
-		//inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
-		public void init (){
+
+        /// <summary>
+        /// inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
+        /// </summary>
+        public void init (){
 			this._mossa = false;
             this._special = false;
 		}
 		
-		//metodo get per leggere il valore della nave
+		/// <summary>
+        /// Restituisce il valore della nave (1...6)
+        /// </summary>
 		public int Pwr {
 			get {return (int)this._tipo;}
 		}
+        /// <summary>
+        /// Restituisce il tipo della nave (enum e_nave: Rottame, Battlestation...)
+        /// </summary>
 		public e_nave Tipo {
 			get {return this._tipo;}
 		}
-		
-		//riconfigurazione delle navi (o primo roll se viene chiamata senza argomenti)
-		public void Riconfig () {
+
+        /// <summary>
+        /// riconfigurazione della nave (o primo roll)
+        /// </summary>
+        public void Riconfig () {
 			int risultato = 0;
-			var prov = this._tipo;
+			var TipoDiNaveIniziale = this._tipo;
 			
 			do {
 				risultato = util.Dadi(1);
-			} while (risultato == (int)prov);
+			} while (risultato == (int)TipoDiNaveIniziale);
 			this._tipo = (e_nave) risultato;
-			
-		
 		}
 		
 		public void Movim (Casella CasellaTarget) {
@@ -78,11 +90,14 @@ namespace Quantum_Game
             Giocatore.Azione();
            
 		}
-		
+		/// <summary>
+        /// Metodo per attaccare una nave target
+        /// </summary>
+        /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
+        /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
 		public bool Attacco (Nave target){
 			this._mossa= true;
             Giocatore.Azione();
-            
 			if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1)) {
 				target.Distr();
 				return true;
@@ -99,20 +114,34 @@ namespace Quantum_Game
 		public bool Viva {
 			get {return (this._tipo > 0);}
 		}
+        /// <summary>
+        /// La nave viene distrutta
+        /// </summary>
 		public void Distr () {
 			this._tipo = e_nave.Rottame;
 		}
+        /// <summary>
+        /// Restituisce True se la nave ha già mosso in questo turno
+        /// </summary>
 		public bool Mossa {
 			get {return this._mossa;}
 		}
+        /// <summary>
+        /// Restituisce True se la nave è in gioco al momento
+        /// </summary>
 		public bool InGioco {
 			get {return this._ingioco;}
 		}
 		
+        /// <summary>
+        /// Mette in gioco la nave
+        /// </summary>
 		public void Gioca (){
 			this._ingioco = true;
 		}
-		
+		/// <summary>
+        /// restituisce il colore del giocatore che possiede la nave
+        /// </summary>
 		public e_color Colore {get {return this._proprietario.Colore;}}
 		
 	}
