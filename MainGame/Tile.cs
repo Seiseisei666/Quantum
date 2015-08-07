@@ -44,6 +44,7 @@ namespace Quantum_Game
         abstract public bool Esistente { get; }
         public virtual bool Attraversabile { get { return false; } }
         public virtual bool EunPianeta { get { return false; } }
+        public virtual bool EunaCasella { get { return false; } }
     }
     
     /// <summary>

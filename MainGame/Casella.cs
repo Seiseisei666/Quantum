@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Quantum_Game
 {
-   
+
 
     /// <summary>
     /// Tutti i tipi di caselle ereditano da un modello astratto, la classe Tile,
@@ -21,6 +21,8 @@ namespace Quantum_Game
         // override di Tile
         public override bool Attraversabile { get { return (this._occupante == null); } }
         public override bool Esistente { get { return true; } }
+        public override bool EunaCasella { get { return true; } }
+
 
         //campi propri
         private Nave _occupante;
@@ -30,10 +32,11 @@ namespace Quantum_Game
         public bool Orbita { get { return _tipo == QuantumTile.orbita; } }
 
         //costruttore
-        public Casella (QuantumTile tipo)
+        public Casella(QuantumTile tipo)
         {
             _tipo = tipo;
             _occupante = null;
         }
     }
 }
+

@@ -14,14 +14,14 @@ namespace Quantum_Game
     /// NON PIU' IN USO
     /// LO LASCIO SOLO PER VEDERE SE CASOMAI MI SONO PERSO QUALCOSA PER STRADA
     /// </summary>
-    public class Tabellone2 : Riquadro 
+    public class Tabellone2  
     {
         private int _righe, _colonne;
         public int Righe { get { return _righe; } }
         public int Colonne { get { return _colonne; } }
         public List<Zona> Tessere;
 
-        public Tabellone2(int righe, int colonne) : base (new Point (0,0), 1f, 50 * colonne, 50 * righe)
+        public Tabellone2(int righe, int colonne)// : base (new Point (0,0), 1f, 50 * colonne, 50 * righe)
         {
 
             _righe = righe; _colonne = colonne;
@@ -69,8 +69,8 @@ namespace Quantum_Game
         {
             decimal tempX = x; decimal tempY = y;
             //Debug.WriteLine(base.Superficie.Width);
-              x = (int)Math.Floor((tempX / base.Superficie.Width) * this._colonne);
-            y = (int)Math.Floor((tempY / base.Superficie.Height) * this._righe);
+       //       x = (int)Math.Floor((tempX / Larghezza) * this._colonne);
+       //     y = (int)Math.Floor((tempY / Altezza) * this._righe);
              
             return;
           

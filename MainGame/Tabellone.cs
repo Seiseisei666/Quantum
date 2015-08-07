@@ -34,6 +34,18 @@ namespace Quantum_Game
         private int _latoCasella;
         private Rectangle source, target; //per disegnare
 
+        private int? _IdSelezione;
+        private Point _SelezPixCoord; //coordinate in pixel della casella selezionata
+
+        public Nave NaveSelezionata { get
+                {
+                Casella cas = _listaCaselle[_IdSelezione.Value] as Casella;
+                if (cas != null)
+                    return cas.Occupante;
+                else return null;
+                }
+            } 
+
         public int Righe { get { return _righe; } }
         public int Colonne { get { return _colonne; } }
 
@@ -46,61 +58,74 @@ namespace Quantum_Game
         /// <param name="TopLeft">Coordinate in pixel dell'angolo in alto a sinistra</param>
         /// <param name="Largh">Larghezza del riquadro del tabellone in pixel</param>
         /// <param name="Alt">Altezza del riquadro tabellone in pixel</param>
-        public Tabellone(List<Tile> lista, int righe, int colonne, Point TopLeft, int Largh, int Alt) : base(TopLeft, 1f, 1f, Largh, Alt)
+        public Tabellone(List<Tile> lista, int righe, int colonne, float xRel, float yRel, int LarghSchermo, int AltSchermo) : base(xRel,yRel, 1f, 1f, LarghSchermo, AltSchermo)
         {
             _righe = righe; _colonne = colonne;
             _listaCaselle = lista;
 
             //Calcolo il lato delle caselle:
-            _latoCasella = (_righe >= _colonne) ?
-                (int)((float)Superficie.Height / _righe) :
-                (int)((float)Superficie.Width / _colonne);
+            float h = Altezza / (float)_righe; float w = Larghezza / (float)_colonne;
+            _latoCasella =  (w <= h) ? (int)w : (int)h;
             //rettangoli per lo spritebatch:
             target = new Rectangle(0, 0, _latoCasella, _latoCasella);
             source = new Rectangle(0, 0, 100, 100);  // 100 è il lato del nostro tileset di prova!! 
                                                      //va sostituito con quello definitivo
 
-
-
-            Game1.MouseClick += ClickSinistro;
-            Game1.Ridimensionamento += GestisciRidimensionamento;
-        }
-        /// <summary>
-        /// Costruttore dell'oggetto Tabellone. 
-        /// Il riquardo relativo alla parte grafica è settato automaticamente a tutto schermo
-        /// </summary>
-        /// <param name="lista">Una lista di caselle (da sin a dx, dall'alto al basso)</param>
-        /// <param name="righe">Numero di caselle per colonna</param>
-        /// <param name="colonne">Numero di caselle per riga</param>
-        public Tabellone(List<Tile> lista, int righe, int colonne) : base()
-        {
-            _righe = righe; _colonne = colonne;
-            _listaCaselle = lista;
-
-            //Calcolo il lato delle caselle:
-            _latoCasella = (_righe >= _colonne) ?
-                (int)((float)Superficie.Height / _righe) :
-                (int)((float)Superficie.Width / _colonne);
-            //rettangoli per lo spritebatch:
-            target = new Rectangle(0, 0, _latoCasella, _latoCasella);
-            source = new Rectangle(0, 0, 100, 100);  // 100 è il lato del nostro tileset di prova!! 
-                                                     //va sostituito con quello definitivo
-
+            _IdSelezione = null;
 
             Game1.MouseClick += ClickSinistro;
             Game1.Ridimensionamento += GestisciRidimensionamento;
         }
-
+       
+      
         /// <summary>
         /// funzioncina per convertire fra indice dell'array e posizione x,y della casella nel tabellone
+        /// (angolo sup sin)
         /// </summary>
         private void id2xy (int id, out int x, out int y)
         {
-            x = id % _colonne;
-            y = (id / _righe);
+            x = ((id % _colonne) * _latoCasella);
+            y = (id / _colonne) * _latoCasella;
+            
         }
 
+        /// <summary>
+        /// Converte una coordinata in pixel nell'Id della casella corrispondente
+        /// </summary>
+        public void coordinatePixel2Casella(ref int x, ref int y)
+        {
+            float tempX = x; float tempY = y;
+            tempX -= Offset.X; tempY -= Offset.Y;
 
+            x = (int)Math.Floor(tempX / _latoCasella);
+            y = (int)Math.Floor(tempY / _latoCasella);
+            return;
+        }
+
+        protected override void ClickSinistro (object sender, MouseEvntArgs args)
+        {
+            int tempX = args.Posizione.X;
+            int tempY = args.Posizione.Y;
+
+            if (Compreso(tempX, tempY)) {       // Click sul tabellone
+                coordinatePixel2Casella(ref tempX, ref tempY);
+                int tempID = tempX + tempY * _colonne;
+             
+                if (tempID >= 0)                // la condizione dovrebbe essere sempre soddisfatta in realtà
+                {
+                    _IdSelezione = tempID;
+                    id2xy(_IdSelezione.Value, out tempX, out tempY);
+                    _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY +Offset.Y;
+                }
+                else
+                    _IdSelezione = null;
+                Debug.WriteLine(_IdSelezione.Value);
+                Debug.WriteLine(_latoCasella);
+
+
+
+            }
+        }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
 
@@ -112,9 +137,9 @@ namespace Quantum_Game
                    
                     //calcolo delle coordinate su cui disegnare:
                     id2xy(Idx, out x, out y);
-                    target.X = (x *= _latoCasella + Superficie.X);
-                    target.Y = (y *= _latoCasella + Superficie.Y);
-
+                    target.X = x  + Offset.X;
+                    target.Y = y + Offset.Y;
+                 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     switch (_listaCaselle[Idx].Tipo)
                         {
@@ -138,6 +163,16 @@ namespace Quantum_Game
                     }
                 }
             }
+
+        public void DisegnaSelezione (SpriteBatch spriteBatch, Texture2D texture)
+        {
+            if (_IdSelezione != null)
+            {
+                target.X = _SelezPixCoord.X; target.Y = _SelezPixCoord.Y; 
+                spriteBatch.Draw(texture,target, Color.Beige);
+
+            }
+        }
 
         }
     }
