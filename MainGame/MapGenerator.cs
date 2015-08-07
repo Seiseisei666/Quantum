@@ -31,7 +31,7 @@ namespace Quantum_Game
                 ris = util.Dadi(2);
                 if (ris < 3)
                     _tabellone.Add(new Vuoto());
-                if (ris < 7)
+                else if (ris < 7)
                     _tabellone.Add(new Casella(QuantumTile.casella));
                 else if (ris < 9)
                     _tabellone.Add(new Casella(QuantumTile.orbita));
