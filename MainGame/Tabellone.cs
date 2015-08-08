@@ -73,7 +73,6 @@ namespace Quantum_Game
 
             _IdSelezione = null;
 
-            Game1.MouseClick += ClickSinistro;
             Game1.Ridimensionamento += GestisciRidimensionamento;
         }
        
@@ -102,16 +101,18 @@ namespace Quantum_Game
             return;
         }
 
+        
+
         protected override void ClickSinistro (object sender, MouseEvntArgs args)
         {
-            int tempX = args.Posizione.X;
-            int tempY = args.Posizione.Y;
-
-            if (Compreso(tempX, tempY)) {       // Click sul tabellone
+            if (Compreso(args.Posizione.X, args.Posizione.Y)) {
+                int tempX = args.Posizione.X;
+                int tempY = args.Posizione.Y;
                 coordinatePixel2Casella(ref tempX, ref tempY);
-                int tempID = tempX + tempY * _colonne;
+
+                int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
              
-                if (tempID >= 0)                // la condizione dovrebbe essere sempre soddisfatta in realtà
+                if (tempID>=0 && tempID < _listaCaselle.Count && _listaCaselle[tempID].Esistente) // la casella esiste davvero e non sto smatriciando
                 {
                     _IdSelezione = tempID;
                     id2xy(_IdSelezione.Value, out tempX, out tempY);
@@ -119,8 +120,6 @@ namespace Quantum_Game
                 }
                 else
                     _IdSelezione = null;
-                Debug.WriteLine(_IdSelezione.Value);
-                Debug.WriteLine(_latoCasella);
 
 
 
@@ -169,8 +168,7 @@ namespace Quantum_Game
             if (_IdSelezione != null)
             {
                 target.X = _SelezPixCoord.X; target.Y = _SelezPixCoord.Y; 
-                spriteBatch.Draw(texture,target, Color.Beige);
-
+                spriteBatch.Draw (texture,target, Color.IndianRed);
             }
         }
 

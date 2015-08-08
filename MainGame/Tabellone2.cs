@@ -28,7 +28,7 @@ namespace Quantum_Game
             Tessere = new List<Zona>();
             Tessere.Capacity = righe * colonne;
 
-            Game1.MouseClick += ClickSinistro;
+          
 
            
         }

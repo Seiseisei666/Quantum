@@ -9,14 +9,18 @@ namespace Quantum_Game
     {
         private int _righe, _colonne;
         private List<Tile> _tabellone;
+        public int Righe { get { return _righe; } }
+        public int Colonne { get { return _colonne; } }
 
+        //Costruttore
         public MapGenerator (int righe, int colonne)
         {
             _righe = righe; _colonne = colonne;
             _tabellone = new List<Tile>();
-           _tabellone.Capacity = righe * colonne;
+            _tabellone.Capacity = righe * colonne;
         }
 
+        //Funzione principale per generare la lista di caselle
         public List<Tile> GeneraMappa ()
         {
             // DA RIEMPIRE ************************

@@ -65,6 +65,42 @@ namespace Quantum_Game
         {
             // gestione click sinistro standard
         }
+        protected virtual void ClickDestro(object sender, MouseEvntArgs args)
+        {
+            // gestione click dx standard
+        }
+        protected virtual void MouseOver (object sender, MouseEvntArgs args)
+        {
+            // gestione click sinistro standard
+        }
+        /// <summary>
+        /// Chiamato dal gioco per associare (o rimuovere un'associazione) un evento del mouse
+        /// ad un handler di questo oggetto
+        /// </summary>
+        /// <param name="tipo">Tipo di evento da associare/dissociare</param>
+        /// <param name="Associa">True = associa, false = rimuovi associazione; predefinito true</param>
+        public virtual void AssociaEvento(MouseInput mouseInput, TipoEventoMouse tipo, bool associa = true)
+        {
+            switch (tipo)
+            {
+                case TipoEventoMouse.ClkSin:
+                    if (associa)
+                        mouseInput.ClickSinistro += ClickSinistro;
+                    else mouseInput.ClickSinistro -= ClickSinistro;
+                    break;
+                case TipoEventoMouse.ClkDx:
+                    if (associa)
+                        mouseInput.ClickDestro += ClickDestro;
+                    else mouseInput.ClickDestro -= ClickDestro;
+                    break;
+                case TipoEventoMouse.Over:
+                    if (associa)
+                        mouseInput.MouseOver += MouseOver;
+                    else mouseInput.MouseOver -= MouseOver;
+
+                    break;
+            }
+        }
 
 
     }

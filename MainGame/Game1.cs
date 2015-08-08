@@ -16,65 +16,52 @@ namespace Quantum_Game
     /// </summary>
     public class Game1 : Game
     {
-         
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
         private Tabellone tabellone;
         private Texture2D textureCaselle;
         private Texture2D contornoCasella;
-        private MouseState mouseState, oldState;
+        private MouseInput mouseInput;
+
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
-        static public event EventHandler<MouseEvntArgs> MouseClick;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
             graphics.PreferredBackBufferWidth = 800;  
             graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
-            //graphics.ToggleFullScreen;
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
+            mouseInput = new MouseInput();
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            MapGenerator gen = new MapGenerator(3, 5);
-            tabellone = new Tabellone(gen.GeneraMappa(), 3, 5, 0.1f, 0.1f, 800, 600);
+            MapGenerator gen = new MapGenerator(6, 9);
+            tabellone = new Tabellone
+                (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.3f, 0.1f, 800, 600);
+
+            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
 
             base.Initialize();
         }
-
-
-
+        
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
+            // texture con alpha blending per evidenziare la casella selezionata
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
-            contornoCasella.SetData(new[] { (Color.White) });
-        
-
-
-            // TODO: use this.Content to load your game content here
-        }
-
-
-
+            contornoCasella.SetData(new[] { (Color.White*0.5f) });
+        } 
         protected override void UnloadContent()
         {
             spriteBatch.Dispose();
-
-            // TODO: Unload any non ContentManager content here
+            contornoCasella.Dispose();
+            textureCaselle.Dispose();
         }
 
      
@@ -84,18 +71,7 @@ namespace Quantum_Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            
-            mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
-            {
-                //  int x = mouseState.X; int y = mouseState.Y;
-
-                OnMouseClick(new MouseEvntArgs(mouseState.X, mouseState.Y, true, false));
-
-            }
-            oldState = mouseState;
-
+            mouseInput.Update();
 
             base.Update(gameTime);
         }
@@ -104,14 +80,17 @@ namespace Quantum_Game
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
+            // qui cominciano le routine di disegno dei vari oggetti
             spriteBatch.Begin();
+
             tabellone.Draw(spriteBatch, textureCaselle);
-          
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
 
             spriteBatch.End();
+            // finiscono qui
+
             base.Draw(gameTime);
-            
         }
 
 
@@ -121,11 +100,7 @@ namespace Quantum_Game
             if (Ridimensionamento != null)
                 Ridimensionamento(this, args);
         }
-        protected virtual void OnMouseClick(MouseEvntArgs args) // evento per gestire i cilck del mouse
-        {
-            if (MouseClick != null)
-                MouseClick(this, args);
-        }
+
 
 
     }

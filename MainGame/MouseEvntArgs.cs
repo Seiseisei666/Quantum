@@ -7,7 +7,14 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
-    
+    public enum TipoEventoMouse
+    {
+        ClkSin,
+        ClkDx,
+        Over
+    }
+
+
     public class MouseEvntArgs : System.EventArgs
     {
         private Point _posizione;
@@ -19,8 +26,6 @@ namespace Quantum_Game
             _posizione.X = x; _posizione.Y = y;
             _sinistroPremuto = sin; _destroPremuto = dx;
         }
-
-
 
         public Point Posizione { get { return _posizione; } }
         public bool TastoSinistro { get { return _sinistroPremuto; } }
