@@ -8,9 +8,6 @@ using System;
 
 namespace Quantum_Game
 {
-  
-
-
     /// <summary>
     /// Il gioco vero e proprio
     /// </summary>
@@ -22,10 +19,9 @@ namespace Quantum_Game
         private Texture2D textureCaselle;
         private Texture2D contornoCasella;
         private MouseInput mouseInput;
-
+        private GameSystem gameSystem;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
-
 
         public Game1()
         {
@@ -40,19 +36,39 @@ namespace Quantum_Game
 
         protected override void Initialize()
         {
+            // Crea il gamesystem con 4 giocatori
+            gameSystem = new GameSystem();
+            gameSystem.AggiungiGiocatori(4);
+
+            //Crea la mappa
             MapGenerator gen = new MapGenerator(6, 9);
             tabellone = new Tabellone
                 (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.3f, 0.1f, 800, 600);
 
+            /*  ASSOCIAZIONE DEGLI EVENTI 
+                Gli eventi del mouse vengono letti o ignorati a seconda del momento del gioco
+                Ad esempio, una volta selezionata un'unità andiamo a leggere il click dx
+                che prima di aver effettuato una selezione valida viene ignorato.
+                Per gestire dinamicamente queste situazioni ogni riquadro dell'interfaccia grafica 
+                dispone del metodo AssociaEvento
+                */
+            
             tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+
+            //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
+            //avviene una volta per partita e lo associamo manualmente a tutti gli oggetti
+            //che lo utilizzeranno
+            gameSystem.InizioPartita += tabellone.InizioPartita;
+
+
 
             base.Initialize();
         }
-        
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
+
             // texture con alpha blending per evidenziare la casella selezionata
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
             contornoCasella.SetData(new[] { (Color.White*0.5f) });
@@ -63,13 +79,22 @@ namespace Quantum_Game
             contornoCasella.Dispose();
             textureCaselle.Dispose();
         }
-
-     
-
+        
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                Exit(); //questa ci stava per default, è per chiudere la finestra
+
+            if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
+            {
+
+            }
+
+            else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
+            {
+
+            }
+
 
             mouseInput.Update();
 
@@ -93,8 +118,6 @@ namespace Quantum_Game
             base.Draw(gameTime);
         }
 
-
-        //metodi x far partire gli eventi!!!
         protected virtual void OnRidimensionamento(ResizeEvntArgs args) //evento ipotetico per gestire il ridimensionamento delle finestre
         {
             if (Ridimensionamento != null)

@@ -7,6 +7,12 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
+    /// <summary>
+    /// Classe dei messaggi mouse inviati con gli eventi del mouse
+    /// racchiude tutte le informazioni su posizione e bottoni premuti
+    /// ricalcata su una classe per le form microsoft più massiccia di così, con cose tipo
+    /// la scroll wheel che a noi non servono
+    /// </summary>
     public enum TipoEventoMouse
     {
         ClkSin,

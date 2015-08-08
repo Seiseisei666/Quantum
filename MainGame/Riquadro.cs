@@ -74,13 +74,16 @@ namespace Quantum_Game
             // gestione click sinistro standard
         }
         /// <summary>
-        /// Chiamato dal gioco per associare (o rimuovere un'associazione) un evento del mouse
-        /// ad un handler di questo oggetto
+        /// Metodo per associare un evento del mouse ad un handler (metodo) a disposizione di questo oggetto
+        /// (se il parametro associa è false l'associazione viene rimossa)
         /// </summary>
         /// <param name="tipo">Tipo di evento da associare/dissociare</param>
         /// <param name="Associa">True = associa, false = rimuovi associazione; predefinito true</param>
         public virtual void AssociaEvento(MouseInput mouseInput, TipoEventoMouse tipo, bool associa = true)
         {
+            //TODO: controllare che l'associazione esista prima di toglierla!!!
+            //altrimenti generiamo un errore!
+
             switch (tipo)
             {
                 case TipoEventoMouse.ClkSin:

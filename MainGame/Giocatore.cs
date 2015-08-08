@@ -21,15 +21,9 @@ public class Giocatore {
 		
 		//costruttore del giocatore
 		public Giocatore (){
-            if (_count >= 4)
-            {
-                throw new System.Exception("Il numero massimo di giocatori è 4!!!");
-            } 
-
 			this._colore = (e_color) (++_count); //assegna il colore
 			_ricerca = _dominio = _punti = 0;
 			Flotta = new List<Nave> ();
-			
 		}
 		
 		public void GlobalInit () {
@@ -37,6 +31,7 @@ public class Giocatore {
 
 
 		}
+
         /// <summary>
         /// metodo generale per mettere in gioco e riconfigurare una NUOVA nave
         /// </summary>
@@ -54,7 +49,7 @@ public class Giocatore {
         /// <summary>
         /// inizializzazione, da chiamare prima di ogni turno
         /// </summary>
-        public void init () {
+        public void Init () {
 			
 			foreach (var n in Flotta) {n.init();}
 			_azioni = NUM_AZIONI;

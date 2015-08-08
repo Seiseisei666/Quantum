@@ -36,6 +36,7 @@ namespace Quantum_Game
 
         private int? _IdSelezione;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata
+        private bool _partitaIniziata;
 
         public Nave NaveSelezionata { get
                 {
@@ -72,6 +73,7 @@ namespace Quantum_Game
                                                      //va sostituito con quello definitivo
 
             _IdSelezione = null;
+            _partitaIniziata = false;
 
             Game1.Ridimensionamento += GestisciRidimensionamento;
         }
@@ -102,7 +104,11 @@ namespace Quantum_Game
         }
 
         
-
+        /// <summary>
+        /// Gestisce il click sinistro
+        /// </summary>
+        /// <param name="sender">ignorato</param>
+        /// <param name="args">status del mouse (eg posizione)</param>
         protected override void ClickSinistro (object sender, MouseEvntArgs args)
         {
             if (Compreso(args.Posizione.X, args.Posizione.Y)) {
@@ -120,10 +126,7 @@ namespace Quantum_Game
                 }
                 else
                     _IdSelezione = null;
-
-
-
-            }
+                }
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
@@ -165,12 +168,17 @@ namespace Quantum_Game
 
         public void DisegnaSelezione (SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (_IdSelezione != null)
+            if (_IdSelezione != null && _partitaIniziata)
             {
                 target.X = _SelezPixCoord.X; target.Y = _SelezPixCoord.Y; 
                 spriteBatch.Draw (texture,target, Color.IndianRed);
             }
         }
+        public void InizioPartita (object sender, EventArgs args)
+        {
+
+        }
+
 
         }
     }

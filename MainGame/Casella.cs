@@ -26,7 +26,7 @@ namespace Quantum_Game
 
         //campi propri
         private Nave _occupante;
-        public Nave Occupante { get { return _occupante; } }
+        public Nave Occupante { get { return _occupante; } set { _occupante = value; } }
 
         private bool _orbita;
         public bool Orbita { get { return _tipo == QuantumTile.orbita; } }

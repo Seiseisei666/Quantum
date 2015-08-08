@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Quantum_Game
+{
+    public enum FasiDiGioco
+    {
+        SceltaOpzioni = -1,
+        SetupPartita,
+        PartitaInCorso
+
+    }
+
+    public class GameSystem
+    {
+        private static int _contaTurni;
+        private List<Giocatore> _giocatori;
+        private static FasiDiGioco _faseDiGioco;
+        private int _numGiocatori;
+
+        public int NumeroTurno { get { return _contaTurni; } }
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
+        public event EventHandler InizioPartita;
+
+        public GameSystem()
+        {
+            _contaTurni = 0;
+            _faseDiGioco = FasiDiGioco.SceltaOpzioni;
+        }
+
+        /// <summary>
+        /// crea N giocatori
+        /// </summary>
+        /// <param name="numeroGiocatori"></param>
+        public void AggiungiGiocatori (int numeroGiocatori)
+        {
+            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni) return;
+            _giocatori = new List<Giocatore>();
+            for (int i = 0; i < numeroGiocatori; i++)
+                _giocatori.Add(new Giocatore());
+            _numGiocatori = numeroGiocatori;
+        }
+
+        /// <summary>
+        /// fornisce un riferimento al giocatore di turno
+        /// </summary>
+        public Giocatore GiocatoreDiTurno { get
+            {
+                return _giocatori[(_contaTurni % _giocatori.Count)]; }
+            }
+
+        public void NextTurn(bool primoturno = false)
+        {
+            if (_faseDiGioco != FasiDiGioco.PartitaInCorso) return; //funziona solo se la partita è in corso
+
+            if (!primoturno) { 
+                GiocatoreDiTurno.cleanup();
+                _contaTurni++;
+            }
+            GiocatoreDiTurno.Init();
+        }
+
+
+
+    }
+}

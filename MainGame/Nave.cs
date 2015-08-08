@@ -36,8 +36,6 @@ namespace Quantum_Game
 		private e_nave _tipo;
 		private Giocatore _proprietario;
 		
-		
-		
 		/// <summary>
         /// Costruttore.
         /// </summary>
@@ -45,9 +43,8 @@ namespace Quantum_Game
 		public Nave (Giocatore prop)
 		{
 			this._proprietario = prop;
-			_ingioco = _mossa = false;
+			_ingioco = _mossa = _special = false;
 			_tipo = e_nave.Rottame;
-			
 		}
 
         /// <summary>
@@ -77,7 +74,6 @@ namespace Quantum_Game
         public void Riconfig () {
 			int risultato = 0;
 			var TipoDiNaveIniziale = this._tipo;
-			
 			do {
 				risultato = util.Dadi(1);
 			} while (risultato == (int)TipoDiNaveIniziale);
@@ -85,11 +81,11 @@ namespace Quantum_Game
 		}
 		
 		public void Movim (Casella CasellaTarget) {
-			//fare cose varie per muovere la nave...
+            CasellaTarget.Occupante = this;
 			this._mossa = true;
             Giocatore.Azione();
-           
 		}
+
 		/// <summary>
         /// Metodo per attaccare una nave target
         /// </summary>
@@ -111,27 +107,21 @@ namespace Quantum_Game
             this._special = true;
         }
 		
-		public bool Viva {
-			get {return (this._tipo > 0);}
-		}
+		public bool Viva {  get {return (this._tipo > 0);}}
+
         /// <summary>
         /// La nave viene distrutta
         /// </summary>
-		public void Distr () {
-			this._tipo = e_nave.Rottame;
-		}
+		public void Distr () {  this._tipo = e_nave.Rottame;}
+
         /// <summary>
         /// Restituisce True se la nave ha già mosso in questo turno
         /// </summary>
-		public bool Mossa {
-			get {return this._mossa;}
-		}
+		public bool Mossa { get {return this._mossa;}  }
         /// <summary>
         /// Restituisce True se la nave è in gioco al momento
         /// </summary>
-		public bool InGioco {
-			get {return this._ingioco;}
-		}
+		public bool InGioco {   get {return this._ingioco;} }
 		
         /// <summary>
         /// Mette in gioco la nave
@@ -144,7 +134,7 @@ namespace Quantum_Game
         /// </summary>
 		public e_color Colore {get {return this._proprietario.Colore;}}
 		
-	}
+	    }
 	
 	
 	
