@@ -36,19 +36,22 @@ namespace Quantum_Game
 
         private int? _IdSelezione;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata
-        private bool _partitaIniziata;
-
+        public void Deseleziona()   {_IdSelezione = null; }
         public Nave NaveSelezionata { get
                 {
-                Casella cas = _listaCaselle[_IdSelezione.Value] as Casella;
+                Casella cas = _tileSelezionato as Casella;
                 if (cas != null)
                     return cas.Occupante;
                 else return null;
                 }
             } 
+        private Tile _tileSelezionato { get { return (_IdSelezione == null) ? null : _listaCaselle[_IdSelezione.Value]; } }
+        public Tile TileSelezionato { get { return _tileSelezionato; }   }
 
+        //inutili?
         public int Righe { get { return _righe; } }
         public int Colonne { get { return _colonne; } }
+        private bool _partitaIniziata; //inutili
 
         /// <summary>
         /// Costruttore dell'oggetto Tabellone, con impostazioni del riquadro grafico
@@ -127,44 +130,55 @@ namespace Quantum_Game
                 else
                     _IdSelezione = null;
                 }
+            System.Diagnostics.Debug.WriteLine(_IdSelezione);
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
 
         {
-            int x, y; 
+            int x, y;
             for (int Idx = 0; Idx < _listaCaselle.Count; Idx++)
             {
-                if (_listaCaselle[Idx].Esistente) {             // se la casella non fa parte del gioco non la disegna
-                   
+                if (_listaCaselle[Idx].Esistente)
+                {             // se la casella non fa parte del gioco non la disegna
+
                     //calcolo delle coordinate su cui disegnare:
                     id2xy(Idx, out x, out y);
-                    target.X = x  + Offset.X;
+                    target.X = x + Offset.X;
                     target.Y = y + Offset.Y;
-                 
+
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     switch (_listaCaselle[Idx].Tipo)
-                        {
+                    {
 
                         case QuantumTile.casella:
-                                source.X = 0;
-                                source.Y = 0;
-                                break;
+                            source.X = 0;
+                            source.Y = 0;
+                            break;
                         case QuantumTile.orbita:
-                                source.X = 100;
-                                source.Y = 0;
-                                break;
+                            source.X = 100;
+                            source.Y = 0;
+                            break;
                         default:
-                                source.X = 200;
-                                source.Y = 0;
-                                break;
-                        }
+                            source.X = 200;
+                            source.Y = 0;
+                            break;
+                    }
 
                     // l'istruzione draw vera e propria
                     spriteBatch.Draw(tileset, target, source, Color.White);
+                    if (_listaCaselle[Idx].EunaCasella)
+                    {
+                        Casella tempCas = _listaCaselle[Idx] as Casella;
+                        if (tempCas.Occupante != null)
+                        {
+                            source.X = 300;
+                            spriteBatch.Draw(tileset, target, source, Color.White);
+                        }
                     }
                 }
             }
+        }
 
         public void DisegnaSelezione (SpriteBatch spriteBatch, Texture2D texture)
         {

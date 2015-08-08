@@ -60,14 +60,19 @@ namespace Quantum_Game
             //che lo utilizzeranno
             gameSystem.InizioPartita += tabellone.InizioPartita;
 
+            //TODO: usare i generics per fare un solo metodo AssociaEvento<TipoEvento> (object oggetto, TipoEvento tipo)
 
+
+            // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
+            gameSystem.FasePartita = FasiDiGioco.SetupPartita;
+            // DA TOGLIERE
 
             base.Initialize();
         }
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            textureCaselle = Content.Load<Texture2D>("Graphica\\TileSet_prova1");
+            textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
 
             // texture con alpha blending per evidenziare la casella selezionata
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
@@ -92,7 +97,7 @@ namespace Quantum_Game
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
             {
-
+                Test();
             }
 
 
@@ -101,6 +106,16 @@ namespace Quantum_Game
             base.Update(gameTime);
         }
 
+        // PROVA!!!!!!!!
+        private void Test()
+        {
+            Casella tempCas = tabellone.TileSelezionato as Casella;
+
+            if (tempCas != null && tempCas.Occupante == null)
+            {
+                gameSystem.GiocatoreDiTurno.PiazzaNuovaNave(tempCas);
+            }
+        }
    
         protected override void Draw(GameTime gameTime)
         {

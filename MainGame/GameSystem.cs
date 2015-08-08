@@ -10,7 +10,6 @@ namespace Quantum_Game
         SceltaOpzioni = -1,
         SetupPartita,
         PartitaInCorso
-
     }
 
     public class GameSystem
@@ -21,7 +20,8 @@ namespace Quantum_Game
         private int _numGiocatori;
 
         public int NumeroTurno { get { return _contaTurni; } }
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } } //TOGLIERE IL SET E INTEGRARLO COL GIOCO
+
         public event EventHandler InizioPartita;
 
         public GameSystem()
@@ -36,7 +36,7 @@ namespace Quantum_Game
         /// <param name="numeroGiocatori"></param>
         public void AggiungiGiocatori (int numeroGiocatori)
         {
-            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni) return;
+            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni) return; //se la fase di gioco non è quella giusta esce
             _giocatori = new List<Giocatore>();
             for (int i = 0; i < numeroGiocatori; i++)
                 _giocatori.Add(new Giocatore());
@@ -53,8 +53,8 @@ namespace Quantum_Game
 
         public void NextTurn(bool primoturno = false)
         {
-            if (_faseDiGioco != FasiDiGioco.PartitaInCorso) return; //funziona solo se la partita è in corso
-
+            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return; //funziona solo se la partita è in corso
+            if (_faseDiGioco == FasiDiGioco.SetupPartita)   { _contaTurni++; return; }
             if (!primoturno) { 
                 GiocatoreDiTurno.cleanup();
                 _contaTurni++;

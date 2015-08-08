@@ -1,4 +1,3 @@
-C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\Graphica\TileSet_prova1.png
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\MainGame.exe
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\MainGame.pdb
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\MonoGame.Framework.dll
@@ -24,3 +23,5 @@ C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Sh
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\obj\x86\Debug\MainGame.csprojResolveAssemblyReference.cache
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\obj\x86\Debug\MainGame.exe
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\obj\x86\Debug\MainGame.pdb
+C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\TileSet_prova1.png
+C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\TileSet_prova1.xnb

@@ -35,13 +35,13 @@ public class Giocatore {
         /// <summary>
         /// metodo generale per mettere in gioco e riconfigurare una NUOVA nave
         /// </summary>
-        public void PiazzaNuovaNave() {
+        public void PiazzaNuovaNave(Casella cas) {
 			Nave n = new Nave(this);
 				Flotta.Add (n);
 				Flotta[Flotta.Count-1].Gioca();
 				Flotta[Flotta.Count-1].Riconfig();
-            //Qua aspettiamo l'interazione del giocatore: 
-            //richiediamo il click per posizionare la nave
+
+                cas.Occupante = Flotta[Flotta.Count - 1];
 				
 			}
 

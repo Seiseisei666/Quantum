@@ -64,6 +64,7 @@ namespace Quantum_Game
         protected virtual void ClickSinistro (object sender, MouseEvntArgs args)
         {
             // gestione click sinistro standard
+            
         }
         protected virtual void ClickDestro(object sender, MouseEvntArgs args)
         {
