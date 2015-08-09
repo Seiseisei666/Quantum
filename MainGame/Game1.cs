@@ -30,7 +30,7 @@ namespace Quantum_Game
             graphics.PreferredBackBufferWidth = 800;  
             graphics.PreferredBackBufferHeight = 600;
             graphics.ApplyChanges();
-            IsMouseVisible = true;
+            IsMouseVisible = true; 
             mouseInput = new MouseInput();
         }
 
@@ -41,18 +41,18 @@ namespace Quantum_Game
             gameSystem.AggiungiGiocatori(4);
 
             //Crea la mappa
-            MapGenerator gen = new MapGenerator(6, 9);
+            MapGenerator gen = new MapGenerator(9, 9);
             tabellone = new Tabellone
-                (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.3f, 0.1f, 800, 600);
+                (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
 
-            /*  ASSOCIAZIONE DEGLI EVENTI 
+            /*  
+                ASSOCIAZIONE DEGLI EVENTI 
                 Gli eventi del mouse vengono letti o ignorati a seconda del momento del gioco
-                Ad esempio, una volta selezionata un'unità andiamo a leggere il click dx
-                che prima di aver effettuato una selezione valida viene ignorato.
+                Ad esempio, una volta selezionata un'unità andiamo a leggere il click dx,
+                che prima di aver effettuato una selezione valida veniva ignorato.
                 Per gestire dinamicamente queste situazioni ogni riquadro dell'interfaccia grafica 
                 dispone del metodo AssociaEvento
-                */
-            
+            */
             tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
 
             //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
@@ -69,15 +69,17 @@ namespace Quantum_Game
 
             base.Initialize();
         }
+
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
 
-            // texture con alpha blending per evidenziare la casella selezionata
+            // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
             contornoCasella.SetData(new[] { (Color.White*0.5f) });
         } 
+
         protected override void UnloadContent()
         {
             spriteBatch.Dispose();
@@ -100,8 +102,8 @@ namespace Quantum_Game
                 Test();
             }
 
-
-            mouseInput.Update();
+            mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
+                                 // l'oggetto mouseInput
 
             base.Update(gameTime);
         }
@@ -109,11 +111,12 @@ namespace Quantum_Game
         // PROVA!!!!!!!!
         private void Test()
         {
-            Casella tempCas = tabellone.TileSelezionato as Casella;
+            Casella tempCas = tabellone.TileSelezionato as Casella; // prova a castare il tile selezionato come casella
 
-            if (tempCas != null && tempCas.Occupante == null)
+            if (tempCas != null && tempCas.Occupante == null) // se ho una casella valida e non occupata da una nave...
             {
                 gameSystem.GiocatoreDiTurno.PiazzaNuovaNave(tempCas);
+                if (gameSystem.GiocatoreDiTurno.Flotta.Count == 3) gameSystem.NextTurn();
             }
         }
    
@@ -132,8 +135,11 @@ namespace Quantum_Game
 
             base.Draw(gameTime);
         }
-
-        protected virtual void OnRidimensionamento(ResizeEvntArgs args) //evento ipotetico per gestire il ridimensionamento delle finestre
+        /// <summary>
+        /// Evento ipotetico per gestire un improbabile ridimensionamento delle finestre
+        /// </summary>
+        /// <param name="args"></param>
+        protected virtual void OnRidimensionamento(ResizeEvntArgs args) 
         {
             if (Ridimensionamento != null)
                 Ridimensionamento(this, args);

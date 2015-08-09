@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
@@ -19,6 +20,8 @@ namespace Quantum_Game
         private static FasiDiGioco _faseDiGioco;
         private int _numGiocatori;
 
+        public static Dictionary<e_color, Color> QuantumColor;
+
         public int NumeroTurno { get { return _contaTurni; } }
         public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } } //TOGLIERE IL SET E INTEGRARLO COL GIOCO
 
@@ -28,6 +31,12 @@ namespace Quantum_Game
         {
             _contaTurni = 0;
             _faseDiGioco = FasiDiGioco.SceltaOpzioni;
+
+            QuantumColor = new Dictionary<e_color, Color>();
+            QuantumColor.Add(e_color.Blu, Color.Blue);
+            QuantumColor.Add(e_color.Rosso, Color.Red);
+            QuantumColor.Add(e_color.Giallo, Color.Yellow);
+            QuantumColor.Add(e_color.Verde, Color.Green);
         }
 
         /// <summary>
@@ -51,15 +60,27 @@ namespace Quantum_Game
                 return _giocatori[(_contaTurni % _giocatori.Count)]; }
             }
 
-        public void NextTurn(bool primoturno = false)
+        public void NextTurn()
         {
-            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return; //funziona solo se la partita è in corso
-            if (_faseDiGioco == FasiDiGioco.SetupPartita)   { _contaTurni++; return; }
-            if (!primoturno) { 
-                GiocatoreDiTurno.cleanup();
-                _contaTurni++;
+            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return; //se la partita non è in corso esce
+
+            if (_faseDiGioco == FasiDiGioco.SetupPartita)
+            {
+                if (++_contaTurni >= _numGiocatori)
+                {
+                    _faseDiGioco = FasiDiGioco.PartitaInCorso;
+                    InizioPartita(this, new EventArgs());
+                    GiocatoreDiTurno.Init();
+                    return;
+                }
             }
-            GiocatoreDiTurno.Init();
+
+            else
+            {
+                GiocatoreDiTurno.Cleanup();
+                _contaTurni++;
+                GiocatoreDiTurno.Init();
+            }
         }
 
 

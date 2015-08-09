@@ -1,10 +1,13 @@
 ﻿using Quantum_Game;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Quantum_Game {
 
+
 public class Giocatore {
-		
+        
 		const byte NUM_AZIONI = 3;
 		const byte PUNTI_x_VINCERE = 10;
 		
@@ -24,7 +27,7 @@ public class Giocatore {
 			this._colore = (e_color) (++_count); //assegna il colore
 			_ricerca = _dominio = _punti = 0;
 			Flotta = new List<Nave> ();
-		}
+        }
 		
 		public void GlobalInit () {
 		// inizializzazione prima che inizi il gioco 
@@ -56,7 +59,7 @@ public class Giocatore {
 			
 		}
 
-        public void cleanup()
+        public void Cleanup()
         {
             if (_punti >= PUNTI_x_VINCERE)
             {
@@ -90,9 +93,17 @@ public class Giocatore {
                 //finisce il turno
             }
         }
-			
-			
-		}
+
+        public Color SpriteColor
+        {
+            get
+            {
+                return GameSystem.QuantumColor[_colore];
+            }
+        }
+
+
+    }
 		
 		
 }

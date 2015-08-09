@@ -133,8 +133,15 @@ namespace Quantum_Game
         /// restituisce il colore del giocatore che possiede la nave
         /// </summary>
 		public e_color Colore {get {return this._proprietario.Colore;}}
-		
-	    }
+        public Microsoft.Xna.Framework.Color SpriteColor
+        {
+            get
+            {
+                return _proprietario.SpriteColor;
+            }
+        }
+
+    }
 	
 	
 	

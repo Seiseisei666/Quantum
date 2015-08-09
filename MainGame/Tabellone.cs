@@ -62,7 +62,7 @@ namespace Quantum_Game
         /// <param name="TopLeft">Coordinate in pixel dell'angolo in alto a sinistra</param>
         /// <param name="Largh">Larghezza del riquadro del tabellone in pixel</param>
         /// <param name="Alt">Altezza del riquadro tabellone in pixel</param>
-        public Tabellone(List<Tile> lista, int righe, int colonne, float xRel, float yRel, int LarghSchermo, int AltSchermo) : base(xRel,yRel, 1f, 1f, LarghSchermo, AltSchermo)
+        public Tabellone(List<Tile> lista, int righe, int colonne, float xRel, float yRel, int LarghSchermo, int AltSchermo) : base(xRel,yRel, 1f, 0.98f, LarghSchermo, AltSchermo)
         {
             _righe = righe; _colonne = colonne;
             _listaCaselle = lista;
@@ -130,7 +130,7 @@ namespace Quantum_Game
                 else
                     _IdSelezione = null;
                 }
-            System.Diagnostics.Debug.WriteLine(_IdSelezione);
+
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
@@ -173,7 +173,7 @@ namespace Quantum_Game
                         if (tempCas.Occupante != null)
                         {
                             source.X = 300;
-                            spriteBatch.Draw(tileset, target, source, Color.White);
+                            spriteBatch.Draw(tileset, target, source, tempCas.Occupante.SpriteColor);
                         }
                     }
                 }
