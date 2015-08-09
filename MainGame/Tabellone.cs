@@ -29,28 +29,43 @@ namespace Quantum_Game
 {
     public class Tabellone : Riquadro
     {
+        // gli elementi costitutivi del tabellone
         private List<Tile> _listaCaselle;
         private int _righe, _colonne;
         private int _latoCasella;
-        private Rectangle source, target; //per disegnare
 
+        //utility per disegnare
+        private Rectangle source, target;
+
+        // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int? _IdSelezione;
-        private Point _SelezPixCoord; //coordinate in pixel della casella selezionata
-        public void Deseleziona()   {_IdSelezione = null; }
-        public Nave NaveSelezionata { get
-                {
+        private int? _idSelezioneDestro;
+        private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
+        public void Deseleziona(bool sinistro = true) //metodo per annullare la selezione
+        {
+            if (sinistro)
+                _IdSelezione = null;
+            else _idSelezioneDestro = null;
+        } //
+        // restituisce il Tile su cui si è cliccato col sinistro
+        private Tile _tileSelezionato { get { return (_IdSelezione == null) ? null : _listaCaselle[_IdSelezione.Value]; } }
+        public Tile TileSelezionato { get { return _tileSelezionato; }   }
+        //stessa cosa col click destro
+        private Tile _tileTarget { get { return (_idSelezioneDestro == null) ? null : _listaCaselle[_idSelezioneDestro.Value]; } }
+        public Tile TileTarget { get { return _tileTarget; } }
+        //restituisce la nave selezionata
+        public Nave NaveSelezionata
+        {
+            get
+            {
                 Casella cas = _tileSelezionato as Casella;
                 if (cas != null)
                     return cas.Occupante;
                 else return null;
-                }
-            } 
-        private Tile _tileSelezionato { get { return (_IdSelezione == null) ? null : _listaCaselle[_IdSelezione.Value]; } }
-        public Tile TileSelezionato { get { return _tileSelezionato; }   }
+            }
+        }
 
         //inutili?
-        public int Righe { get { return _righe; } }
-        public int Colonne { get { return _colonne; } }
         private bool _partitaIniziata; //inutili
 
         /// <summary>
@@ -76,6 +91,7 @@ namespace Quantum_Game
                                                      //va sostituito con quello definitivo
 
             _IdSelezione = null;
+            _idSelezioneDestro = null;
             _partitaIniziata = false;
 
             Game1.Ridimensionamento += GestisciRidimensionamento;
@@ -95,42 +111,72 @@ namespace Quantum_Game
 
         /// <summary>
         /// Converte una coordinata in pixel nell'Id della casella corrispondente
+        /// Restituisce false se il click è fuori dai bordi del tabellone
         /// </summary>
-        public void coordinatePixel2Casella(ref int x, ref int y)
+        private bool coordinatePixel2Casella(ref int x, ref int y)
         {
             float tempX = x; float tempY = y;
             tempX -= Offset.X; tempY -= Offset.Y;
 
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
-            return;
+            if (x < 0 || x > _colonne - 1 || y < 0 || y > _righe - 1)
+                return false;
+            return true;
         }
 
         
         /// <summary>
-        /// Gestisce il click sinistro
+        /// Gestisce il click sinistro, selezionando la casella corrispondente
         /// </summary>
         /// <param name="sender">ignorato</param>
         /// <param name="args">status del mouse (eg posizione)</param>
         protected override void ClickSinistro (object sender, MouseEvntArgs args)
         {
+            _idSelezioneDestro = null;
             if (Compreso(args.Posizione.X, args.Posizione.Y)) {
                 int tempX = args.Posizione.X;
                 int tempY = args.Posizione.Y;
-                coordinatePixel2Casella(ref tempX, ref tempY);
 
-                int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
-             
-                if (tempID>=0 && tempID < _listaCaselle.Count && _listaCaselle[tempID].Esistente) // la casella esiste davvero e non sto smatriciando
+                if (coordinatePixel2Casella(ref tempX, ref tempY))
                 {
-                    _IdSelezione = tempID;
-                    id2xy(_IdSelezione.Value, out tempX, out tempY);
-                    _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY +Offset.Y;
-                }
-                else
-                    _IdSelezione = null;
+                    int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
+
+                    if (_listaCaselle[tempID].Esistente) // la casella esiste davvero
+                    {
+                        _IdSelezione = tempID;
+                        id2xy(_IdSelezione.Value, out tempX, out tempY);
+                        _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
+                        return;
+                    }
                 }
 
+                _IdSelezione = null;
+
+                }
+        }
+
+        protected override void ClickDestro(object sender, MouseEvntArgs args)
+        {
+            if (Compreso(args.Posizione.X, args.Posizione.Y))
+            {
+                int tempX = args.Posizione.X;
+                int tempY = args.Posizione.Y;
+
+                if (coordinatePixel2Casella(ref tempX, ref tempY))
+                {
+                    int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
+
+                    if (_listaCaselle[tempID].Esistente) // la casella esiste davvero
+                    {
+                        _idSelezioneDestro = tempID;
+                        return;
+                    }
+                }
+
+                _idSelezioneDestro = null;
+
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
@@ -190,7 +236,21 @@ namespace Quantum_Game
         }
         public void InizioPartita (object sender, EventArgs args)
         {
+            _partitaIniziata = true;
+        }
 
+        public void SpostaNaveSelezionata ()
+        {
+            Casella cas = TileSelezionato as Casella;
+            Casella destinazione = TileTarget as Casella;
+            if (NaveSelezionata != null && cas != null)
+            {
+                destinazione.Occupante = NaveSelezionata;
+                cas.Occupante = null;
+            }
+            else throw new Exception("La selezione non era valida! Movimento non effettuato!");
+
+            Deseleziona(); // dopo aver effettuato il movimento, deseleziona automaticamente
         }
 
 

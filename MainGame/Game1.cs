@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System;
+
 
 
 namespace Quantum_Game
@@ -20,6 +22,7 @@ namespace Quantum_Game
         private Texture2D contornoCasella;
         private MouseInput mouseInput;
         private GameSystem gameSystem;
+        private FlussoDiGioco flussoGioco;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
 
@@ -38,12 +41,15 @@ namespace Quantum_Game
         {
             // Crea il gamesystem con 4 giocatori
             gameSystem = new GameSystem();
-            gameSystem.AggiungiGiocatori(4);
+            gameSystem.AggiungiGiocatori(2);
 
             //Crea la mappa
             MapGenerator gen = new MapGenerator(9, 9);
             tabellone = new Tabellone
                 (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
+
+
+            flussoGioco = new FlussoDiGioco(gameSystem, mouseInput, tabellone);
 
             /*  
                 ASSOCIAZIONE DEGLI EVENTI 
@@ -54,17 +60,19 @@ namespace Quantum_Game
                 dispone del metodo AssociaEvento
             */
             tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkDx);
 
             //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
             //avviene una volta per partita e lo associamo manualmente a tutti gli oggetti
             //che lo utilizzeranno
             gameSystem.InizioPartita += tabellone.InizioPartita;
+            gameSystem.InizioPartita += this.InizioPartita;
 
             //TODO: usare i generics per fare un solo metodo AssociaEvento<TipoEvento> (object oggetto, TipoEvento tipo)
 
 
             // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
-            gameSystem.FasePartita = FasiDiGioco.SetupPartita;
+            gameSystem.IniziaSetupPartita();
             // DA TOGLIERE
 
             base.Initialize();
@@ -92,15 +100,28 @@ namespace Quantum_Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit(); //questa ci stava per default, è per chiudere la finestra
 
+            
             if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
             {
+                /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
+                ***************************************/
+                                
+                if (Giocatore.AzioniDisponibili <= 0)   // controlla se è finito il turno
+                {
+                    gameSystem.NextTurn();
+                    Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
+                }
+
+                flussoGioco.Update();
 
             }
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
             {
+                // qui stiamo piazzando le pedine per il setup iniziale
                 Test();
             }
+
 
             mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
                                  // l'oggetto mouseInput
@@ -112,12 +133,14 @@ namespace Quantum_Game
         private void Test()
         {
             Casella tempCas = tabellone.TileSelezionato as Casella; // prova a castare il tile selezionato come casella
-
-            if (tempCas != null && tempCas.Occupante == null) // se ho una casella valida e non occupata da una nave...
+            Nave naveTemp = gameSystem.GiocatoreDiTurno.Flotta.Find(x => x.InGioco == false);
+            if (naveTemp != null)
             {
-                gameSystem.GiocatoreDiTurno.PiazzaNuovaNave(tempCas);
-                if (gameSystem.GiocatoreDiTurno.Flotta.Count == 3) gameSystem.NextTurn();
+                if (tempCas != null && tempCas.Occupante == null)
+                    naveTemp.Piazza(tempCas);
             }
+            else
+                gameSystem.NextTurn();
         }
    
         protected override void Draw(GameTime gameTime)
@@ -145,7 +168,13 @@ namespace Quantum_Game
                 Ridimensionamento(this, args);
         }
 
+        /*  Qua cominciano altre cose nostre */
 
+        private void InizioPartita(object sender, EventArgs args)
+        {
+            Debug.WriteLine("Partita iniziata!!");
+            Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
+        }
 
     }
 }

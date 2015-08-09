@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace Quantum_Game {
 
@@ -13,40 +14,50 @@ public class Giocatore {
 		
 		private static byte _count;
 		private static byte _azioni;
+        public static byte AzioniDisponibili { get { return _azioni; } }
 		private int _ricerca, _dominio, _punti;
 		private e_color _colore;
 		
 		public e_color Colore {
 			get {return this._colore;}
 		}
-		
-		public List<Nave> Flotta;
+
+        private List<Nave> _flotta;
+        public int NumeroNavi { get { return _flotta.Count; } }
+
+        public List<Nave> Flotta { get { return _flotta; } }
 		
 		//costruttore del giocatore
-		public Giocatore (){
+		public Giocatore () {
 			this._colore = (e_color) (++_count); //assegna il colore
 			_ricerca = _dominio = _punti = 0;
-			Flotta = new List<Nave> ();
+			_flotta = new List<Nave> ();
         }
 		
 		public void GlobalInit () {
-		// inizializzazione prima che inizi il gioco 
-
+            // inizializzazione prima che inizi il gioco 
+            InizializzaFlotta();
 
 		}
 
         /// <summary>
-        /// metodo generale per mettere in gioco e riconfigurare una NUOVA nave
+        /// metodo generale per mettere in gioco e riconfigurare nuove navi
         /// </summary>
-        public void PiazzaNuovaNave(Casella cas) {
-			Nave n = new Nave(this);
-				Flotta.Add (n);
-				Flotta[Flotta.Count-1].Gioca();
-				Flotta[Flotta.Count-1].Riconfig();
+        public void NuoveNavi(int numeroNuoveNavi = 1)
+        {
+            for (int i = 0; i < numeroNuoveNavi; i++)
+            {
+                Nave n = new Nave(this);
+                _flotta.Add(n);
+                n.Riconfig();
+             }
+		}
 
-                cas.Occupante = Flotta[Flotta.Count - 1];
-				
-			}
+        private void InizializzaFlotta (int NUMERO_NAVI_INIZIALI = 3)
+        {
+            if (_flotta.Count > 0) return;
+            NuoveNavi(NUMERO_NAVI_INIZIALI);
+        }
 
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace Quantum_Game
         public static Dictionary<e_color, Color> QuantumColor;
 
         public int NumeroTurno { get { return _contaTurni; } }
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } } //TOGLIERE IL SET E INTEGRARLO COL GIOCO
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } } //TOGLIERE IL SET E INTEGRARLO COL GIOCO
 
         public event EventHandler InizioPartita;
 
@@ -60,13 +60,21 @@ namespace Quantum_Game
                 return _giocatori[(_contaTurni % _giocatori.Count)]; }
             }
 
+        public void IniziaSetupPartita()
+        {
+            _faseDiGioco = FasiDiGioco.SetupPartita;
+            foreach (Giocatore g in _giocatori)
+                g.GlobalInit();
+
+        }
+
         public void NextTurn()
         {
             if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return; //se la partita non è in corso esce
 
             if (_faseDiGioco == FasiDiGioco.SetupPartita)
             {
-                if (++_contaTurni >= _numGiocatori)
+                if (++_contaTurni == _numGiocatori)
                 {
                     _faseDiGioco = FasiDiGioco.PartitaInCorso;
                     InizioPartita(this, new EventArgs());

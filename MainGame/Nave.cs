@@ -32,7 +32,7 @@ namespace Quantum_Game
 	/// </summary>
 	public class Nave
 	{
-        private bool _ingioco, _mossa, _special;
+        private bool _mossa, _special, _ingioco;
 		private e_nave _tipo;
 		private Giocatore _proprietario;
 		
@@ -80,28 +80,40 @@ namespace Quantum_Game
 			this._tipo = (e_nave) risultato;
 		}
 		
-		public void Movim (Casella CasellaTarget) {
+		public void Muovi (Casella CasellaPartenza, Casella CasellaTarget) {
+            CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
 			this._mossa = true;
             Giocatore.Azione();
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Metodo per piazzare per la prima volta una nave
+        /// E' l'unico modo con cui una nave può essere dichiarata IN GIOCO
+        /// </summary>
+        /// <param name="CasellaTarget"></param>
+        public void Piazza(Casella CasellaTarget)
+        {
+            CasellaTarget.Occupante = this;
+            _ingioco = true;
+        }
+
+        /// <summary>
         /// Metodo per attaccare una nave target
         /// </summary>
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
-		public bool Attacco (Nave target){
+        public bool Attacco (Nave target){
 			this._mossa= true;
-            Giocatore.Azione();
 			if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1)) {
-				target.Distr();
+				target.Distruggi();
 				return true;
 			}
+            Giocatore.Azione();
 			return false;
 		}
 
-        public void Special()
+        public void UsaSpecial()
         {
             //usare la special
             this._special = true;
@@ -112,23 +124,18 @@ namespace Quantum_Game
         /// <summary>
         /// La nave viene distrutta
         /// </summary>
-		public void Distr () {  this._tipo = e_nave.Rottame;}
+		public void Distruggi () {  this._tipo = e_nave.Rottame;}
 
         /// <summary>
         /// Restituisce True se la nave ha già mosso in questo turno
         /// </summary>
 		public bool Mossa { get {return this._mossa;}  }
-        /// <summary>
-        /// Restituisce True se la nave è in gioco al momento
-        /// </summary>
-		public bool InGioco {   get {return this._ingioco;} }
-		
-        /// <summary>
-        /// Mette in gioco la nave
-        /// </summary>
-		public void Gioca (){
-			this._ingioco = true;
-		}
+        public bool SpecialUsata { get { return _special; } }
+    
+        public bool InGioco { get { return _ingioco; } }
+        public void Gioca () { _ingioco = true; }
+
+        public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
 		/// <summary>
         /// restituisce il colore del giocatore che possiede la nave
         /// </summary>

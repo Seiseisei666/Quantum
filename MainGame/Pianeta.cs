@@ -19,6 +19,11 @@ namespace Quantum_Game
         {
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
+        public bool Colonizzabile (Giocatore player)
+        {
+            e_color colore = player.Colore;
+            return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
+        }
         public bool Colonizza(Giocatore plyr)
         {
             if (plyr.PuòAgire(true) && this.Colonizzabile(plyr.Colore))

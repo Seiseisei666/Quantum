@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Casella.cs" />
+    <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="MapGenerator.cs" />
