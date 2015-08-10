@@ -12,7 +12,12 @@ namespace Quantum_Game
         SetupPartita,
         PartitaInCorso
     }
-
+    /// <summary>
+    /// Con questa classe gestiamo le fasi di gioco, i turni e i giocatori della partita
+    /// Importanti la proprietà GiocatoreDiTurno (l'unico riferimento pubblico ai giocatori)
+    /// e quella FasePartita.
+    /// Invia un evento InizioPartita per informare tutto il programma che si comincia a giocare
+    /// </summary>
     public class GameSystem
     {
         private static int _contaTurni;
@@ -20,10 +25,15 @@ namespace Quantum_Game
         private static FasiDiGioco _faseDiGioco;
         private int _numGiocatori;
 
+        /// <summary>
+        /// fornisce un riferimento al giocatore di turno
+        /// </summary>
+        public Giocatore GiocatoreDiTurno  { get { return _giocatori[(_contaTurni % _giocatori.Count)]; } }
+
         public static Dictionary<e_color, Color> QuantumColor;
 
         public int NumeroTurno { get { return _contaTurni; } }
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } } //TOGLIERE IL SET E INTEGRARLO COL GIOCO
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } } 
 
         public event EventHandler InizioPartita;
 
@@ -52,13 +62,7 @@ namespace Quantum_Game
             _numGiocatori = numeroGiocatori;
         }
 
-        /// <summary>
-        /// fornisce un riferimento al giocatore di turno
-        /// </summary>
-        public Giocatore GiocatoreDiTurno { get
-            {
-                return _giocatori[(_contaTurni % _giocatori.Count)]; }
-            }
+
 
         public void IniziaSetupPartita()
         {

@@ -8,25 +8,25 @@ namespace Quantum_Game {
 
 
 public class Giocatore {
-        
+        // costanti eterne immutabili
 		const byte NUM_AZIONI = 3;
 		const byte PUNTI_x_VINCERE = 10;
 		
+        // contatori per il numero dei giocatori e le azioni disponibili per turno
 		private static byte _count;
 		private static byte _azioni;
         public static byte AzioniDisponibili { get { return _azioni; } }
-		private int _ricerca, _dominio, _punti;
-		private e_color _colore;
-		
-		public e_color Colore {
-			get {return this._colore;}
-		}
 
+        // variabili vere del giocatore
+		private int _ricerca, _dominio, _punti;
         private List<Nave> _flotta;
         public int NumeroNavi { get { return _flotta.Count; } }
 
-        public List<Nave> Flotta { get { return _flotta; } }
-		
+        // colore giocatore
+        private e_color _colore;
+		public e_color Colore { get {return this._colore;} }
+        public Color SpriteColor { get { return GameSystem.QuantumColor[_colore]; } }
+
 		//costruttore del giocatore
 		public Giocatore () {
 			this._colore = (e_color) (++_count); //assegna il colore
@@ -52,6 +52,11 @@ public class Giocatore {
                 n.Riconfig();
              }
 		}
+        /// <summary>
+        /// restituisce una ad una le navi che sono state rollate ma aspettano di essere messe in gioco
+        /// se non ce ne sono restituisce NULL
+        /// </summary>
+        public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } }
 
         private void InizializzaFlotta (int NUMERO_NAVI_INIZIALI = 3)
         {
@@ -59,24 +64,25 @@ public class Giocatore {
             NuoveNavi(NUMERO_NAVI_INIZIALI);
         }
 
-
         /// <summary>
         /// inizializzazione, da chiamare prima di ogni turno
         /// </summary>
         public void Init () {
 			
-			foreach (var n in Flotta) {n.init();}
+			foreach (var n in _flotta) {n.init();}
 			_azioni = NUM_AZIONI;
-			
 		}
 
         public void Cleanup()
         {
+            if (_dominio >= 5)
+            {
+                _dominio -= 5; //reset dominio
+                // Piazzare la mentina
+            }
             if (_punti >= PUNTI_x_VINCERE)
             {
-
                 //Fine Gioco
-
             }
         }
 
@@ -84,7 +90,7 @@ public class Giocatore {
         /// Restituisce True se il giocatore ha abbastanza punti azione
         /// </summary>
         /// <param name="colonizzazione">Se l'azione è una colonizzazione passare questo parametro True</param>
-        public bool PuòAgire(bool colonizzazione = false)
+        static public bool PuòAgire(bool colonizzazione = false)
         {
             if (colonizzazione) return _azioni >= 2;
             return _azioni > 0;
@@ -105,13 +111,7 @@ public class Giocatore {
             }
         }
 
-        public Color SpriteColor
-        {
-            get
-            {
-                return GameSystem.QuantumColor[_colore];
-            }
-        }
+        
 
 
     }

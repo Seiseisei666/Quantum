@@ -31,7 +31,6 @@ namespace Quantum_Game
                 else return null;
             }
         }
-
         private Nave _naveSel { get { return OggettoSelezionato as Nave; } }
         private Pianeta _pianetaSel { get { return OggettoSelezionato as Pianeta; } }
         private Casella _casellaSel { get { return tabellone.TileSelezionato as Casella; } }
@@ -50,9 +49,12 @@ namespace Quantum_Game
         {
             giocatoreDiTurno = gameSystem.GiocatoreDiTurno;
             gestioneClickSinistro();
-            gestioneClickDestro();
+            if (_leggiClickDx)
+                gestioneClickDestro();
         }
 
+        // Qui vengono fatte le operazioni relative al click sinistro
+        // (per ora solo movimento/attacco)
         private void gestioneClickSinistro()
         {
             _leggiClickDx =                                 // condizioni per interessarsi al click DX:
@@ -63,12 +65,9 @@ namespace Quantum_Game
 
         }
 
-
+        // Se serve, qui gestiamo il click destro (movimento/attacco)
         private void gestioneClickDestro()
         {
-
-            if (_leggiClickDx)
-            {
                 Casella target = tabellone.TileTarget as Casella;
                 if (target != null)
                 {
@@ -97,4 +96,4 @@ namespace Quantum_Game
             
         }
     }
-}
+

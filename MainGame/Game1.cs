@@ -106,7 +106,7 @@ namespace Quantum_Game
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
                                 
-                if (Giocatore.AzioniDisponibili <= 0)   // controlla se è finito il turno
+                if (!Giocatore.PuòAgire())   // controlla se è finito il turno
                 {
                     gameSystem.NextTurn();
                     Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
@@ -133,7 +133,7 @@ namespace Quantum_Game
         private void Test()
         {
             Casella tempCas = tabellone.TileSelezionato as Casella; // prova a castare il tile selezionato come casella
-            Nave naveTemp = gameSystem.GiocatoreDiTurno.Flotta.Find(x => x.InGioco == false);
+            Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
             if (naveTemp != null)
             {
                 if (tempCas != null && tempCas.Occupante == null)

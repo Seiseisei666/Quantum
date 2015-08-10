@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
-    public class Riquadro
+    public abstract class Riquadro
     {
       
         private Rectangle _superficie; // rettangolo che rappresenta il Riquadro
@@ -82,8 +82,7 @@ namespace Quantum_Game
         /// <param name="Associa">True = associa, false = rimuovi associazione; predefinito true</param>
         public virtual void AssociaEvento(MouseInput mouseInput, TipoEventoMouse tipo, bool associa = true)
         {
-            //TODO: controllare che l'associazione esista prima di toglierla!!!
-            //altrimenti generiamo un errore!
+            //TODO: capire se sta roba serve davvero
 
             switch (tipo)
             {

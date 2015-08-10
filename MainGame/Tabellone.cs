@@ -35,7 +35,7 @@ namespace Quantum_Game
         private int _latoCasella;
 
         //utility per disegnare
-        private Rectangle source, target;
+        private Rectangle _source, _target;
 
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int? _IdSelezione;
@@ -53,17 +53,7 @@ namespace Quantum_Game
         //stessa cosa col click destro
         private Tile _tileTarget { get { return (_idSelezioneDestro == null) ? null : _listaCaselle[_idSelezioneDestro.Value]; } }
         public Tile TileTarget { get { return _tileTarget; } }
-        //restituisce la nave selezionata
-        public Nave NaveSelezionata
-        {
-            get
-            {
-                Casella cas = _tileSelezionato as Casella;
-                if (cas != null)
-                    return cas.Occupante;
-                else return null;
-            }
-        }
+
 
         //inutili?
         private bool _partitaIniziata; //inutili
@@ -86,8 +76,8 @@ namespace Quantum_Game
             float h = Altezza / (float)_righe; float w = Larghezza / (float)_colonne;
             _latoCasella =  (w <= h) ? (int)w : (int)h;
             //rettangoli per lo spritebatch:
-            target = new Rectangle(0, 0, _latoCasella, _latoCasella);
-            source = new Rectangle(0, 0, 100, 100);  // 100 è il lato del nostro tileset di prova!! 
+            _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
+            _source = new Rectangle(0, 0, 100, 100);  // 100 è il lato del nostro tileset di prova!! 
                                                      //va sostituito con quello definitivo
 
             _IdSelezione = null;
@@ -97,18 +87,34 @@ namespace Quantum_Game
             Game1.Ridimensionamento += GestisciRidimensionamento;
         }
        
-      
         /// <summary>
-        /// funzioncina per convertire fra indice dell'array e posizione x,y della casella nel tabellone
-        /// (angolo sup sin)
+        /// restituisce il pianeta appartenente al settore della casella argomento.
         /// </summary>
-        private void id2xy (int id, out int x, out int y)
+        public Pianeta PianetaVicino (Casella casella)
         {
-            x = ((id % _colonne) * _latoCasella);
-            y = (id / _colonne) * _latoCasella;
-            
+            int Id, n, m;
+            Id = _listaCaselle.FindIndex(c => c.Equals(casella));
+            id2nm(Id, out n, out m);
+            n /= 3; m /= 3;
+            Pianeta tempPlan;
+            tempPlan = _listaCaselle[nm2id(n, m)] as Pianeta;
+            return tempPlan;
         }
-
+        
+        //Funzioncine private di conversione fra le coordinate id ad una dimensione
+        // e le coordinate x,y (pixel) oppure n, m
+        private void id2xy (int id, out int x, out int y)
+        {   x = ((id % _colonne) * _latoCasella);
+            y = (id / _colonne) * _latoCasella;
+        }
+        private void id2nm (int id, out int n, out int m)
+        {
+            n = id % _colonne; m = id / _colonne;
+        }
+        private int nm2id (int n, int m)
+        {
+            return n + m * _colonne;
+        }
         /// <summary>
         /// Converte una coordinata in pixel nell'Id della casella corrispondente
         /// Restituisce false se il click è fuori dai bordi del tabellone
@@ -117,7 +123,6 @@ namespace Quantum_Game
         {
             float tempX = x; float tempY = y;
             tempX -= Offset.X; tempY -= Offset.Y;
-
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
             if (x < 0 || x > _colonne - 1 || y < 0 || y > _righe - 1)
@@ -133,7 +138,7 @@ namespace Quantum_Game
         /// <param name="args">status del mouse (eg posizione)</param>
         protected override void ClickSinistro (object sender, MouseEvntArgs args)
         {
-            _idSelezioneDestro = null;
+            _idSelezioneDestro = null;      // annulliamo la selezione destra per prima cosa
             if (Compreso(args.Posizione.X, args.Posizione.Y)) {
                 int tempX = args.Posizione.X;
                 int tempY = args.Posizione.Y;
@@ -150,12 +155,10 @@ namespace Quantum_Game
                         return;
                     }
                 }
-
-                _IdSelezione = null;
+                _IdSelezione = null; // click fuori dal tabellone = annulliamo la selezione
 
                 }
         }
-
         protected override void ClickDestro(object sender, MouseEvntArgs args)
         {
             if (Compreso(args.Posizione.X, args.Posizione.Y))
@@ -173,9 +176,7 @@ namespace Quantum_Game
                         return;
                     }
                 }
-
                 _idSelezioneDestro = null;
-
             }
         }
 
@@ -190,36 +191,36 @@ namespace Quantum_Game
 
                     //calcolo delle coordinate su cui disegnare:
                     id2xy(Idx, out x, out y);
-                    target.X = x + Offset.X;
-                    target.Y = y + Offset.Y;
+                    _target.X = x + Offset.X;
+                    _target.Y = y + Offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     switch (_listaCaselle[Idx].Tipo)
                     {
 
                         case QuantumTile.casella:
-                            source.X = 0;
-                            source.Y = 0;
+                            _source.X = 0;
+                            _source.Y = 0;
                             break;
                         case QuantumTile.orbita:
-                            source.X = 100;
-                            source.Y = 0;
+                            _source.X = 100;
+                            _source.Y = 0;
                             break;
                         default:
-                            source.X = 200;
-                            source.Y = 0;
+                            _source.X = 200;
+                            _source.Y = 0;
                             break;
                     }
 
                     // l'istruzione draw vera e propria
-                    spriteBatch.Draw(tileset, target, source, Color.White);
+                    spriteBatch.Draw(tileset, _target, _source, Color.White);
                     if (_listaCaselle[Idx].EunaCasella)
                     {
                         Casella tempCas = _listaCaselle[Idx] as Casella;
                         if (tempCas.Occupante != null)
                         {
-                            source.X = 300;
-                            spriteBatch.Draw(tileset, target, source, tempCas.Occupante.SpriteColor);
+                            _source.X = 300;
+                            spriteBatch.Draw(tileset, _target, _source, tempCas.Occupante.SpriteColor);
                         }
                     }
                 }
@@ -230,30 +231,15 @@ namespace Quantum_Game
         {
             if (_IdSelezione != null && _partitaIniziata)
             {
-                target.X = _SelezPixCoord.X; target.Y = _SelezPixCoord.Y; 
-                spriteBatch.Draw (texture,target, Color.IndianRed);
+                _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y; 
+                spriteBatch.Draw (texture, _target, Color.IndianRed);
             }
         }
+
         public void InizioPartita (object sender, EventArgs args)
         {
             _partitaIniziata = true;
         }
-
-        public void SpostaNaveSelezionata ()
-        {
-            Casella cas = TileSelezionato as Casella;
-            Casella destinazione = TileTarget as Casella;
-            if (NaveSelezionata != null && cas != null)
-            {
-                destinazione.Occupante = NaveSelezionata;
-                cas.Occupante = null;
-            }
-            else throw new Exception("La selezione non era valida! Movimento non effettuato!");
-
-            Deseleziona(); // dopo aver effettuato il movimento, deseleziona automaticamente
-        }
-
-
-        }
     }
+ }
 
