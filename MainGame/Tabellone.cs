@@ -90,14 +90,13 @@ namespace Quantum_Game
         /// <summary>
         /// restituisce il pianeta appartenente al settore della casella argomento.
         /// </summary>
-        public Pianeta PianetaVicino (Casella casella)
+        public Pianeta PianetaPiùVicino (Casella casella)
         {
             int Id, n, m;
             Id = _listaCaselle.FindIndex(c => c.Equals(casella));
             id2nm(Id, out n, out m);
-            n /= 3; m /= 3;
-            Pianeta tempPlan;
-            tempPlan = _listaCaselle[nm2id(n, m)] as Pianeta;
+            n = (n / 3) * 3;  m /= 3 * 3;
+            Pianeta tempPlan = _listaCaselle[nm2id(n+1, m+1)] as Pianeta;
             return tempPlan;
         }
         
