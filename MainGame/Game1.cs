@@ -23,6 +23,7 @@ namespace Quantum_Game
         private MouseInput mouseInput;
         private GameSystem gameSystem;
         private FlussoDiGioco flussoGioco;
+        private PathFinder pathFinder;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
 
@@ -45,11 +46,15 @@ namespace Quantum_Game
 
             //Crea la mappa
             MapGenerator gen = new MapGenerator(9, 9);
+            List<Tile> mappa = gen.GeneraMappa();
             tabellone = new Tabellone
-                (gen.GeneraMappa(), gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
+                (mappa, gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
 
-
-            flussoGioco = new FlussoDiGioco(gameSystem, mouseInput, tabellone);
+            pathFinder = new PathFinder
+                (mappa, gen.Righe, gen.Colonne);
+            
+            flussoGioco = new FlussoDiGioco
+                (gameSystem, mouseInput, tabellone);
 
             /*  
                 ASSOCIAZIONE DEGLI EVENTI 
@@ -114,6 +119,13 @@ namespace Quantum_Game
 
                 flussoGioco.Update();
 
+                Nave nave = flussoGioco.OggettoSelezionato as Nave;
+                if (nave != null && nave.Colore == gameSystem.GiocatoreDiTurno.Colore)
+                    pathFinder.Start(tabellone.TileSelezionato, nave.Pwr);
+                else
+                    pathFinder.Clear();
+
+
             }
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
@@ -152,6 +164,7 @@ namespace Quantum_Game
 
             tabellone.Draw(spriteBatch, textureCaselle);
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
+            pathFinder.Draw(4, tabellone, spriteBatch, contornoCasella);
 
             spriteBatch.End();
             // finiscono qui

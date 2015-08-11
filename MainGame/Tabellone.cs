@@ -33,6 +33,7 @@ namespace Quantum_Game
         private List<Tile> _listaCaselle;
         private int _righe, _colonne;
         private int _latoCasella;
+        public int LarghezzaTilePx { get { return _latoCasella; } }
 
         //utility per disegnare
         private Rectangle _source, _target;
@@ -40,6 +41,7 @@ namespace Quantum_Game
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int? _IdSelezione;
         private int? _idSelezioneDestro;
+        private int _idMouseOver;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
         public void Deseleziona(bool sinistro = true) //metodo per annullare la selezione
         {
@@ -129,7 +131,28 @@ namespace Quantum_Game
             return true;
         }
 
-        
+        protected override void MouseOver(object sender, MouseEvntArgs args)
+        {
+            if (Compreso(args.Posizione.X, args.Posizione.Y))
+            {
+                int tempX = args.Posizione.X;
+                int tempY = args.Posizione.Y;
+
+                if (coordinatePixel2Casella(ref tempX, ref tempY))
+                {
+                    _idMouseOver = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
+
+                    if (_listaCaselle[_idMouseOver].Esistente) // la casella esiste davvero
+                    {
+                        id2xy(_idMouseOver, out tempX, out tempY);
+                        _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
+                        return;
+                    }
+                }
+                _idMouseOver = -1;
+
+            }
+        }
         /// <summary>
         /// Gestisce il click sinistro, selezionando la casella corrispondente
         /// </summary>
