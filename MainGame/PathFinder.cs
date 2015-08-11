@@ -30,12 +30,18 @@ namespace Quantum_Game
 
         public int[] PercorsoXCasella (Tile target)
         {
-            int id = _listaCaselle.FindIndex(x => x.Equals(target));
-            return _matrice[id];
+            if (target != null)
+            {
+                int id = _listaCaselle.FindIndex(x => x.Equals(target));
+                return _matrice[id];
+            }
+            return new int[0];
+                
         }
         public int[] PercorsoXCasella (int targetId)
         {
-            return _matrice[targetId];
+            if (targetId > 0) return _matrice[targetId];
+            return new int [0];
         }
 
         public PathFinder(List<Tile> ListaCaselle, int righe, int colonne)
@@ -46,7 +52,7 @@ namespace Quantum_Game
             _partito = false;
         }
 
-        public void Start(Tile Partenza, int naveSpd, int DistanzaMax = 10)
+        public void Start(Tile Partenza, int naveSpd, int DistanzaMax = 12)
         {
             if (_partito) return;
             if (Partenza != null)
@@ -62,12 +68,7 @@ namespace Quantum_Game
 
             int tile;
             tile = _listaCaselle.FindIndex(x => x.Equals(Partenza));
-            System.Diagnostics.Debug.WriteLine(tile);
-
             crawl(tile, 0, new int [0], Direzioni.nessuna);
-
-            
-            
         }
 
 
@@ -125,18 +126,13 @@ namespace Quantum_Game
         private bool step (ref int pos, Direzioni dir)
         {
             if (dir == Direzioni.Sopra)
-                pos -= _colonne;
+                return (pos -= _colonne) >= 0;
             else if (dir == Direzioni.Sotto)
-                pos += _colonne;
+                return (pos += _colonne) < _numCaselle;
             else if (dir == Direzioni.Destra)
-                pos++;
+                return ((++pos % _colonne) != 0) && pos <_numCaselle;
             else if (dir == Direzioni.Sinistra)
-                pos--;
-            else return false;
-
-            if (pos >= 0 && pos < _numCaselle)
-                return true;
-
+                return ((--pos % _colonne) != (_colonne - 1)) && pos >= 0;
             return false;
         }
 
@@ -158,7 +154,7 @@ namespace Quantum_Game
             x = id % _colonne;
             y = id / _colonne;
         }
-        public void Draw (int IDtile, Tabellone tabellone, SpriteBatch spriteBatch, Texture2D texture)
+        public void Draw (Tabellone tabellone, SpriteBatch spriteBatch, Texture2D texture)
         {
             if (_partito == false)
                 return;
@@ -166,13 +162,14 @@ namespace Quantum_Game
             int x, y, lungh = 0;
             Color colore;
 
-            foreach (int i in PercorsoXCasella(IDtile))
+            foreach (int i in PercorsoXCasella(tabellone.IdMouseOver))
             {
                 id2nm(i, out x, out y);
                 x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
                 x += tabellone.Offset.X; y += tabellone.Offset.Y;
-                colore = lungh <= _naveSpd ? Color.LawnGreen : Color.IndianRed;
+                colore = lungh < _naveSpd ? Color.LawnGreen : Color.IndianRed; // verde se in range, sennò rosso
                 spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore);
+                lungh++;
             }
         }
     }

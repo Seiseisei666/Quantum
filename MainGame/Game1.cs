@@ -64,6 +64,7 @@ namespace Quantum_Game
                 Per gestire dinamicamente queste situazioni ogni riquadro dell'interfaccia grafica 
                 dispone del metodo AssociaEvento
             */
+            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.Over);
             tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
             tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkDx);
 
@@ -164,7 +165,7 @@ namespace Quantum_Game
 
             tabellone.Draw(spriteBatch, textureCaselle);
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
-            pathFinder.Draw(4, tabellone, spriteBatch, contornoCasella);
+            pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
 
             spriteBatch.End();
             // finiscono qui

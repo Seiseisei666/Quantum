@@ -39,21 +39,23 @@ namespace Quantum_Game
         private Rectangle _source, _target;
 
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
-        private int? _IdSelezione;
-        private int? _idSelezioneDestro;
+        private int _IdSelezione;
+        private int _idSelezioneDestro;
         private int _idMouseOver;
+        public int IdMouseOver { get { return _idMouseOver; } }
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
-        public void Deseleziona(bool sinistro = true) //metodo per annullare la selezione
+        [Obsolete]
+        public void Deseleziona(bool sinistro = true) //metodo per annullare la selezione OBSOLETO
         {
             if (sinistro)
-                _IdSelezione = null;
-            else _idSelezioneDestro = null;
+                _IdSelezione = -1;
+            else _idSelezioneDestro = -1;
         } //
         // restituisce il Tile su cui si è cliccato col sinistro
-        private Tile _tileSelezionato { get { return (_IdSelezione == null) ? null : _listaCaselle[_IdSelezione.Value]; } }
+        private Tile _tileSelezionato { get { return (_IdSelezione < 0) ? null : _listaCaselle[_IdSelezione]; } }
         public Tile TileSelezionato { get { return _tileSelezionato; }   }
         //stessa cosa col click destro
-        private Tile _tileTarget { get { return (_idSelezioneDestro == null) ? null : _listaCaselle[_idSelezioneDestro.Value]; } }
+        private Tile _tileTarget { get { return (_idSelezioneDestro < 0) ? null : _listaCaselle[_idSelezioneDestro]; } }
         public Tile TileTarget { get { return _tileTarget; } }
 
 
@@ -82,8 +84,9 @@ namespace Quantum_Game
             _source = new Rectangle(0, 0, 100, 100);  // 100 è il lato del nostro tileset di prova!! 
                                                      //va sostituito con quello definitivo
 
-            _IdSelezione = null;
-            _idSelezioneDestro = null;
+            _IdSelezione = -1;
+            _idSelezioneDestro = -1;
+            _idMouseOver = -1;
             _partitaIniziata = false;
 
             Game1.Ridimensionamento += GestisciRidimensionamento;
@@ -138,21 +141,18 @@ namespace Quantum_Game
                 int tempX = args.Posizione.X;
                 int tempY = args.Posizione.Y;
 
-                if (coordinatePixel2Casella(ref tempX, ref tempY))
+                if (coordinatePixel2Casella(ref tempX, ref tempY) &&
+                    _listaCaselle[_idMouseOver = (tempX + tempY*_colonne)].Esistente)
                 {
-                    _idMouseOver = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
-
-                    if (_listaCaselle[_idMouseOver].Esistente) // la casella esiste davvero
-                    {
-                        id2xy(_idMouseOver, out tempX, out tempY);
-                        _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
-                        return;
-                    }
+                    id2xy(_idMouseOver, out tempX, out tempY);
+                    _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
+                    return;
                 }
-                _idMouseOver = -1;
+             }
+                _idMouseOver = -1; // mouse fuori dal tabellone o mouse su casella Vuoto
 
             }
-        }
+        
         /// <summary>
         /// Gestisce il click sinistro, selezionando la casella corrispondente
         /// </summary>
@@ -160,46 +160,19 @@ namespace Quantum_Game
         /// <param name="args">status del mouse (eg posizione)</param>
         protected override void ClickSinistro (object sender, MouseEvntArgs args)
         {
-            _idSelezioneDestro = null;      // annulliamo la selezione destra per prima cosa
-            if (Compreso(args.Posizione.X, args.Posizione.Y)) {
-                int tempX = args.Posizione.X;
-                int tempY = args.Posizione.Y;
-
-                if (coordinatePixel2Casella(ref tempX, ref tempY))
-                {
-                    int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
-
-                    if (_listaCaselle[tempID].Esistente) // la casella esiste davvero
-                    {
-                        _IdSelezione = tempID;
-                        id2xy(_IdSelezione.Value, out tempX, out tempY);
-                        _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
-                        return;
-                    }
-                }
-                _IdSelezione = null; // click fuori dal tabellone = annulliamo la selezione
-
-                }
+            _idSelezioneDestro = -1;      // annulliamo la selezione destra per prima cosa
+            if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
+                _IdSelezione = _idMouseOver;
+            else
+                _IdSelezione = -1;              // sennò annulliamo la selezione attuale
         }
+
         protected override void ClickDestro(object sender, MouseEvntArgs args)
         {
-            if (Compreso(args.Posizione.X, args.Posizione.Y))
-            {
-                int tempX = args.Posizione.X;
-                int tempY = args.Posizione.Y;
-
-                if (coordinatePixel2Casella(ref tempX, ref tempY))
-                {
-                    int tempID = tempX + tempY * _colonne;  // calcolo l'ID della casella selezionata
-
-                    if (_listaCaselle[tempID].Esistente) // la casella esiste davvero
-                    {
-                        _idSelezioneDestro = tempID;
-                        return;
-                    }
-                }
-                _idSelezioneDestro = null;
-            }
+            if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
+                _idSelezioneDestro = _idMouseOver;
+            else
+                _idSelezioneDestro = -1;              // sennò annulliamo la selezione attuale
         }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
@@ -251,7 +224,7 @@ namespace Quantum_Game
 
         public void DisegnaSelezione (SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (_IdSelezione != null && _partitaIniziata)
+            if (_idMouseOver > 0 && _partitaIniziata)
             {
                 _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y; 
                 spriteBatch.Draw (texture, _target, Color.IndianRed);
