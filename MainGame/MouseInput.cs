@@ -26,12 +26,12 @@ namespace Quantum_Game
         public void Update ()
         {
             newState = Mouse.GetState();
+
+            OnMouseOver();
             if (newState.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
                 OnClickSinistro();
             else if (newState.RightButton == ButtonState.Pressed && oldState.RightButton == ButtonState.Released)
                 OnClickDestro();
-
-            OnMouseOver();
 
             oldState = newState;
         }

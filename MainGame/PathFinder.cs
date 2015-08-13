@@ -22,12 +22,18 @@ namespace Quantum_Game
         private List<Tile> _listaCaselle;
         private int _righe, _colonne;
         private int _distanzaMax;
-        private int _naveSpd;
+        private int _naveSpd { get { return _nave.Pwr; } }
+        private Nave _nave;
         private Tile _posPartenza;
-        private int [][] _matrice;         // lunghezza tragitto per raggiungere casella N / lista tragitto
+        private int [][] _matrice; // per scrivere i percorsi per raggiungere le caselle
         private int _numCaselle { get { return _listaCaselle.Count; } }
         private bool _partito;
 
+        /// <summary>
+        /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile target
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public int[] PercorsoXCasella (Tile target)
         {
             if (target != null)
@@ -35,24 +41,28 @@ namespace Quantum_Game
                 int id = _listaCaselle.FindIndex(x => x.Equals(target));
                 return _matrice[id];
             }
-            return new int[0];
-                
+            else return new int[0]; 
         }
+        /// <summary>
+        /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId
+        /// </summary>
         public int[] PercorsoXCasella (int targetId)
         {
             if (targetId > 0) return _matrice[targetId];
-            return new int [0];
+            else return new int [0];
         }
 
         public PathFinder(List<Tile> ListaCaselle, int righe, int colonne)
         {
             _righe = righe; _colonne = colonne;
             _listaCaselle = ListaCaselle;
-            _matrice = new int[_numCaselle][];
             _partito = false;
+            _matrice = new int[_numCaselle][];
+            for (int i = 0; i < _numCaselle; i++)
+                _matrice[i] = new int[0];
         }
 
-        public void Start(Tile Partenza, int naveSpd, int DistanzaMax = 12)
+        public void Start(Tile Partenza, Nave nave, int DistanzaMax = 12)
         {
             if (_partito) return;
             if (Partenza != null)
@@ -60,21 +70,19 @@ namespace Quantum_Game
                 _distanzaMax = DistanzaMax;
                 _posPartenza = Partenza;
                 _partito = true;
-                _naveSpd = naveSpd;
-
-                for (int i = 0; i < _numCaselle; i++)
-                    _matrice[i] = new int[0];
+                _nave = nave;
+                int tile;
+                tile = _listaCaselle.FindIndex(x => x.Equals(Partenza));
+                crawl(tile, 0, new int[0], Direzioni.nessuna);
             }
-
-            int tile;
-            tile = _listaCaselle.FindIndex(x => x.Equals(Partenza));
-            crawl(tile, 0, new int [0], Direzioni.nessuna);
         }
 
 
         private void crawl (int IDtile, int count, int [] percorso, Direzioni DirezioneProvenienza)
         {
-            if ((!_listaCaselle[IDtile].Attraversabile && count != 0) ||
+            if (!_listaCaselle[IDtile].EunaCasella || 
+                (_listaCaselle[IDtile].PresenzaAlleata(_nave) &&
+                count != 0) ||
                 (_matrice[IDtile].Length > 0 && 
                 _matrice[IDtile].Length <= percorso.Length))
                 return;
@@ -87,6 +95,8 @@ namespace Quantum_Game
                 Array.Copy(percorso, _matrice[IDtile], count);               
             }
             count++;
+            if (!_listaCaselle[IDtile].Attraversabile && !_listaCaselle[IDtile].PresenzaAlleata(_nave))
+                return;
             if (count < _distanzaMax)
                 // Chiamate ricorsive
             {
@@ -146,6 +156,7 @@ namespace Quantum_Game
                // System.Diagnostics.Debug.WriteLine(PercorsoXCasella(i).Length);
                 Array.Resize (ref _matrice[i],0);
             }
+            _nave = null;
             _partito = false;
         }
 

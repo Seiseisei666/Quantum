@@ -45,6 +45,7 @@ namespace Quantum_Game
         public virtual bool Attraversabile { get { return false; } }
         public virtual bool EunPianeta { get { return false; } }
         public virtual bool EunaCasella { get { return false; } }
+        public virtual bool PresenzaAlleata (Nave nave) { return false; }
     }
     
     /// <summary>
@@ -58,5 +59,6 @@ namespace Quantum_Game
             this._tipo = QuantumTile.vuoto;
         }
     }
+
 }
 

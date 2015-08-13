@@ -30,7 +30,10 @@ namespace Quantum_Game
     public class Tabellone : Riquadro
     {
         // gli elementi costitutivi del tabellone
-        private List<Tile> _listaCaselle;
+        private static List<Tile> _listaCaselle;
+        public Tile Id2Tile (int ID) { return _listaCaselle[ID]; }
+        public int Tile2Id (Tile t) { return _listaCaselle.FindIndex(x => x.Equals(t)); }
+        public int NumeroCaselle { get { return _listaCaselle.Count; } }
         private int _righe, _colonne;
         private int _latoCasella;
         public int LarghezzaTilePx { get { return _latoCasella; } }

@@ -52,9 +52,9 @@ namespace Quantum_Game
 
             pathFinder = new PathFinder
                 (mappa, gen.Righe, gen.Colonne);
-            
+
             flussoGioco = new FlussoDiGioco
-                (gameSystem, mouseInput, tabellone);
+                (gameSystem, mouseInput, tabellone, pathFinder);
 
             /*  
                 ASSOCIAZIONE DEGLI EVENTI 
@@ -105,56 +105,17 @@ namespace Quantum_Game
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit(); //questa ci stava per default, è per chiudere la finestra
-
             
-            if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
-            {
-                /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
-                ***************************************/
-                                
-                if (!Giocatore.PuòAgire())   // controlla se è finito il turno
-                {
-                    gameSystem.NextTurn();
-                    Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
-                }
-
-                flussoGioco.Update();
-
-                Nave nave = flussoGioco.OggettoSelezionato as Nave;
-                if (nave != null && nave.Colore == gameSystem.GiocatoreDiTurno.Colore)
-                    pathFinder.Start(tabellone.TileSelezionato, nave.Pwr);
-                else
-                    pathFinder.Clear();
-
-
-            }
-
-            else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
-            {
-                // qui stiamo piazzando le pedine per il setup iniziale
-                Test();
-            }
-
-
             mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
                                  // l'oggetto mouseInput
+            flussoGioco.Update();
+
 
             base.Update(gameTime);
         }
-
-        // PROVA!!!!!!!!
-        private void Test()
-        {
-            Casella tempCas = tabellone.TileSelezionato as Casella; // prova a castare il tile selezionato come casella
-            Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
-            if (naveTemp != null)
-            {
-                if (tempCas != null && tempCas.Occupante == null)
-                    naveTemp.Piazza(tempCas);
-            }
-            else
-                gameSystem.NextTurn();
-        }
+        
+            
+        
    
         protected override void Draw(GameTime gameTime)
         {
@@ -190,5 +151,6 @@ namespace Quantum_Game
             Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
         }
 
+       
     }
 }

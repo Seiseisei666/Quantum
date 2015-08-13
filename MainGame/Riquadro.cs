@@ -25,7 +25,9 @@ namespace Quantum_Game
 
         private float _larghRel, _altRel;
 
-        protected Riquadro (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo ){
+        protected Riquadro 
+            (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
+        {
             float ofsX = MathHelper.Clamp(xRel, 0f, 1f);
             float ofsY = MathHelper.Clamp(yRel, 0f, 1f);
             _larghRel = MathHelper.Clamp(LarghRelativa, 0f, 1f);
@@ -34,9 +36,7 @@ namespace Quantum_Game
             float w = (LarghRelativa - xRel) * LarghSchermo;
             float h = (AltezzaRelativa- yRel) * AltezzaSchermo;
 
-
             _superficie = new Rectangle((int)(xRel * LarghSchermo), (int)(yRel * AltezzaSchermo), (int)w, (int)h);
-            Game1.Ridimensionamento += GestisciRidimensionamento;
         }
 
     
@@ -58,7 +58,7 @@ namespace Quantum_Game
         protected virtual void GestisciRidimensionamento (object sender, ResizeEvntArgs args)
         {
             _superficie.Height = (int)(_altRel * args.newScreenHeight);
-            _superficie.Width = (int)(_larghRel * args.newScreenHeight);
+            _superficie.Width = (int)(_larghRel * args.newScreenWidth);
         }
 
         protected virtual void ClickSinistro (object sender, MouseEvntArgs args)

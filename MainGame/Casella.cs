@@ -22,7 +22,7 @@ namespace Quantum_Game
         public override bool Attraversabile { get { return (this._occupante == null); } }
         public override bool Esistente { get { return true; } }
         public override bool EunaCasella { get { return true; } }
-
+        public override bool PresenzaAlleata (Nave nave) { return (_occupante != null && _occupante.Colore == nave.Colore); }
 
         //campi propri
         private Nave _occupante;
