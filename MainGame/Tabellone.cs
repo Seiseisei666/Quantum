@@ -224,7 +224,7 @@ namespace Quantum_Game
 
         public void DisegnaSelezione (SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (_idMouseOver > 0 && _partitaIniziata)
+            if (_idMouseOver >= 0 && _partitaIniziata)
             {
                 _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y; 
                 spriteBatch.Draw (texture, _target, Color.IndianRed);
