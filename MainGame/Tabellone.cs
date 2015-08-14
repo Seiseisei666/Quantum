@@ -178,7 +178,7 @@ namespace Quantum_Game
                 _idSelezioneDestro = -1;              // sennò annulliamo la selezione attuale
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
+        public override void Draw(SpriteBatch spriteBatch, Texture2D tileset)
 
         {
             int x, y;

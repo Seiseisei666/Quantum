@@ -38,9 +38,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Bottone.cs" />
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
+    <Compile Include="IBottone.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="MapGenerator.cs" />
     <Compile Include="MouseEvntArgs.cs" />

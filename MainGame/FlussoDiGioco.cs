@@ -71,7 +71,7 @@ namespace Quantum_Game
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
 
-                if (!Giocatore.PuòAgire())   // controlla se è finito il turno
+                if (!giocatoreDiTurno.PuòAgire())   // controlla se è finito il turno
                 {
                     gameSystem.NextTurn();
                     Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);

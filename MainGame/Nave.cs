@@ -84,7 +84,7 @@ namespace Quantum_Game
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
 			this._mossa = true;
-            Giocatore.Azione();
+            _proprietario.Azione();
 		}
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Quantum_Game
 				target.Distruggi();
 				return true;
 			}
-            Giocatore.Azione();
+            _proprietario.Azione();
 			return false;
 		}
 
