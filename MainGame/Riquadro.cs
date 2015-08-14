@@ -8,7 +8,6 @@ namespace Quantum_Game
 {
     public abstract class Riquadro
     {
-      
         private Rectangle _superficie; // rettangolo che rappresenta il Riquadro
         /// <summary>
     /// Offset (in pixel) del Riquadro
@@ -74,6 +73,7 @@ namespace Quantum_Game
         {
             // gestione click sinistro standard
         }
+        public abstract void Draw();
         /// <summary>
         /// Metodo per associare un evento del mouse ad un handler (metodo) a disposizione di questo oggetto
         /// (se il parametro associa è false l'associazione viene rimossa)

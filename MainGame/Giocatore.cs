@@ -13,9 +13,9 @@ public class Giocatore {
 		const byte PUNTI_x_VINCERE = 10;
 		
         // contatori per il numero dei giocatori e le azioni disponibili per turno
-		private static byte _count;
-		private static byte _azioni;
-        public static byte AzioniDisponibili { get { return _azioni; } }
+		private byte _count;
+		private byte _azioni;
+        public byte AzioniDisponibili { get { return _azioni; } }
 
         // variabili vere del giocatore
 		private int _ricerca, _dominio, _punti;
@@ -90,7 +90,7 @@ public class Giocatore {
         /// Restituisce True se il giocatore ha abbastanza punti azione
         /// </summary>
         /// <param name="colonizzazione">Se l'azione è una colonizzazione passare questo parametro True</param>
-        static public bool PuòAgire(bool colonizzazione = false)
+        public bool PuòAgire(bool colonizzazione = false)
         {
             if (colonizzazione) return _azioni >= 2;
             return _azioni > 0;
@@ -101,7 +101,7 @@ public class Giocatore {
         /// diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
         /// </summary>
         /// <param name="colonizzazione">Se l'azione da fare è una colonizzazione passare True come parametro</param>
-        public static void Azione (bool colonizzazione = false)
+        public void Azione (bool colonizzazione = false)
         {
             _azioni--;
             if (colonizzazione) _azioni--;

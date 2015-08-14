@@ -26,7 +26,7 @@ namespace Quantum_Game
         }
         public bool Colonizza(Giocatore plyr)
         {
-            if (Giocatore.PuòAgire(true) && this.Colonizzabile(plyr.Colore))
+            if (plyr.PuòAgire(true) && this.Colonizzabile(plyr.Colore))
             {
                 // Da togliere il check sulla condizione Colonizzabile? (lo fa il programma prima?)
                 for (int i = 0; i < _colonizzazioni.Length - 1; i++)
@@ -34,7 +34,7 @@ namespace Quantum_Game
                     if (_colonizzazioni[i] == 0)
                     {
                         _colonizzazioni[i] = plyr.Colore;
-                        Giocatore.Azione(true);                 // Toglie 2 azioni al giocatore
+                        plyr.Azione(true);                 // Toglie 2 azioni al giocatore
                         return true;
                     }
                 }
