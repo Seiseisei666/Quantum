@@ -13,21 +13,26 @@ namespace Quantum_Game
     /// <summary>
     /// Il gioco vero e proprio
     /// </summary>
-    public class Game1 : Game
+    public class Quantum : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private Tabellone tabellone;
+        private SpriteFont font;
+
+        
         private Texture2D textureCaselle;
         private Texture2D contornoCasella;
+
+        private Tabellone tabellone;
         private MouseInput mouseInput;
         private GameSystem gameSystem;
         private FlussoDiGioco flussoGioco;
         private PathFinder pathFinder;
+        private GUI Gui;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
 
-        public Game1()
+        public Quantum()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -52,10 +57,6 @@ namespace Quantum_Game
 
             pathFinder = new PathFinder
                 (mappa, gen.Righe, gen.Colonne);
-
-            flussoGioco = new FlussoDiGioco
-                (gameSystem, mouseInput, tabellone, pathFinder);
-
             /*  
                 ASSOCIAZIONE DEGLI EVENTI 
                 Gli eventi del mouse vengono letti o ignorati a seconda del momento del gioco
@@ -82,16 +83,30 @@ namespace Quantum_Game
             // DA TOGLIERE
 
             base.Initialize();
+            Gui = new GUI
+                (this, contornoCasella);
+            Gui.Font = font;
+            Gui.AddElement(new Bottone
+                (bottone.Passa,
+                0.7f, 0.7f, 0.9f, 0.9f, 800, 600))
+                ;
+            Gui.AddElement(tabellone);
+
+            flussoGioco = new FlussoDiGioco
+                (this);
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
+            font = Content.Load<SpriteFont>("Font\\Font");
 
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
             contornoCasella.SetData(new[] { (Color.White*0.5f) });
+
+
         } 
 
         protected override void UnloadContent()
@@ -109,6 +124,7 @@ namespace Quantum_Game
             mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
                                  // l'oggetto mouseInput
             flussoGioco.Update();
+            
 
 
             base.Update(gameTime);
@@ -127,6 +143,7 @@ namespace Quantum_Game
             tabellone.Draw(spriteBatch, textureCaselle);
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
             pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
+       //     Gui.Draw(spriteBatch);
 
             spriteBatch.End();
             // finiscono qui
@@ -149,6 +166,19 @@ namespace Quantum_Game
         {
             Debug.WriteLine("Partita iniziata!!");
             Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
+        }
+
+        public object GetGameObject (Type tipo)
+        {
+            if (tipo == typeof(GameSystem))
+                return gameSystem;
+            else if (tipo == typeof(PathFinder))
+                return pathFinder;
+            else if (tipo == typeof(MouseInput))
+                return mouseInput;
+            else if (tipo == typeof(GUI))
+                return Gui;
+            else return null;
         }
 
        
