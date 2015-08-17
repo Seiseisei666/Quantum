@@ -25,3 +25,4 @@ C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\obj\x86\Debug\MainGa
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\obj\x86\Debug\MainGame.pdb
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\TileSet_prova1.png
 C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\TileSet_prova1.xnb
+C:\Users\Asus\Documents\GitHubVisualStudio\Quantum\MainGame\bin\Windows\Debug\Content\Font\Font.xnb

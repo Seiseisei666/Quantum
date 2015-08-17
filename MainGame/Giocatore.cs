@@ -8,38 +8,38 @@ namespace Quantum_Game {
 
 
 public class Giocatore {
-        // costanti eterne immutabili
-		const byte NUM_AZIONI = 3;
-		const byte PUNTI_x_VINCERE = 10;
-		
-        // contatori per il numero dei giocatori e le azioni disponibili per turno
-		private byte _count;
-		private byte _azioni;
+
+        // COSTRUTTORE
+        public Giocatore()
+        {
+            this._colore = (e_color)(++_count); //assegna il colore
+            _ricerca = _dominio = _punti = 0;
+            _flotta = new List<Nave>();
+        }
+        public Giocatore (e_color colore)   // Overload del costruttore in caso volessimo fare giocatori di colori particolari
+        {
+            _colore = colore;
+            _ricerca = _dominio = _punti = 0;
+            _flotta = new List<Nave>();
+        }
+
+        // PROPRIETA' PUBBLICHE
         public byte AzioniDisponibili { get { return _azioni; } }
 
-        // variabili vere del giocatore
-		private int _ricerca, _dominio, _punti;
-        private List<Nave> _flotta;
-        public int NumeroNavi { get { return _flotta.Count; } }
+        public int NumeroNavi { get { return _flotta.Count; } } // Quante navi in gioco ha il giocatore
+        public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
 
-        // colore giocatore
-        private e_color _colore;
-		public e_color Colore { get {return this._colore;} }
+        public e_color Colore { get { return this._colore; } }
         public Color SpriteColor { get { return GameSystem.QuantumColor[_colore]; } }
 
-		//costruttore del giocatore
-		public Giocatore () {
-			this._colore = (e_color) (++_count); //assegna il colore
-			_ricerca = _dominio = _punti = 0;
-			_flotta = new List<Nave> ();
+        public bool PuòAgire { get { return _azioni > 0; } }
+        public bool PuòColonizzare { get { return _azioni > 1; } }
+
+        //METODI PUBBLICI 
+        public void GlobalInit() // inizializzazione globale
+        {
+            inizializzaFlotta();
         }
-		
-		public void GlobalInit () {
-            // inizializzazione prima che inizi il gioco 
-            InizializzaFlotta();
-
-		}
-
         /// <summary>
         /// metodo generale per mettere in gioco e riconfigurare nuove navi
         /// </summary>
@@ -50,70 +50,55 @@ public class Giocatore {
                 Nave n = new Nave(this);
                 _flotta.Add(n);
                 n.Riconfig();
-             }
-		}
-        /// <summary>
-        /// restituisce una ad una le navi che sono state rollate ma aspettano di essere messe in gioco
-        /// se non ce ne sono restituisce NULL
-        /// </summary>
-        public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } }
-
-        private void InizializzaFlotta (int NUMERO_NAVI_INIZIALI = 3)
-        {
-            if (_flotta.Count > 0) return;
-            NuoveNavi(NUMERO_NAVI_INIZIALI);
+            }
         }
-
         /// <summary>
-        /// inizializzazione, da chiamare prima di ogni turno
+        /// Inizio Turno
         /// </summary>
-        public void Init () {
-			
-			foreach (var n in _flotta) {n.init();}
-			_azioni = NUM_AZIONI;
-		}
-
-        public void Cleanup()
+        public void Init()
+        {
+            foreach (var n in _flotta)
+                n.init(); 
+            _azioni = NUM_AZIONI;
+        }
+        /// <summary>
+        /// diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
+        /// </summary>
+        /// <param name="colonizzazione">Se l'azione da fare è una colonizzazione passare True come parametro</param>
+        public void Azione(bool colonizzazione = false)
+        {
+            _azioni--;
+            if (colonizzazione)
+                _azioni--;
+        }
+        public void Cleanup()   // Fine turno
         {
             if (_dominio >= 5)
             {
                 _dominio -= 5; //reset dominio
                 // Piazzare la mentina
             }
-            if (_punti >= PUNTI_x_VINCERE)
-            {
-                //Fine Gioco
-            }
         }
 
-        /// <summary>
-        /// Restituisce True se il giocatore ha abbastanza punti azione
-        /// </summary>
-        /// <param name="colonizzazione">Se l'azione è una colonizzazione passare questo parametro True</param>
-        public bool PuòAgire(bool colonizzazione = false)
+        // METODI PRIVATI
+        private void inizializzaFlotta(int NUMERO_NAVI_INIZIALI = 3)
         {
-            if (colonizzazione) return _azioni >= 2;
-            return _azioni > 0;
-
+            if (_flotta.Count > 0) return;
+            NuoveNavi(NUMERO_NAVI_INIZIALI);
         }
 
-        /// <summary>
-        /// diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
-        /// </summary>
-        /// <param name="colonizzazione">Se l'azione da fare è una colonizzazione passare True come parametro</param>
-        public void Azione (bool colonizzazione = false)
-        {
-            _azioni--;
-            if (colonizzazione) _azioni--;
-            if (_azioni <= 0)
-            {
-                //finisce il turno
-            }
-        }
+        // CAMPI PRIVATI
+		private int _ricerca, _dominio, _punti;
+        private List<Nave> _flotta;
+        private e_color _colore;
 
-        
+        // contatori statici
+        static byte _count; // num giocatori
+        static byte _azioni;// azioni disponibili x turno
 
-
+        // costanti eterne immutabili
+        const byte NUM_AZIONI = 3;
+        const byte PUNTI_x_VINCERE = 10;
     }
 		
 		

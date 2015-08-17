@@ -42,6 +42,7 @@
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
+    <Compile Include="GUI.cs" />
     <Compile Include="IBottone.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="MapGenerator.cs" />
@@ -53,7 +54,7 @@
     <Compile Include="Settore.cs" />
     <Compile Include="Tabellone2.cs" />
     <Compile Include="Tabellone.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Quantum.cs" />
     <Compile Include="Giocatore.cs" />
     <Compile Include="Nave.cs" />
     <Compile Include="Program.cs" />
@@ -73,6 +74,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
+    <Content Include="AAA LEGGIMI!.txt" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

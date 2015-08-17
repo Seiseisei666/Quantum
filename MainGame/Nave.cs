@@ -25,128 +25,104 @@ namespace Quantum_Game
 		Interceptor,
 		Scout
 	}
-	
-	
-	/// <summary>
-	/// Classe Nave - le pedine del gioco
-	/// </summary>
+
+
 	public class Nave
 	{
-        private bool _mossa, _special, _ingioco;
-		private e_nave _tipo;
-		private Giocatore _proprietario;
-		
-		/// <summary>
-        /// Costruttore.
-        /// </summary>
-        /// <param name="prop">riferimento al giocatore proprietario della pedina</param>
-		public Nave (Giocatore prop)
-		{
-			this._proprietario = prop;
-			_ingioco = _mossa = _special = false;
-			_tipo = e_nave.Rottame;
-		}
+        // COSTRUTTORE
+        public Nave(Giocatore proprietario)
+        {
+            this._proprietario = proprietario;
+            _ingioco = _mossa = _special = false;
+            _tipo = e_nave.Rottame;
+        }
 
+        // PROPRIETA' PUBBLICHE
+            // tutte le varie informazioni che abbiamo sulla nave
+        public int Pwr { get { return (int)_tipo; } }
+        public e_nave Tipo { get { return this._tipo; } } // il nome della nave, nel caso dobbiamo scriverlo
+        public bool Viva { get { return (_tipo > 0); } } // _tipo == 0 significa che la nave è un rottame attualmente
+        public bool InGioco { get { return _ingioco; } }
+        public bool Mossa { get { return _mossa; } }
+        public bool SpecialUsata { get { return _special; } }
+            // colori sia nel formato scemo che in quello System.Color
+        public e_color Colore { get { return this._proprietario.Colore; } }
+        public Microsoft.Xna.Framework.Color SpriteColor { get { return _proprietario.SpriteColor; } }
+
+        // METODI PUBBLICI
         /// <summary>
         /// inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
         /// </summary>
-        public void init (){
-			this._mossa = false;
+        public void init()
+        {
+            this._mossa = false;
             this._special = false;
-		}
-		
-		/// <summary>
-        /// Restituisce il valore della nave (1...6)
-        /// </summary>
-		public int Pwr {
-			get {return (int)this._tipo;}
-		}
-        /// <summary>
-        /// Restituisce il tipo della nave (enum e_nave: Rottame, Battlestation...)
-        /// </summary>
-		public e_nave Tipo {
-			get {return this._tipo;}
-		}
-
+        }
         /// <summary>
         /// riconfigurazione della nave (o primo roll)
         /// </summary>
-        public void Riconfig () {
-			int risultato = 0;
-			var TipoDiNaveIniziale = this._tipo;
-			do {
-				risultato = util.Dadi(1);
-			} while (risultato == (int)TipoDiNaveIniziale);
-			this._tipo = (e_nave) risultato;
-		}
-		
-		public void Muovi (Casella CasellaPartenza, Casella CasellaTarget) {
-            CasellaPartenza.Occupante = null;
-            CasellaTarget.Occupante = this;
-			this._mossa = true;
-            _proprietario.Azione();
-		}
-
+        public void Riconfig()
+        {
+            int risultato = 0;
+            var TipoDiNaveIniziale = this._tipo;
+            do
+            {
+                risultato = util.Dadi(1);
+            } while (risultato == (int)TipoDiNaveIniziale);
+            this._tipo = (e_nave)risultato;
+        }
         /// <summary>
         /// Metodo per piazzare per la prima volta una nave
         /// E' l'unico modo con cui una nave può essere dichiarata IN GIOCO
         /// </summary>
-        /// <param name="CasellaTarget"></param>
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
             _ingioco = true;
         }
-
+        public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
+        {
+            CasellaPartenza.Occupante = null;
+            CasellaTarget.Occupante = this;
+            this._mossa = true;
+            _proprietario.Azione();
+        }
         /// <summary>
         /// Metodo per attaccare una nave target
         /// </summary>
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
-        public bool Attacco (Nave target){
-			this._mossa= true;
-			if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1)) {
-				target.Distruggi();
-				return true;
-			}
+        public bool Attacco(Nave target)
+        {
+            this._mossa = true;
+            if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1))
+            {
+                target.Distruggi();
+                return true;
+            }
             _proprietario.Azione();
-			return false;
-		}
-
+            return false;
+        }
         public void UsaSpecial()
         {
             //usare la special
             this._special = true;
         }
-		
-		public bool Viva {  get {return (this._tipo > 0);}}
-
         /// <summary>
         /// La nave viene distrutta
         /// </summary>
-		public void Distruggi () {  this._tipo = e_nave.Rottame;}
+		public void Distruggi() { this._tipo = e_nave.Rottame; }
 
-        /// <summary>
-        /// Restituisce True se la nave ha già mosso in questo turno
-        /// </summary>
-		public bool Mossa { get {return this._mossa;}  }
-        public bool SpecialUsata { get { return _special; } }
-    
-        public bool InGioco { get { return _ingioco; } }
-        public void Gioca () { _ingioco = true; }
-
+        public void Gioca() { _ingioco = true; }
+            // per vedere se la nave è del colore di un giocatore
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
-		/// <summary>
-        /// restituisce il colore del giocatore che possiede la nave
-        /// </summary>
-		public e_color Colore {get {return this._proprietario.Colore;}}
-        public Microsoft.Xna.Framework.Color SpriteColor
-        {
-            get
-            {
-                return _proprietario.SpriteColor;
-            }
-        }
+
+
+        // CAMPI 
+        private Giocatore _proprietario;
+        private bool _mossa, _special, _ingioco;
+		private e_nave _tipo;
+        
 
     }
 	

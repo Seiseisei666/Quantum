@@ -3,31 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
+    public enum Azione
+    {
+        nessuna,
+        Movimento,
+        // da aggiungere man mano che implementiamo le azioni!!
+    }
+
     /// <summary>
     /// FlussoDiGioco è un superoggettone che riunisce tutti i pezzi del gioco e li mette insieme.
     /// Non so se è buona prassi fare così... ma intanto ci ho provato
     /// </summary>
     public class FlussoDiGioco
     {
-        private GameSystem gameSystem;
-        private Tabellone tabellone;
-        private Giocatore giocatoreDiTurno;
-        private MouseInput mouseInput;
-        private PathFinder pathFinder;
+        // COSTRUTTORE
+        public FlussoDiGioco(Quantum game)
+        {
+            gameSystem = (GameSystem)game.GetGameObject(typeof(GameSystem));
+            pathFinder = (PathFinder)game.GetGameObject(typeof(PathFinder));
+            Gui = (GUI)game.GetGameObject(typeof(GUI));
+            tabellone = Gui.tabellone;
+            mouseInput = (MouseInput)game.GetGameObject(typeof(MouseInput)); 
+            stato = Azione.nessuna;
+        }
 
-        private bool _leggiClickDx;
-        public bool LeggiClickDx { get { return _leggiClickDx; } }
-
+        // PROPRIETA' PUBBLICHE
 
         public object OggettoSelezionato
         {
             get
             {
-                Casella cas = tabellone.TileSelezionato as Casella;
-                Pianeta pian = tabellone.TileSelezionato as Pianeta;
+                Casella cas = tabellone.TileClkSn as Casella;
+                Pianeta pian = tabellone.TileClkSn as Pianeta;
 
                 if (cas != null && cas.Occupante != null)
                     return cas.Occupante;
@@ -35,109 +46,110 @@ namespace Quantum_Game
                     return pian;
                 else return null;
             }
-        }
-        private Nave _naveSel { get { return OggettoSelezionato as Nave; } }
-        private Nave _naveSelOld;
-        private Pianeta _pianetaSel { get { return OggettoSelezionato as Pianeta; } }
-        private Casella _casellaSel { get { return tabellone.TileSelezionato as Casella; } }
-        private Casella _casellaTarget { get { return tabellone.TileTarget as Casella; } }
-        private Nave _naveTarget { get
-            { 
-                if (_casellaTarget != null)
-                    return _casellaTarget.Occupante;
-                else return null;
-            }
-        }
-        private int _distanzaCasella { get { if (_casellaTarget != null)
-                    return pathFinder.PercorsoXCasella(_casellaTarget).Length;
-                else return 0; } }
+        } // Riferimento all'oggetto selezionato, così che oggetti esterni possano "visualizzarlo"
 
-        public FlussoDiGioco(GameSystem m_gameSystem, MouseInput m_mouseInput, Tabellone m_tabellone, PathFinder m_pathFinder)
+        // METODI PUBBLICI
+        public void Update() // loop principale
         {
-            gameSystem = m_gameSystem;
-            tabellone = m_tabellone;
-            mouseInput = m_mouseInput;
-            pathFinder = m_pathFinder;
-            _leggiClickDx = false;
-            
-        }
-
-        public void Update()
-        {
-            giocatoreDiTurno = gameSystem.GiocatoreDiTurno;
-
             if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
             {
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
+                checkFineTurno(); // Controlla se il giocatore può agire; in caso contrario finisce il turno ed esce da Update
+                
+                if (stato == Azione.nessuna)
+                    checkSelezione();
 
-                if (!giocatoreDiTurno.PuòAgire())   // controlla se è finito il turno
-                {
-                    gameSystem.NextTurn();
-                    Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
-                }
-
-                if (_naveSel != null && _naveSel.Alleato(giocatoreDiTurno))
-                    pathFinder.Start(tabellone.TileSelezionato, _naveSel);
-                else
-                    pathFinder.Clear();
-                if (_naveSel!= null && !_naveSel.Equals(_naveSelOld))
-                    pathFinder.Clear();
-
-                _naveSelOld = _naveSel;
-
-
-                gestioneClickSinistro();
-                if (_leggiClickDx)
-                    gestioneClickDestro();
-
-
+                else if (stato == Azione.Movimento)
+                    Movimento();
             }
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
                 setupPartita();
         }
 
-        // Qui vengono fatte le operazioni relative al click sinistro
-        // (per ora solo movimento/attacco)
-        private void gestioneClickSinistro()
+        // METODI PRIVATI
+        void checkFineTurno() // controlla se è finito il turno
         {
-            _leggiClickDx =                                 // condizioni per interessarsi al click DX:
-
-                (_naveSel != null &&                        // nave selezionata AND
-                _naveSel.Alleato(giocatoreDiTurno) &&       // alleata AND
-                !(_naveSel.Mossa || _naveSel.SpecialUsata));  // la nave selezionata non ha mosso
+            if (!giocatoreDiTurno.PuòAgire | Gui.BottonePremuto == bottone.Passa)   
+            {
+                gameSystem.NextTurn();
+                Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
+                return;
+            }
         }
 
-        // Se serve, qui gestiamo il click destro (movimento/attacco)
-        private void gestioneClickDestro()
+        void checkSelezione()   // aspetta una selezione valida
         {
-            int dist = _distanzaCasella;
-            
-            if (dist == 0 || dist > _naveSel.Pwr )
+            Nave nave = OggettoSelezionato as Nave;
+            if (nave == null) return;
+
+            else if (nave != null && 
+                nave.Alleato(giocatoreDiTurno) && 
+                !(nave.Mossa))
+            {
+                // Selezionata nave alleata e disponibile per il movimento
+                _naveSel = nave;
+                _casellaSel = casellaCliccata;
+                pathFinder.Start(tabellone.TileClkSn, _naveSel);
+                stato = Azione.Movimento;
+            }
+        }
+
+        void Movimento()    // gestisce Attacco/Movimento una volta che è stata fatta una selezione valida
+        {
+            if (clickDx || !clickSn)
+            {    // Click dx valido o click sn NON valido: deselezione
+                Deseleziona();
                 return;
-            if (_naveTarget != null && !_naveTarget.Alleato(giocatoreDiTurno))
-                {
+            }
+            
+            _casellaTarget = casellaCliccata;
+            int dist = _distanzaCasella;
+
+            if (dist == 0 || dist > _naveSel.Pwr)
+                return;
+
+            Nave nave = _casellaTarget.Occupante;
+            if (nave != null && 
+                nave.Alleato(giocatoreDiTurno))
+            {   
+                // Combattimento
+
                 bool RisultatoAttacco;
                 Debug.WriteLine("Una nave {0} di colore {1} ha attaccato una nave {2} di colore {3}.",
-                            _naveSel.Tipo, _naveSel.Colore, _naveTarget.Tipo, _naveTarget.Colore);
+                            _naveSel.Tipo, _naveSel.Colore, nave.Tipo, nave.Colore);
 
-                RisultatoAttacco = _naveSel.Attacco(_naveTarget);
+                RisultatoAttacco = _naveSel.Attacco(nave);
                 Debug.WriteLine("risultato: {0}", RisultatoAttacco);
 
                 if (RisultatoAttacco == true)
                     _naveSel.Muovi(_casellaSel, _casellaTarget);
-                }
-            else if (_casellaTarget!= null) { 
-                _naveSel.Muovi(_casellaSel, _casellaTarget);
-                Debug.WriteLine(dist);
             }
+            else if (_casellaTarget != null)
+
+            {
+                // Movimento
+
+                _naveSel.Muovi(_casellaSel, _casellaTarget);
+            }
+
+            // Fine procedura Movimento/Attacco
+            Deseleziona();
+            
         }
 
-        // qui stiamo piazzando le pedine per il setup iniziale
-        private void setupPartita ()
+        void Deseleziona () // esce dalla routine di Attacco/Movimento
         {
-            Casella tempCas = tabellone.TileSelezionato as Casella; // prova a castare il tile selezionato come casella
+            pathFinder.Clear();
+            stato = Azione.nessuna;
+            _naveSel = null;
+            _casellaTarget = _casellaSel = null;
+        }
+
+        void setupPartita() // loop della fase di setup della partita
+        {
+            Casella tempCas = tabellone.TileClkSn as Casella; // prova a castare il tile selezionato come casella
             Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
             if (naveTemp != null)
             {
@@ -147,6 +159,39 @@ namespace Quantum_Game
             else
                 gameSystem.NextTurn();
         }
+
+
+        // PROPRIETA' PRIVATE
+        private Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
+        private Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
+            // distanza della casella su cui si prova a muovere /attaccare
+        private int _distanzaCasella
+        {
+            get
+            {
+                if (_casellaTarget != null)
+                    return pathFinder.PercorsoXCasella(_casellaTarget).Length;
+                else return 0;
+            }
+        }
+            // bool che ci dicono se c'è stato un click destro o sinistro sul tabellone
+        private bool clickDx { get { return tabellone.TileClkDx != null; } }
+        private bool clickSn { get { return casellaCliccata != null; } }
+
+
+        // CAMPI
+        // oggetti di gioco a cui dobbiamo avere accesso
+        private GameSystem gameSystem;
+        private Tabellone tabellone;
+        private MouseInput mouseInput;
+        private PathFinder pathFinder;
+        private GUI Gui;
+            // stato del flusso di gioco
+        private Azione stato;
+            // Qui ci salviamo le selezioni compiute dall'utente
+        private Nave _naveSel;  
+        private Casella _casellaSel; // la casella attualmente selezionata
+        private Casella _casellaTarget; // la casella obiettivo di attacco/movimento
 
        }
 }
