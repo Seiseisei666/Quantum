@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game
 {
@@ -73,7 +74,7 @@ namespace Quantum_Game
         {
             // gestione click sinistro standard
         }
-        public abstract void Draw();
+        public abstract void Draw(SpriteBatch spriteBatch, Texture2D texture);
         /// <summary>
         /// Metodo per associare un evento del mouse ad un handler (metodo) a disposizione di questo oggetto
         /// (se il parametro associa è false l'associazione viene rimossa)
