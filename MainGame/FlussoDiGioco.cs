@@ -25,7 +25,7 @@ namespace Quantum_Game
         {
             gameSystem = (GameSystem)game.GetGameObject(typeof(GameSystem));
             pathFinder = (PathFinder)game.GetGameObject(typeof(PathFinder));
-            GUI Gui = (GUI)game.GetGameObject(typeof(GUI));
+            Gui = (GUI)game.GetGameObject(typeof(GUI));
             tabellone = Gui.tabellone;
             mouseInput = (MouseInput)game.GetGameObject(typeof(MouseInput)); 
             stato = Azione.nessuna;
@@ -71,7 +71,7 @@ namespace Quantum_Game
         // METODI PRIVATI
         void checkFineTurno() // controlla se è finito il turno
         {
-            if (!giocatoreDiTurno.PuòAgire)   
+            if (!giocatoreDiTurno.PuòAgire | Gui.BottonePremuto == bottone.Passa)   
             {
                 gameSystem.NextTurn();
                 Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
@@ -185,6 +185,7 @@ namespace Quantum_Game
         private Tabellone tabellone;
         private MouseInput mouseInput;
         private PathFinder pathFinder;
+        private GUI Gui;
             // stato del flusso di gioco
         private Azione stato;
             // Qui ci salviamo le selezioni compiute dall'utente

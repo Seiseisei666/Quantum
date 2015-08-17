@@ -9,12 +9,12 @@ namespace Quantum_Game
 {
     public sealed class GUI
     {
-        public GUI (Game game, Texture2D texture)
+        public GUI (Quantum game, Texture2D texture)
         {
             _game = game;
             _texture = texture;
             _elementi = new List<Riquadro>();
-         //   spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
+            _spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
         }
     
 
@@ -24,11 +24,11 @@ namespace Quantum_Game
         {
             get
             {
-                foreach (IBottone bot in _elementi)
-                {
-                    if (bot.Check)
-                        return bot.TipoBottone;
-                }
+                var bottoni = _elementi.OfType<IBottone>();
+                foreach (var b in bottoni)
+                    if (b.Check)
+                        return b.TipoBottone;
+
                 return bottone.nessuno;
             }
         }
@@ -36,7 +36,7 @@ namespace Quantum_Game
         {
             get
             {
-                return _elementi.Find(tab => tab.GetType() == typeof(Tabellone)) as Tabellone;
+                return _elementi.OfType<Tabellone>().First();
             }
         }
 
@@ -45,8 +45,12 @@ namespace Quantum_Game
         // METODI IMPORTANTI
         public void Draw (SpriteBatch spriteBatch)
         {
-            foreach (Riquadro r in _elementi)
-                r.Draw(spriteBatch, _texture);
+            var bottoni = _elementi.OfType<Bottone>();
+            foreach (var b in bottoni)
+            {
+                b.Draw(spriteBatch, _texture);
+
+            }
         }
 
        
@@ -56,6 +60,8 @@ namespace Quantum_Game
 
         public void AddElement (Riquadro riquadro)
         {
+            MouseInput mouseInput = (MouseInput)_game.GetGameObject(typeof(MouseInput));
+            riquadro.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
             Bottone bot = riquadro as Bottone;
             if (bot != null)
             {
@@ -68,8 +74,8 @@ namespace Quantum_Game
 
         // Campi privati
         private List<Riquadro> _elementi;
-        private Game _game;
-  //      private SpriteBatch spriteBatch;
+        private Quantum _game;
+        private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private SpriteFont font;
 

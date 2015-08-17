@@ -41,10 +41,12 @@ namespace Quantum_Game
             graphics.ApplyChanges();
             IsMouseVisible = true; 
             mouseInput = new MouseInput();
+
         }
 
         protected override void Initialize()
         {
+
             // Crea il gamesystem con 4 giocatori
             gameSystem = new GameSystem();
             gameSystem.AggiungiGiocatori(2);
@@ -83,12 +85,15 @@ namespace Quantum_Game
             // DA TOGLIERE
 
             base.Initialize();
+
+            
+
             Gui = new GUI
                 (this, contornoCasella);
             Gui.Font = font;
             Gui.AddElement(new Bottone
                 (bottone.Passa,
-                0.7f, 0.7f, 0.9f, 0.9f, 800, 600))
+                0.72f, 0.85f, 0.9f, 0.8f, 800, 600))
                 ;
             Gui.AddElement(tabellone);
 
@@ -143,7 +148,7 @@ namespace Quantum_Game
             tabellone.Draw(spriteBatch, textureCaselle);
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
             pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
-       //     Gui.Draw(spriteBatch);
+            Gui.Draw(spriteBatch);
 
             spriteBatch.End();
             // finiscono qui
