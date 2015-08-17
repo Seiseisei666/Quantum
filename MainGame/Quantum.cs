@@ -93,7 +93,7 @@ namespace Quantum_Game
             Gui.Font = font;
             Gui.AddElement(new Bottone
                 (bottone.Passa,
-                0.72f, 0.85f, 0.9f, 0.8f, 800, 600))
+                0.9f, 0.9f, 1f, 1f, 800, 600))
                 ;
             Gui.AddElement(tabellone);
 

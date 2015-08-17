@@ -4,7 +4,7 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Asus/Documents/GitHubVisualStudio/Quantum/MainGame/Content/Font/Font.spritefont</File>
     <File>C:/Users/Asus/Documents/GitHubVisualStudio/Quantum/MainGame/Content/TileSet_prova1.png</File>
+    <File>C:/Users/Asus/Documents/GitHubVisualStudio/Quantum/MainGame/Content/Font/Font.spritefont</File>
   </SourceFiles>
 </SourceFileCollection>
