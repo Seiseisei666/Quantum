@@ -9,24 +9,14 @@ namespace Quantum_Game
 {
     public sealed class GUI
     {
-        // Roba per implementazione Singleton
-        // Può esistere un solo oggetto GUI: GUI.Istanza
-        private bool _inizializzato;
-
-        private static readonly GUI _istanza = new GUI();
-        public static GUI Istanza { get { return _istanza; } }
-
-        private GUI() { _inizializzato = false; }
-
-        public void Init(Game game) //inizializzazione, da chiamare all'inizio
+        public GUI (Quantum game, Texture2D texture)
         {
-            if (graphicsDevice != null)
-            {
-                this.game = game;
-                _elementi = new List<Riquadro>();
-                graphicsDevice = (GraphicsDevice) game.Services.GetService(typeof(GraphicsDevice));
-            }
+            _game = game;
+            _texture = texture;
+            _elementi = new List<Riquadro>();
+            _spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
         }
+    
 
 
         // Proprietà pubbliche
@@ -34,11 +24,11 @@ namespace Quantum_Game
         {
             get
             {
-                foreach (IBottone bot in _elementi)
-                {
-                    if (bot.Check)
-                        return bot.TipoBottone;
-                }
+                var bottoni = _elementi.OfType<IBottone>();
+                foreach (var b in bottoni)
+                    if (b.Check)
+                        return b.TipoBottone;
+
                 return bottone.nessuno;
             }
         }
@@ -46,15 +36,21 @@ namespace Quantum_Game
         {
             get
             {
-                return _elementi.Find(tab => tab.GetType() == typeof(Tabellone)) as Tabellone;
+                return _elementi.OfType<Tabellone>().First();
             }
         }
 
+        public SpriteFont Font { set { font = value; } }
+
         // METODI IMPORTANTI
-        public void Draw ()
+        public void Draw (SpriteBatch spriteBatch)
         {
-            foreach (Riquadro r in _elementi)
-                r.Draw(spriteBatch, texture);
+            var bottoni = _elementi.OfType<Bottone>();
+            foreach (var b in bottoni)
+            {
+                b.Draw(spriteBatch, _texture);
+
+            }
         }
 
        
@@ -64,15 +60,24 @@ namespace Quantum_Game
 
         public void AddElement (Riquadro riquadro)
         {
-            _elementi.Add(riquadro);
+            MouseInput mouseInput = (MouseInput)_game.GetGameObject(typeof(MouseInput));
+            riquadro.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+            Bottone bot = riquadro as Bottone;
+            if (bot != null)
+            {
+                bot.Font = this.font;
+                _elementi.Add(bot);
+            }
+            else
+                _elementi.Add(riquadro);
         }
 
         // Campi privati
         private List<Riquadro> _elementi;
-        private Game game;
-        private GraphicsDevice graphicsDevice;
-        private SpriteBatch spriteBatch;
-        private Texture2D texture;
+        private Quantum _game;
+        private SpriteBatch _spriteBatch;
+        private Texture2D _texture;
+        private SpriteFont font;
 
         // Proprietà private
         private int _numElementi { get { return _elementi.Count; } }

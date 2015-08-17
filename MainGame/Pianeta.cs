@@ -7,26 +7,40 @@ namespace Quantum_Game
 {
     public class Pianeta : Tile
     {
-        //override di Tile
+        //costruttore
+        public Pianeta(QuantumTile tipo)
+        {
+            _tipo = tipo;
+            _colonizzazioni = new e_color[4];
+            for (int i = 0; i < _colonizzazioni.Length; i++)
+            {
+                _colonizzazioni[i] = e_color.incolore;
+            }
+        }
+
+        // PROPRIETA' PUBBLICHE
+
+            //override di Tile
         public override bool Esistente { get { return true; } }
         public override bool EunPianeta { get { return true; } }
+            // l'array delle mentine
+        public e_color[] Colonizzazioni { get { return _colonizzazioni; } }
 
-        //campi propri
-        private e_color[] _colonizzazioni;
-        public e_color[] Colonizzazioni {get { return _colonizzazioni; }}
-
+        // METODI PUBBLICI
+            // Per controllare se il pianeta è colonizzabile
         public bool Colonizzabile(e_color colore)
         {
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
-        public bool Colonizzabile (Giocatore player)
+        public bool Colonizzabile(Giocatore player)
         {
             e_color colore = player.Colore;
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
+            // L'azione di colonizzazione vera e propria
         public bool Colonizza(Giocatore plyr)
         {
-            if (plyr.PuòAgire(true) && this.Colonizzabile(plyr.Colore))
+            if (plyr.PuòColonizzare && this.Colonizzabile(plyr.Colore))
             {
                 // Da togliere il check sulla condizione Colonizzabile? (lo fa il programma prima?)
                 for (int i = 0; i < _colonizzazioni.Length - 1; i++)
@@ -38,21 +52,13 @@ namespace Quantum_Game
                         return true;
                     }
                 }
-
             }
             return false;
         }
 
 
-        //costruttore
-        public Pianeta (QuantumTile tipo)
-        {
-            _tipo = tipo;
-            _colonizzazioni = new e_color[4];
-            for (int i = 0; i < _colonizzazioni.Length - 1; i++)
-            {
-                _colonizzazioni[i] = e_color.incolore;
-            }
-        }
+        //campi propri
+        private e_color[] _colonizzazioni;
+      
     }
 }

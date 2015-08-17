@@ -79,7 +79,7 @@ namespace Quantum_Game
         /// <returns>Se tutto va bene restituisce True</returns>
         public bool Colonizza (Giocatore plyr)
         {
-            if (plyr.PuòAgire(true) && this.Colonizzabile (plyr.Colore)) {
+            if (plyr.PuòColonizzare && this.Colonizzabile (plyr.Colore)) {
                 // Da togliere il check sulla condizione Colonizzabile? (lo fa il programma prima?)
                 for (int i = 0; i < _colonizzazioni.Length - 1; i++)
                 {

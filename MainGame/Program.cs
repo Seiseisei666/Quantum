@@ -14,7 +14,7 @@ namespace Quantum_Game
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new Quantum())
                 game.Run();
         }
     }

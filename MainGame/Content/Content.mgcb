@@ -24,3 +24,9 @@
 /processorParam:TextureFormat=Color
 /build:TileSet_prova1.png
 
+#begin Font/Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Font/Font.spritefont
+
