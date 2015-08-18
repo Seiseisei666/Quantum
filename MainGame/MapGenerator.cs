@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -13,7 +14,7 @@ namespace Quantum_Game
         public int Colonne { get { return _colonne; } }
 
         //Costruttore
-        public MapGenerator (int righe, int colonne)
+        public MapGenerator(int righe, int colonne)
         {
             _righe = righe; _colonne = colonne;
             _tabellone = new List<Tile>();
@@ -21,27 +22,37 @@ namespace Quantum_Game
         }
 
         //Funzione principale per generare la lista di caselle
-        public List<Tile> GeneraMappa ()
+        public List<Tile> GeneraMappa()
         {
-            // DA RIEMPIRE ************************
-            return Test();
+            //legge tutte le righe del file
+            string[] mapData = File.ReadAllLines(@"Content\mappa_prova2.txt");
 
-            /*
-            string[] mapData = File.ReadAllLines(path);
-            File.WriteAllLines(path, mapData);
-
-            var width = mapData[0].Length;
+            //var width = mapData[0].Length;
             var height = mapData.Length;
-            var tileData = new char[width, height];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                    tileData[x, y] = mapData[y][x];
-            }
-            */
 
+            //concateno ad una stringa vuota le varie righe, ripulite dagli spazi (vedi metodo in fondo, forse da spostare)
+            string tileData = String.Empty;
+            for (int j = 0; j < height; j++)
+            {
+                tileData = tileData + ExceptBlanks(mapData[j]);
+            }
+
+            // ad ogni carattere dello stringone associo l'oggetto Casella appropriato
+            StringBuilder sb = new StringBuilder(tileData.Length);
+            for (int i = 0; i < tileData.Length; i++)
+            {
+                char c = tileData[i];
+                if (c.Equals('#')) _tabellone.Add(new Vuoto());
+                if (c.Equals('*')) _tabellone.Add(new Casella(QuantumTile.casella));
+                if (c.Equals('+')) _tabellone.Add(new Casella(QuantumTile.orbita));
+                if (c.Equals('7') || c.Equals('8') || c.Equals('9') || c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
+
+            }
+
+            return _tabellone;
         }
 
+        /* Vecchio metodo di prova randomico, per eventuali referenze future
         private List<Tile> Test ()
         {
             int ris;
@@ -66,6 +77,20 @@ namespace Quantum_Game
             return _tabellone;
         }
 
+        */
+
+        // Serve a rimuovere gli spazi nella mappa letta dal file
+        public string ExceptBlanks(string str)
+        {
+            StringBuilder sb = new StringBuilder(str.Length);
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+                if (!char.IsWhiteSpace(c))
+                    sb.Append(c);
+            }
+            return sb.ToString();
+        }
 
     }
 }
