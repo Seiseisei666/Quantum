@@ -25,8 +25,23 @@ namespace Quantum_Game
         {
             // DA RIEMPIRE ************************
             return Test();
+
+            /*
+            string[] mapData = File.ReadAllLines(path);
+            File.WriteAllLines(path, mapData);
+
+            var width = mapData[0].Length;
+            var height = mapData.Length;
+            var tileData = new char[width, height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                    tileData[x, y] = mapData[y][x];
+            }
+            */
+
         }
-        
+
         private List<Tile> Test ()
         {
             int ris;
