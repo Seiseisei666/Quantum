@@ -52,7 +52,7 @@ namespace Quantum_Game
             gameSystem.AggiungiGiocatori(2);
 
             //Crea la mappa
-            MapGenerator gen = new MapGenerator(9, 9);
+            MapGenerator gen = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
             List<Tile> mappa = gen.GeneraMappa();
             tabellone = new Tabellone
                 (mappa, gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
@@ -104,7 +104,8 @@ namespace Quantum_Game
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
+            //textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
+            textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = Content.Load<SpriteFont>("Font\\Font");
 
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
