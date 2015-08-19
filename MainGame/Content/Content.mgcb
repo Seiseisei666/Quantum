@@ -36,3 +36,14 @@
 #begin mappa_prova2.txt
 /copy:mappa_prova2.txt
 
+#begin Graphica/TileSet_prova2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:TextureFormat=Color
+/build:Graphica/TileSet_prova2.png
+
