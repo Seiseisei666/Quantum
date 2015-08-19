@@ -11,6 +11,7 @@ namespace Quantum_Game
     {
         nessuna,
         Movimento,
+        SelezioneDx,
         // da aggiungere man mano che implementiamo le azioni!!
     }
 
@@ -56,12 +57,15 @@ namespace Quantum_Game
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
                 checkFineTurno(); // Controlla se il giocatore può agire; in caso contrario finisce il turno ed esce da Update
-                
+
                 if (stato == Azione.nessuna)
                     checkSelezione();
 
                 else if (stato == Azione.Movimento)
                     Movimento();
+
+                else if (stato == Azione.SelezioneDx)
+                    SelezioneDx();
             }
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
@@ -81,12 +85,11 @@ namespace Quantum_Game
 
         void checkSelezione()   // aspetta una selezione valida
         {
-            Nave nave = OggettoSelezionato as Nave;
+            Nave nave = casellaCliccata?.Occupante ?? casellaCliccataDx?.Occupante;
             if (nave == null) return;
 
-            else if (nave != null && 
-                nave.Alleato(giocatoreDiTurno) && 
-                !(nave.Mossa))
+            else if 
+                (clickSn && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
             {
                 // Selezionata nave alleata e disponibile per il movimento
                 _naveSel = nave;
@@ -94,6 +97,15 @@ namespace Quantum_Game
                 pathFinder.Start(tabellone.TileClkSn, _naveSel);
                 stato = Azione.Movimento;
             }
+            else if 
+                (clickDx && nave.Alleato(giocatoreDiTurno) &&
+                (!nave.SpecialUsata || !nave.Riconfigurata))
+            {
+                _naveSel = nave;
+                _casellaSel = casellaCliccataDx;
+                stato = Azione.SelezioneDx;
+            }
+
         }
 
         void Movimento()    // gestisce Attacco/Movimento una volta che è stata fatta una selezione valida
@@ -138,6 +150,19 @@ namespace Quantum_Game
             Deseleziona();
             
         }
+        void SelezioneDx()
+        {
+            if (!clickDx || clickSn)
+            {    // Click dx valido o click sn NON valido: deselezione
+                Deseleziona();
+                return;
+            }
+            /* TODO:
+            Mostrare il menù di selezione fra riconfigurazione e special;
+            riconfigurazione -> si chiama il metodo e stop
+            Special -> si entra in un altro blocco di codice per la gestione dello special
+    */
+        }
 
         void Deseleziona () // esce dalla routine di Attacco/Movimento
         {
@@ -164,6 +189,7 @@ namespace Quantum_Game
         // PROPRIETA' PRIVATE
         private Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
         private Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
+        private Casella casellaCliccataDx { get { return tabellone.TileClkDx as Casella; } }
             // distanza della casella su cui si prova a muovere /attaccare
         private int _distanzaCasella
         {
@@ -175,7 +201,7 @@ namespace Quantum_Game
             }
         }
             // bool che ci dicono se c'è stato un click destro o sinistro sul tabellone
-        private bool clickDx { get { return tabellone.TileClkDx != null; } }
+        private bool clickDx { get { return casellaCliccataDx != null; } }
         private bool clickSn { get { return casellaCliccata != null; } }
 
 

@@ -33,7 +33,7 @@ namespace Quantum_Game
         public Nave(Giocatore proprietario)
         {
             this._proprietario = proprietario;
-            _ingioco = _mossa = _special = false;
+            _ingioco = _mossa = _special = _riconfigurata = false;
             _tipo = e_nave.Rottame;
         }
 
@@ -45,6 +45,7 @@ namespace Quantum_Game
         public bool InGioco { get { return _ingioco; } }
         public bool Mossa { get { return _mossa; } }
         public bool SpecialUsata { get { return _special; } }
+        public bool Riconfigurata { get { return _riconfigurata; } }
             // colori sia nel formato scemo che in quello System.Color
         public e_color Colore { get { return this._proprietario.Colore; } }
         public Microsoft.Xna.Framework.Color SpriteColor { get { return _proprietario.SpriteColor; } }
@@ -55,8 +56,7 @@ namespace Quantum_Game
         /// </summary>
         public void init()
         {
-            this._mossa = false;
-            this._special = false;
+            _riconfigurata = _mossa = _special = false;
         }
         /// <summary>
         /// riconfigurazione della nave (o primo roll)
@@ -70,6 +70,7 @@ namespace Quantum_Game
                 risultato = util.Dadi(1);
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
+            _riconfigurata = true;
         }
         /// <summary>
         /// Metodo per piazzare per la prima volta una nave
@@ -120,7 +121,7 @@ namespace Quantum_Game
 
         // CAMPI 
         private Giocatore _proprietario;
-        private bool _mossa, _special, _ingioco;
+        private bool _mossa, _special, _ingioco, _riconfigurata;
 		private e_nave _tipo;
         
 
