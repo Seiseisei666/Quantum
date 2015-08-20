@@ -21,23 +21,10 @@ namespace Quantum_Game
         Pianeta9,
         Pianeta10
     }
-    public enum QuantumDirezioni : sbyte
-    {
-        AltoSx,
-        Alto,
-        AltoDx,
-        Sx,
-        seStessa = -1,
-        Dx = 5,
-        BassoSx,
-        Basso,
-        BassoDx
-    }
-
-
-
+    
     public abstract class Tile
     {
+        public static Mappa mappa { private get; set; }
         protected QuantumTile _tipo;
         public QuantumTile Tipo { get { return _tipo; } }
 
@@ -46,6 +33,28 @@ namespace Quantum_Game
         public virtual bool EunPianeta { get { return false; } }
         public virtual bool EunaCasella { get { return false; } }
         public virtual bool PresenzaAlleata (Nave nave) { return false; }
+
+        // Da oggi possiamo fare TileX + Sopra e trovare il tile che sta sopra!!!!1
+        public static Tile operator+ (Tile tile, Direzioni dir)
+        {
+            int id = mappa.Tile2Id(tile);
+            switch (dir)
+            {
+                case Direzioni.Sopra:
+                    id -= mappa.Colonne; break;
+                case Direzioni.Sotto:
+                    id += mappa.Colonne; break;
+                case Direzioni.Sinistra:
+                    if (id % mappa.Colonne != 0)
+                        id--; break;
+                case Direzioni.Destra:
+                    if (id % mappa.Colonne != mappa.Colonne - 1)
+                        id++; break;
+            }
+            if (mappa.idValido(id)) return mappa.id2Tile(id);
+            else return null;
+        }
+
     }
     
     /// <summary>

@@ -44,6 +44,7 @@
     <Compile Include="GameSystem.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="IBottone.cs" />
+    <Compile Include="Mappa.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="MapGenerator.cs" />
     <Compile Include="MouseEvntArgs.cs" />

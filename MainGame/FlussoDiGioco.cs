@@ -22,13 +22,14 @@ namespace Quantum_Game
     public class FlussoDiGioco
     {
         // COSTRUTTORE
-        public FlussoDiGioco(Quantum game)
+        public FlussoDiGioco(Game game)
         {
-            gameSystem = (GameSystem)game.GetGameObject(typeof(GameSystem));
-            pathFinder = (PathFinder)game.GetGameObject(typeof(PathFinder));
-            Gui = (GUI)game.GetGameObject(typeof(GUI));
+            gameSystem = game.Services.GetService<GameSystem>();
+            mouseInput = game.Services.GetService<MouseInput>();
+            pathFinder = game.Components.OfType<PathFinder>().First();
+            Gui = game.Components.OfType<GUI>().First();
             tabellone = Gui.tabellone;
-            mouseInput = (MouseInput)game.GetGameObject(typeof(MouseInput)); 
+
             stato = Azione.nessuna;
         }
 
@@ -50,6 +51,10 @@ namespace Quantum_Game
         } // Riferimento all'oggetto selezionato, così che oggetti esterni possano "visualizzarlo"
 
         // METODI PUBBLICI
+        public void Initialize()
+        {
+
+        }
         public void Update() // loop principale
         {
             if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
@@ -153,7 +158,7 @@ namespace Quantum_Game
         void SelezioneDx()
         {
             if (!clickDx || clickSn)
-            {    // Click dx valido o click sn NON valido: deselezione
+            {    // Click dx non valido o click sn valido: deselezione
                 Deseleziona();
                 return;
             }

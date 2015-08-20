@@ -7,19 +7,21 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
-    public sealed class GUI
+    public sealed class GUI: IGameComponent
     {
-        public GUI (Quantum game, Texture2D texture)
+        public GUI (Game game, Texture2D texture)
         {
             _game = game;
             _texture = texture;
             _elementi = new List<Riquadro>();
-            _spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
+            _spriteBatch = game.Services.GetService<SpriteBatch>();
+            mouseInput = game.Services.GetService<MouseInput>();
         }
     
 
 
         // Proprietà pubbliche
+        public Tabellone tabellone { get { return _tabellone; } }
         public bottone BottonePremuto   // Da controllare ogni update, fornisce il bottone che è stato premuto
         {
             get
@@ -32,49 +34,55 @@ namespace Quantum_Game
                 return bottone.nessuno;
             }
         }
-        public Tabellone tabellone
-        {
-            get
-            {
-                return _elementi.OfType<Tabellone>().First();
-            }
-        }
-
+        
         public SpriteFont Font { set { font = value; } }
 
         // METODI IMPORTANTI
-        public void Draw (SpriteBatch spriteBatch)
+
+        public void Initialize ()
+        {
+
+        }
+        public void Draw ()
         {
             var bottoni = _elementi.OfType<Bottone>();
             foreach (var b in bottoni)
             {
-                b.Draw(spriteBatch, _texture);
+                b.Draw(_spriteBatch, _texture);
 
             }
         }
 
-       
+
 
 
         // Metodi scemi
 
-        public void AddElement (Riquadro riquadro)
+        public void AddElement (Bottone bot)
         {
-            MouseInput mouseInput = (MouseInput)_game.GetGameObject(typeof(MouseInput));
-            riquadro.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
-            Bottone bot = riquadro as Bottone;
-            if (bot != null)
-            {
-                bot.Font = this.font;
-                _elementi.Add(bot);
-            }
-            else
-                _elementi.Add(riquadro);
+
+            bot.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+            bot.Font = this.font;
+            _elementi.Add(bot);
         }
+        public void AddElement (Tabellone tab)
+        {
+            tab.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+            tab.AssociaEvento(mouseInput, TipoEventoMouse.ClkDx);
+            tab.AssociaEvento(mouseInput, TipoEventoMouse.Over);
+            _tabellone = tab;
+        }
+            
+
+
+        
 
         // Campi privati
         private List<Riquadro> _elementi;
-        private Quantum _game;
+        private Game _game;
+        private Tabellone _tabellone;
+        private MouseInput mouseInput;
+
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private SpriteFont font;

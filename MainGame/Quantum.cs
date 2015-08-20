@@ -38,9 +38,10 @@ namespace Quantum_Game
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 800;  
             graphics.PreferredBackBufferHeight = 600;
+            IsMouseVisible = true;
             graphics.ApplyChanges();
-            IsMouseVisible = true; 
             mouseInput = new MouseInput();
+            if (mouseInput == null) throw new Exception("Stocazzo");
 
         }
 
@@ -52,67 +53,59 @@ namespace Quantum_Game
             gameSystem.AggiungiGiocatori(2);
 
             //Crea la mappa
-            MapGenerator gen = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
-            List<Tile> mappa = gen.GeneraMappa();
-            tabellone = new Tabellone
-                (mappa, gen.Righe, gen.Colonne, 0.05f, 0.1f, 800, 600);
-
-            pathFinder = new PathFinder
-                (mappa, gen.Righe, gen.Colonne);
-            /*  
-                ASSOCIAZIONE DEGLI EVENTI 
-                Gli eventi del mouse vengono letti o ignorati a seconda del momento del gioco
-                Ad esempio, una volta selezionata un'unità andiamo a leggere il click dx,
-                che prima di aver effettuato una selezione valida veniva ignorato.
-                Per gestire dinamicamente queste situazioni ogni riquadro dell'interfaccia grafica 
-                dispone del metodo AssociaEvento
-            */
-            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.Over);
-            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
-            tabellone.AssociaEvento(mouseInput, TipoEventoMouse.ClkDx);
-
+                // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
+            MapGenerator generatore = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
+            Mappa mappa = new Mappa( generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+            
             //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
             //avviene una volta per partita e lo associamo manualmente a tutti gli oggetti
             //che lo utilizzeranno
-            gameSystem.InizioPartita += tabellone.InizioPartita;
             gameSystem.InizioPartita += this.InizioPartita;
-
-            //TODO: usare i generics per fare un solo metodo AssociaEvento<TipoEvento> (object oggetto, TipoEvento tipo)
-
 
             // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
             gameSystem.IniziaSetupPartita();
             // DA TOGLIERE
+            Services.AddService(mappa);
+
+            Services.AddService(mouseInput);
+            Services.AddService(gameSystem);
+
+            pathFinder = new PathFinder(this);
+            Components.Add(pathFinder);
 
             base.Initialize();
-
-            
-
-            Gui = new GUI
-                (this, contornoCasella);
-            Gui.Font = font;
-            Gui.AddElement(new Bottone
-                (bottone.Passa,
-                0.9f, 0.9f, 1f, 1f, 800, 600))
-                ;
-            Gui.AddElement(tabellone);
-
-            flussoGioco = new FlussoDiGioco
-                (this);
         }
 
         protected override void LoadContent()
         {
+            // Caricamento e iscrizione ai servizi della roba x la grafica
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            //textureCaselle = Content.Load<Texture2D>("TileSet_prova1");
+            Services.AddService(GraphicsDevice);
+            Services.AddService(spriteBatch);
+
+            // CARICAMENTO CONTENUTO
             textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = Content.Load<SpriteFont>("Font\\Font");
-
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
             contornoCasella.SetData(new[] { (Color.White*0.5f) });
 
+            // Inizializzazione GUI
+            Gui = new GUI(this, contornoCasella);
+            Gui.Font = font;
+            Gui.AddElement(new Bottone
+                (bottone.Passa,
+                0.72f, 0.8f, 0.8f, 0.85f, 800, 600))
+                ;
+            tabellone = new Tabellone
+    (this, 0.05f, 0.1f);
+            Gui.AddElement(tabellone);
+            Components.Add(Gui);
 
+
+            flussoGioco = new FlussoDiGioco (this);
+
+            base.LoadContent();
         } 
 
         protected override void UnloadContent()
@@ -149,7 +142,7 @@ namespace Quantum_Game
             tabellone.Draw(spriteBatch, textureCaselle);
             tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
             pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
-            Gui.Draw(spriteBatch);
+            Gui.Draw();
 
             spriteBatch.End();
             // finiscono qui
@@ -172,21 +165,6 @@ namespace Quantum_Game
         {
             Debug.WriteLine("Partita iniziata!!");
             Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
-        }
-
-        public object GetGameObject (Type tipo)
-        {
-            if (tipo == typeof(GameSystem))
-                return gameSystem;
-            else if (tipo == typeof(PathFinder))
-                return pathFinder;
-            else if (tipo == typeof(MouseInput))
-                return mouseInput;
-            else if (tipo == typeof(GUI))
-                return Gui;
-            else return null;
-        }
-
-       
+        }       
     }
 }

@@ -17,25 +17,28 @@ namespace Quantum_Game
         Destra
     }
 
-    public class PathFinder
+    public class PathFinder: IGameComponent
     {
         // COSTRUTTORE
 
-        public PathFinder(List<Tile> ListaCaselle, int righe, int colonne)
+        public PathFinder(Game game)
         {
-            _righe = righe; _colonne = colonne;
-            _listaCaselle = ListaCaselle;
-            _numCaselle = ListaCaselle.Count;
+            map = game.Services.GetService<Mappa>();
+        }
+
+        // METODI PUBBLICI
+        public void Initialize()
+        {
             _partito = false;
+            //inizializzazione matrice
             _matrice = new int[_numCaselle][];
             for (int i = 0; i < _numCaselle; i++)
                 _matrice[i] = new int[0];
         }
 
-        // METODI PUBBLICI
         public void Start(Tile Partenza, Nave nave, int DistanzaMax = 12)
         {
-            if (_partito) return;
+            if (_partito) return;   // ignora chiamate successive multiple del metodo Start
             if (Partenza != null)
             {
                 _distanzaMax = DistanzaMax;
@@ -43,7 +46,7 @@ namespace Quantum_Game
                 _partito = true;
                 _nave = nave;
                 int tile;
-                tile = _listaCaselle.FindIndex(x => x.Equals(Partenza));
+                tile = map.Tile2Id(Partenza);
                 crawl(tile, 0, new int[0], Direzioni.nessuna);
             }
         }
@@ -61,6 +64,8 @@ namespace Quantum_Game
             _partito = false;
         }
         public void Draw(Tabellone tabellone, SpriteBatch spriteBatch, Texture2D texture)
+            // TODO: vorrei mettere questo metodo draw da un'altra parte, in modo da semplificarlo
+            // (e magari non avere bisogno del riferimento al tabellone)
         {
             if (_partito == false)
                 return;
@@ -71,7 +76,10 @@ namespace Quantum_Game
                 // Illumina tutte le caselle raggiungibili
             for (int i = 0; i < _numCaselle; i++)
             {
-                if (_matrice[i].Length > 0 && _matrice[i].Length <= _nave.Pwr && _listaCaselle[i].EunaCasella)
+                if (_matrice[i].Length > 0              // percorso esistente (almeno 1 casella)
+                    && _matrice[i].Length <= _nave.Pwr  // lunghezza percorso alla portata della nave
+             //     && _listaCaselle[i].EunaCasella
+                                                    )
                 {
                     id2nm(i, out x, out y);
                     x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
@@ -99,7 +107,7 @@ namespace Quantum_Game
         {
             if (target != null)
             {
-                int id = _listaCaselle.FindIndex(x => x.Equals(target));
+                int id = map.Tile2Id(target);
                 return _matrice[id];
             }
             else return new int[0];
@@ -109,7 +117,7 @@ namespace Quantum_Game
         /// </summary>
         public int[] PercorsoXCasella(int targetId)
         {
-            if (targetId > 0) return _matrice[targetId];
+            if (targetId >= 0) return _matrice[targetId];
             else return new int[0];
         }
 
@@ -118,11 +126,12 @@ namespace Quantum_Game
             // Algoritmo ricorsivo
         void crawl(int IDtile, int count, int[] percorso, Direzioni DirezioneProvenienza)
         {
-            if (!_listaCaselle[IDtile].EunaCasella ||
-                (_listaCaselle[IDtile].PresenzaAlleata(_nave) &&
-                count != 0) ||
-                (_matrice[IDtile].Length > 0 &&
-                _matrice[IDtile].Length <= percorso.Length))
+            Tile tile = map.id2Tile(IDtile);
+            if (!tile.EunaCasella                // non è una casella valida
+                    // OR c'è una nave alleata che non è la nave che stiamo muovendo
+                || (tile.PresenzaAlleata(_nave) && count != 0) 
+                    // OR percorso già esistente e più breve di quello che ha trovato questo ramo della ricorsione
+                || (_matrice[IDtile].Length > 0 && _matrice[IDtile].Length <= percorso.Length))
                 return;
 
             if (count > 0)
@@ -133,7 +142,7 @@ namespace Quantum_Game
                 Array.Copy(percorso, _matrice[IDtile], count);
             }
             count++;
-            if (!_listaCaselle[IDtile].Attraversabile && !_listaCaselle[IDtile].PresenzaAlleata(_nave))
+            if (!tile.Attraversabile && !tile.PresenzaAlleata(_nave))
                 return;
             if (count < _distanzaMax)
             // Chiamate ricorsive
@@ -188,15 +197,15 @@ namespace Quantum_Game
             y = id / _colonne;
         }
 
-
+        // PROPRIETA' PRIVATE
+        int _numCaselle { get { return map.NumeroCaselle; } }
+        int _colonne { get { return map.Colonne; } }
         // CAMPI
 
             // status del pathfinder: se è già stato acceso deve essere spento prima di poterlo riutilizzare
         private bool _partito;
         // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare
-        private List<Tile> _listaCaselle;
-        private int _numCaselle;
-        private int _righe, _colonne;
+        private Mappa map;
             // memorizza i percorsi per raggiungere le caselle circostanti
         private int[][] _matrice; 
             // la nave che si sta muovendo

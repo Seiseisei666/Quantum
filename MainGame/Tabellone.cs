@@ -26,7 +26,7 @@ using System.Diagnostics;
     */
 
 namespace Quantum_Game
-{
+{   
     public class Tabellone : Riquadro
     {
         // COSTRUTTORE
@@ -39,10 +39,10 @@ namespace Quantum_Game
         /// <param name="TopLeft">Coordinate in pixel dell'angolo in alto a sinistra</param>
         /// <param name="Largh">Larghezza del riquadro del tabellone in pixel</param>
         /// <param name="Alt">Altezza del riquadro tabellone in pixel</param>
-        public Tabellone(List<Tile> lista, int righe, int colonne, float xRel, float yRel, int LarghSchermo, int AltSchermo) : base(xRel, yRel, 1f, 0.98f, LarghSchermo, AltSchermo)
+        public Tabellone(Game game, float xRel, float yRel) : base(game, xRel, yRel, 1f, 0.98f)
         {
-            _righe = righe; _colonne = colonne;
-            _listaCaselle = lista;
+            mappa = game.Services.GetService<Mappa>();
+            _righe = mappa.Righe; _colonne = mappa.Colonne;
 
             //Calcolo il lato delle caselle:
             float h = Altezza / (float)_righe; float w = Larghezza / (float)_colonne;
@@ -61,8 +61,8 @@ namespace Quantum_Game
         }
 
         // PROPRIETA' PUBBLICHE
-        public Tile Id2Tile(int ID) { return _listaCaselle[ID]; }
-        public int Tile2Id(Tile t) { return _listaCaselle.FindIndex(x => x.Equals(t)); }
+        //public Tile Id2Tile(int ID) { return _listaCaselle[ID]; }
+        //public int Tile2Id(Tile t) { return _listaCaselle.FindIndex(x => x.Equals(t)); }
 
         public int LarghezzaTilePx { get { return _latoCasella; } }
 
@@ -76,19 +76,20 @@ namespace Quantum_Game
         public Pianeta PianetaPiùVicino(Casella casella)
         {
             int Id, n, m;
-            Id = _listaCaselle.FindIndex(c => c.Equals(casella));
+            Id = mappa.Tile2Id(casella);
             id2nm(Id, out n, out m);
-            n = (n / 3) * 3; m /= 3 * 3;
-            Pianeta tempPlan = _listaCaselle[nm2id(n + 1, m + 1)] as Pianeta;
+            n = (n / 3) * 3; m /= 3 * 3; n++; m++;
+            Pianeta tempPlan = mappa.id2Tile(mappa.nm2id(n,m)) as Pianeta;
             return tempPlan;
         }
             // disegna il tabellone e le navi
         public override void Draw(SpriteBatch spriteBatch, Texture2D tileset)
         {
             int x, y;
-            for (int Idx = 0; Idx < _listaCaselle.Count; Idx++)
+            for (int Idx = 0; Idx < mappa.NumeroCaselle; Idx++)
             {
-                if (_listaCaselle[Idx].Esistente)
+                Tile tile = mappa.id2Tile(Idx); 
+                if (tile.Esistente)
                 {             // se la casella non fa parte del gioco non la disegna
 
                     //calcolo delle coordinate su cui disegnare:
@@ -97,7 +98,7 @@ namespace Quantum_Game
                     _target.Y = y + Offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
-                    switch (_listaCaselle[Idx].Tipo)
+                    switch (tile.Tipo)
                     {
 
                         case QuantumTile.casella:
@@ -116,9 +117,9 @@ namespace Quantum_Game
 
                     // l'istruzione draw vera e propria
                     spriteBatch.Draw(tileset, _target, _source, Color.White);
-                    if (_listaCaselle[Idx].EunaCasella)
+                    if (tile.EunaCasella)
                     {
-                        Casella tempCas = _listaCaselle[Idx] as Casella;
+                        Casella tempCas = tile as Casella;
                         if (tempCas.Occupante != null)
                         {
                             _source.X = 300;
@@ -131,7 +132,7 @@ namespace Quantum_Game
             // illumina la casella su cui sta il mouse
         public void DisegnaSelezione(SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (_idMouseOver >= 0 && _partitaIniziata)
+            if (_idMouseOver >= 0)
             {
                 _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y;
                 spriteBatch.Draw(texture, _target, Color.IndianRed);
@@ -148,9 +149,9 @@ namespace Quantum_Game
         // PROPRIETA' PRIVATE
 
             // restituisce il Tile su cui si è cliccato col sinistro
-        private Tile _tileClkSn { get { return (_IdSelezione < 0) ? null : _listaCaselle[_IdSelezione]; } }
+        private Tile _tileClkSn { get { return (_IdSelezione >= 0) ? mappa.id2Tile(_IdSelezione) : null; } }
             //stessa cosa col click destro
-        private Tile _tileClkDx { get { return (_idSelezioneDestro < 0) ? null : _listaCaselle[_idSelezioneDestro]; } }
+        private Tile _tileClkDx { get { return (_idSelezioneDestro < 0) ? mappa.id2Tile(_idSelezioneDestro) : null; } }
 
         // METODI PRIVATI 
             //Funzioncine private di conversione fra le coordinate id ad una dimensione
@@ -194,10 +195,10 @@ namespace Quantum_Game
                 int tempY = args.Posizione.Y;
 
                 if (coordinatePixel2Casella(ref tempX, ref tempY) &&
-                    _listaCaselle[_idMouseOver = (tempX + tempY * _colonne)].Esistente)
+                    mappa.id2Tile(_idMouseOver = (tempX + tempY * _colonne)).Esistente)
                 {
-                    id2xy(_idMouseOver, out tempX, out tempY);
-                    _SelezPixCoord.X = tempX + Offset.X; _SelezPixCoord.Y = tempY + Offset.Y;
+                    mappa.id2nm(_idMouseOver, out tempX, out tempY);
+                    _SelezPixCoord.X = tempX*_latoCasella + Offset.X; _SelezPixCoord.Y = tempY*_latoCasella + Offset.Y;
                     return;
                 }
             }
@@ -230,8 +231,11 @@ namespace Quantum_Game
         // CAMPI DELLA CLASSE
 
             // gli elementi costitutivi del tabellone
-        private static List<Tile> _listaCaselle;
+      //  private static List<Tile> _listaCaselle;
         private int _righe, _colonne;
+
+        private Mappa mappa;
+
         private int _latoCasella;
 
             //utility per disegnare

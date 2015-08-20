@@ -25,21 +25,41 @@ namespace Quantum_Game
 
         private float _larghRel, _altRel;
 
+        #region Costruttori
+        protected Riquadro
+            (Game game, float xRel, float yRel, float LarghRelativa, float AltezzaRelativa)
+        {
+            GraphicsDevice graphicsDevice = game.Services.GetService<GraphicsDevice>();
+            costruzioneRiquadro
+                (xRel, yRel, LarghRelativa, AltezzaRelativa, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
+        }
         protected Riquadro 
             (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
+        {
+            costruzioneRiquadro
+                (xRel, yRel, LarghRelativa, AltezzaRelativa, LarghSchermo, AltezzaSchermo);
+        }
+            // Metodo privato chiamato dai costruttori
+        void costruzioneRiquadro(float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
         {
             float ofsX = MathHelper.Clamp(xRel, 0f, 1f);
             float ofsY = MathHelper.Clamp(yRel, 0f, 1f);
             _larghRel = MathHelper.Clamp(LarghRelativa, 0f, 1f);
             _altRel = MathHelper.Clamp(AltezzaRelativa, 0f, 1f);
 
-            float w = (LarghRelativa - xRel) * LarghSchermo;
-            float h = (AltezzaRelativa- yRel) * AltezzaSchermo;
+            float w = (LarghRelativa - ofsX) * LarghSchermo;
+            float h = (AltezzaRelativa - ofsY) * AltezzaSchermo;
 
-            _superficie = new Rectangle((int)(xRel * LarghSchermo), (int)(yRel * AltezzaSchermo), (int)w, (int)h);
+            _superficie = new Rectangle(
+                (int)(xRel * LarghSchermo),
+                (int)(yRel * AltezzaSchermo),
+                (int)w,
+                (int)h
+                                            );
         }
 
-    
+        #endregion Costruttori
+
         /// <summary>
         /// Ritorna true se il punto è compreso nella superficie del riquadro
         /// </summary>
