@@ -75,6 +75,9 @@ namespace Quantum_Game
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
                 setupPartita();
+
+            else if (gameSystem.FasePartita == FasiDiGioco.MenuIniziale)
+                menuIniziale();
         }
 
         // METODI PRIVATI
@@ -188,6 +191,13 @@ namespace Quantum_Game
             }
             else
                 gameSystem.NextTurn();
+        }
+
+        void menuIniziale() // loop del menù iniziale
+        {
+            //gameSystem.SettaFaseDiGioco(FasiDiGioco.PartitaInCorso);
+            Debug.WriteLine("Fase di gioco: " + gameSystem.FasePartita);
+            Quantum.contaFrames++;
         }
 
 

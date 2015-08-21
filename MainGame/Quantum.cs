@@ -19,7 +19,7 @@ namespace Quantum_Game
         private SpriteBatch spriteBatch;
         private SpriteFont font;
 
-        
+        private Texture2D schermataIniziale;
         private Texture2D textureCaselle;
         private Texture2D contornoCasella;
 
@@ -31,6 +31,7 @@ namespace Quantum_Game
         private GUI Gui;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
+        public static int contaFrames = 0;
 
         public Quantum()
         {
@@ -47,13 +48,16 @@ namespace Quantum_Game
 
         protected override void Initialize()
         {
-
-            // Crea il gamesystem con 4 giocatori
+            // Crea il gamesystem con 2 giocatori
             gameSystem = new GameSystem();
+                        
+            // Inizializzazioni fase MenuIniziale
+            gameSystem.IniziaMenuIniziale();
+            
             gameSystem.AggiungiGiocatori(2);
 
             //Crea la mappa
-                // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
+                // il map generator farà le sue cose e poi stabilirà da solo le dimensioni della mappa
             MapGenerator generatore = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
             Mappa mappa = new Mappa( generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
             
@@ -62,8 +66,6 @@ namespace Quantum_Game
             //che lo utilizzeranno
             gameSystem.InizioPartita += this.InizioPartita;
 
-            // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
-            gameSystem.IniziaSetupPartita();
             // DA TOGLIERE
             Services.AddService(mappa);
 
@@ -72,6 +74,9 @@ namespace Quantum_Game
 
             pathFinder = new PathFinder(this);
             Components.Add(pathFinder);
+
+            // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
+            gameSystem.IniziaSetupPartita();
 
             base.Initialize();
         }
@@ -84,8 +89,10 @@ namespace Quantum_Game
             Services.AddService(spriteBatch);
 
             // CARICAMENTO CONTENUTO
+
+            schermataIniziale = Content.Load<Texture2D>(@"Graphica\schermataInizialeTemp");
             textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
-            font = Content.Load<SpriteFont>("Font\\Font");
+            font = Content.Load<SpriteFont>(@"Font\Font");
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
             contornoCasella.SetData(new[] { (Color.White*0.5f) });
@@ -93,12 +100,8 @@ namespace Quantum_Game
             // Inizializzazione GUI
             Gui = new GUI(this, contornoCasella);
             Gui.Font = font;
-            Gui.AddElement(new Bottone
-                (bottone.Passa,
-                0.72f, 0.8f, 0.8f, 0.85f, 800, 600))
-                ;
-            tabellone = new Tabellone
-    (this, 0.05f, 0.1f);
+            Gui.AddElement(new Bottone(bottone.Passa, 0.72f, 0.8f, 0.8f, 0.85f, 800, 600));
+            tabellone = new Tabellone(this, 0.05f, 0.1f);
             Gui.AddElement(tabellone);
             Components.Add(Gui);
 
@@ -113,6 +116,7 @@ namespace Quantum_Game
             spriteBatch.Dispose();
             contornoCasella.Dispose();
             textureCaselle.Dispose();
+            schermataIniziale.Dispose();
         }
         
         protected override void Update(GameTime gameTime)
@@ -139,10 +143,23 @@ namespace Quantum_Game
             // qui cominciano le routine di disegno dei vari oggetti
             spriteBatch.Begin();
 
-            tabellone.Draw(spriteBatch, textureCaselle);
-            tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
-            pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
-            Gui.Draw();
+            if (gameSystem.FasePartita == FasiDiGioco.MenuIniziale)
+            {
+                if (Quantum.contaFrames < 180)
+                {
+                    Rectangle destRect = new Rectangle(0, 0, 800, 600);
+                    spriteBatch.Draw(schermataIniziale, destRect, Color.White);
+                }
+                else gameSystem.SettaFaseDiGioco(FasiDiGioco.SetupPartita);
+            }
+            else if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso || gameSystem.FasePartita == FasiDiGioco.SetupPartita)
+            {
+
+                tabellone.Draw(spriteBatch, textureCaselle);
+                tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
+                pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
+                Gui.Draw();
+            }
 
             spriteBatch.End();
             // finiscono qui

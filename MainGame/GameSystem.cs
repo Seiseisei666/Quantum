@@ -8,7 +8,7 @@ namespace Quantum_Game
 {
     public enum FasiDiGioco
     {
-        SceltaOpzioni = -1,
+        MenuIniziale = -1,
         SetupPartita,
         PartitaInCorso
     }
@@ -21,11 +21,17 @@ namespace Quantum_Game
     public class GameSystem
     {
 
+        // CAMPI
+        private static int _contaTurni;
+        private List<Giocatore> _giocatori;
+        private static FasiDiGioco _faseDiGioco;
+        private int _numGiocatori;
+
         // COSTRUTTORE
         public GameSystem()
         {
             _contaTurni = _numGiocatori = 0;
-            _faseDiGioco = FasiDiGioco.SceltaOpzioni;
+            _faseDiGioco = FasiDiGioco.MenuIniziale;
 
             QuantumColor = new Dictionary<e_color, Color>();
             QuantumColor.Add(e_color.Blu, Color.Blue);
@@ -40,7 +46,7 @@ namespace Quantum_Game
         public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
             // soluzione non molto elegante. Cmq converte i nostri colori nel formato System.Color
         public static Dictionary<e_color, Color> QuantumColor;
-        // per sfizio, mai usato... toglibile
+            // per sfizio, mai usato... toglibile
         public int NumeroTurno { get { return _contaTurni; } }
 
         // METODI PUBBLICI
@@ -49,8 +55,7 @@ namespace Quantum_Game
             // Crea N giocatori. Utilizzabile solo prima che cominci la partita
         public void AggiungiGiocatori (int numeroGiocatori)
         {
-            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni 
-                || _numGiocatori > 0)
+            if (_faseDiGioco != FasiDiGioco.MenuIniziale || _numGiocatori > 0)
                 return; //se la fase di gioco non è quella giusta esce
             _giocatori = new List<Giocatore>();
             for (int i = 0; i < numeroGiocatori; i++)
@@ -60,14 +65,20 @@ namespace Quantum_Game
             // Per passare dalla scelta opzioni alla fase di setup partita
         public void IniziaSetupPartita()
         {
-            _faseDiGioco = FasiDiGioco.SetupPartita;
+            //_faseDiGioco = FasiDiGioco.SetupPartita;
             foreach (Giocatore g in _giocatori)
                 g.GlobalInit();
         }
-            // Prossimo turno
+
+        public void IniziaMenuIniziale()
+        {
+            _faseDiGioco = FasiDiGioco.MenuIniziale;
+        }
+        
+        // Prossimo turno
         public void NextTurn()
         {
-            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return; //se la partita non è in corso esce
+            if (_faseDiGioco == FasiDiGioco.MenuIniziale) return; //se la partita non è in corso esce
 
             if (_faseDiGioco == FasiDiGioco.SetupPartita)
             {
@@ -88,12 +99,7 @@ namespace Quantum_Game
             }
         }
 
-        // CAMPI
-        private static int _contaTurni;
-        private List<Giocatore> _giocatori;
-        private static FasiDiGioco _faseDiGioco;
-        private int _numGiocatori;
-
+        public void SettaFaseDiGioco(FasiDiGioco fase) { _faseDiGioco = fase; } 
 
     }
 }
