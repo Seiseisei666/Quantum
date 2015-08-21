@@ -31,10 +31,10 @@
 /build:Font/Font.spritefont
 
 #begin mappa_prova1.txt
-/copy:mappa_prova1.txt
+/copy:Mappe/mappa_prova1.txt
 
 #begin mappa_prova2.txt
-/copy:mappa_prova2.txt
+/copy:Mappe/mappa_prova2.txt
 
 #begin Graphica/TileSet_prova2.png
 /importer:TextureImporter
