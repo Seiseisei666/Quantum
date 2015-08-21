@@ -26,18 +26,14 @@ namespace Quantum_Game
         private float _larghRel, _altRel;
 
         #region Costruttori
-        protected Riquadro
-            (Game game, float xRel, float yRel, float LarghRelativa, float AltezzaRelativa)
+        protected Riquadro (Game game, float xRel, float yRel, float LarghRelativa, float AltezzaRelativa)
         {
             GraphicsDevice graphicsDevice = game.Services.GetService<GraphicsDevice>();
-            costruzioneRiquadro
-                (xRel, yRel, LarghRelativa, AltezzaRelativa, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
+            costruzioneRiquadro (xRel, yRel, LarghRelativa, AltezzaRelativa, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
         }
-        protected Riquadro 
-            (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
+        protected Riquadro (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
         {
-            costruzioneRiquadro
-                (xRel, yRel, LarghRelativa, AltezzaRelativa, LarghSchermo, AltezzaSchermo);
+            costruzioneRiquadro (xRel, yRel, LarghRelativa, AltezzaRelativa, LarghSchermo, AltezzaSchermo);
         }
             // Metodo privato chiamato dai costruttori
         void costruzioneRiquadro(float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)

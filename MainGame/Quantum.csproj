@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Bottone.cs" />
     <Compile Include="Casella.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
     <Compile Include="GUI.cs" />
