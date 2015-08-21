@@ -31,7 +31,7 @@ namespace Quantum_Game
         private GUI Gui;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
-        public static int contaFrames = 0;
+        public static int contaFrames = 0; //mi serve per fare prove di attesa di tot secondi
 
         public Quantum()
         {
@@ -90,7 +90,7 @@ namespace Quantum_Game
 
             // CARICAMENTO CONTENUTO
 
-            schermataIniziale = Content.Load<Texture2D>(@"Graphica\schermataInizialeTemp");
+            schermataIniziale = Content.Load<Texture2D>(@"Graphica\schermataIniziale_sfondo_2.1");
             textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = Content.Load<SpriteFont>(@"Font\Font");
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
@@ -145,7 +145,8 @@ namespace Quantum_Game
 
             if (gameSystem.FasePartita == FasiDiGioco.MenuIniziale)
             {
-                if (Quantum.contaFrames < 180)
+                // disegna la schermata iniziale per 300 frames (5s), poi passa alla fase Setup
+                if (Quantum.contaFrames < 300)
                 {
                     Rectangle destRect = new Rectangle(0, 0, 800, 600);
                     spriteBatch.Draw(schermataIniziale, destRect, Color.White);
