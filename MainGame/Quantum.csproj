@@ -53,6 +53,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Azioni\AzioneDiGioco.cs" />
     <Compile Include="Bottone.cs" />
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="GUI.cs" />
     <Compile Include="IBottone.cs" />
     <Compile Include="Mappa.cs" />
+    <Compile Include="MenuTendina.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="MapGenerator.cs" />
     <Compile Include="MouseEvntArgs.cs" />

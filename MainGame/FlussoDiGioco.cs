@@ -61,6 +61,7 @@ namespace Quantum_Game
             {
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
+                BottonePremuto = Gui.BottonePremuto;
                 checkFineTurno(); // Controlla se il giocatore può agire; in caso contrario finisce il turno ed esce da Update
 
                 if (stato == Azione.nessuna)
@@ -80,7 +81,7 @@ namespace Quantum_Game
         // METODI PRIVATI
         void checkFineTurno() // controlla se è finito il turno
         {
-            if (!giocatoreDiTurno.PuòAgire | Gui.BottonePremuto == bottone.Passa)   
+            if (!giocatoreDiTurno.PuòAgire | BottonePremuto == bottone.Passa)   
             {
                 gameSystem.NextTurn();
                 Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
@@ -90,7 +91,9 @@ namespace Quantum_Game
 
         void checkSelezione()   // aspetta una selezione valida
         {
-            Nave nave = casellaCliccata?.Occupante ?? casellaCliccataDx?.Occupante;
+            Nave nave =     
+                casellaCliccata?.Occupante ?? 
+                casellaCliccataDx?.Occupante;
             if (nave == null) return;
 
             else if 
@@ -108,7 +111,12 @@ namespace Quantum_Game
             {
                 _naveSel = nave;
                 _casellaSel = casellaCliccataDx;
+
+                MenuTendina menu = new MenuTendina
+                    (tabellone.Tile2Pixel(_casellaSel), bottone.Riconfigura, bottone.UsaSpecial);
+                Gui.PopupMenu(menu);
                 stato = Azione.SelezioneDx;
+                Debug.WriteLine("ClickDx");
             }
 
         }
@@ -129,7 +137,7 @@ namespace Quantum_Game
 
             Nave nave = _casellaTarget.Occupante;
             if (nave != null && 
-                nave.Alleato(giocatoreDiTurno))
+                !nave.Alleato(giocatoreDiTurno))
             {   
                 // Combattimento
 
@@ -167,6 +175,22 @@ namespace Quantum_Game
             riconfigurazione -> si chiama il metodo e stop
             Special -> si entra in un altro blocco di codice per la gestione dello special
     */
+            
+
+            if (BottonePremuto == bottone.Riconfigura && !_naveSel.Riconfigurata)
+            {
+                e_nave t1 = _naveSel.Tipo;
+                _naveSel.Riconfig();
+                Gui.ChiudiMenu();
+                tabellone.MouseAttivo = true;
+                e_nave t2 = _naveSel.Tipo;
+                Deseleziona();
+
+                
+                Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
+
+            }
+            
         }
 
         void Deseleziona () // esce dalla routine di Attacco/Movimento
@@ -175,6 +199,7 @@ namespace Quantum_Game
             stato = Azione.nessuna;
             _naveSel = null;
             _casellaTarget = _casellaSel = null;
+            Debug.WriteLine("deselezione");
         }
 
         void setupPartita() // loop della fase di setup della partita
@@ -219,10 +244,12 @@ namespace Quantum_Game
         private GUI Gui;
             // stato del flusso di gioco
         private Azione stato;
+
+        private bottone BottonePremuto;
             // Qui ci salviamo le selezioni compiute dall'utente
-        private Nave _naveSel;  
-        private Casella _casellaSel; // la casella attualmente selezionata
-        private Casella _casellaTarget; // la casella obiettivo di attacco/movimento
+        Nave _naveSel;  
+        Casella _casellaSel; // la casella attualmente selezionata
+        Casella _casellaTarget; // la casella obiettivo di attacco/movimento
 
        }
 }

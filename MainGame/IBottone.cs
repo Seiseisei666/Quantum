@@ -11,7 +11,7 @@ namespace Quantum_Game
     /// </summary>
     public interface IBottone
     {
-        bool Check { get; }
+        bool Check();
         bottone TipoBottone { get; }
     }
 }

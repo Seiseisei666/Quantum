@@ -13,7 +13,7 @@ namespace Quantum_Game
         {
             _game = game;
             _texture = texture;
-            _elementi = new List<Riquadro>();
+            _bottoni = new List<Bottone>();
             _spriteBatch = game.Services.GetService<SpriteBatch>();
             mouseInput = game.Services.GetService<MouseInput>();
         }
@@ -26,9 +26,9 @@ namespace Quantum_Game
         {
             get
             {
-                var bottoni = _elementi.OfType<IBottone>();
-                foreach (var b in bottoni)
-                    if (b.Check)
+                foreach (var b in _bottoni)
+
+                    if (b.Check())
                         return b.TipoBottone;
 
                 return bottone.nessuno;
@@ -39,17 +39,14 @@ namespace Quantum_Game
 
         // METODI IMPORTANTI
 
-        public void Initialize ()
-        {
+        public void Initialize() { }
+       
 
-        }
         public void Draw ()
         {
-            var bottoni = _elementi.OfType<Bottone>();
-            foreach (var b in bottoni)
+            foreach (var b in _bottoni)
             {
                 b.Draw(_spriteBatch, _texture);
-
             }
         }
 
@@ -63,7 +60,7 @@ namespace Quantum_Game
 
             bot.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
             bot.Font = this.font;
-            _elementi.Add(bot);
+            _bottoni.Add(bot);
         }
         public void AddElement (Tabellone tab)
         {
@@ -72,24 +69,54 @@ namespace Quantum_Game
             tab.AssociaEvento(mouseInput, TipoEventoMouse.Over);
             _tabellone = tab;
         }
-            
 
 
-        
+
+        public void PopupMenu(MenuTendina menu)
+        {
+            if (menu.Elementi.Count == 0)
+                throw new ArgumentException("Menu' a tendina vuoto");
+            if (_menu != null)
+                throw new DeviceNotResetException("menù a tendina già presente");
+
+            foreach (Bottone b in menu.Elementi)
+            {
+                b.AssociaEvento(mouseInput, TipoEventoMouse.Over);
+                AddElement(b);
+            }
+            _menu = menu;
+        }
+   
+        public void ChiudiMenu ()
+        {
+            foreach (Bottone b in _menu.Elementi)
+            {
+
+                _bottoni.Remove(b);
+                System.Diagnostics.Debug.WriteLine(_bottoni.IndexOf(b));
+            }
+
+            _menu = null;
+        }
 
         // Campi privati
-        private List<Riquadro> _elementi;
+        
+        private List<Bottone> _bottoni;
         private Game _game;
         private Tabellone _tabellone;
         private MouseInput mouseInput;
+        private MenuTendina _menu;
 
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private SpriteFont font;
 
         // Proprietà private
-        private int _numElementi { get { return _elementi.Count; } }
+        private int _numElementi { get { return _bottoni.Count; } }
 
+        const int LARGH_MENU = 84;
+        const int ALT_MENU = 30;
+        const int OFFSETy = 10;
 
     }
 }

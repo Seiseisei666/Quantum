@@ -37,11 +37,16 @@ namespace Quantum_Game
 
         public int nm2id(int n, int m)
         {
-            return n + m * _colonne;
+            if (n >= 0 && m >= 0 && n < _colonne && m < _righe)
+                return n + m * _colonne;
+            else return -1;
 
         }
         public void id2nm(int idCasella, out int n, out int m)
         {
+            if (!idValido(idCasella))
+                throw new IndexOutOfRangeException("Indice non esistente");
+
             n = idCasella % _colonne;
             m = idCasella / _colonne;
         }

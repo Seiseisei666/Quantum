@@ -18,7 +18,6 @@ namespace Quantum_Game
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-
         
         private Texture2D textureCaselle;
         private Texture2D contornoCasella;
@@ -41,7 +40,6 @@ namespace Quantum_Game
             IsMouseVisible = true;
             graphics.ApplyChanges();
             mouseInput = new MouseInput();
-            if (mouseInput == null) throw new Exception("Stocazzo");
 
         }
 
@@ -65,8 +63,8 @@ namespace Quantum_Game
             // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
             gameSystem.IniziaSetupPartita();
             // DA TOGLIERE
-            Services.AddService(mappa);
 
+            Services.AddService(mappa);
             Services.AddService(mouseInput);
             Services.AddService(gameSystem);
 
@@ -98,7 +96,7 @@ namespace Quantum_Game
                 0.72f, 0.8f, 0.8f, 0.85f, 800, 600))
                 ;
             tabellone = new Tabellone
-    (this, 0.05f, 0.1f);
+    (this, 0f, 0f);
             Gui.AddElement(tabellone);
             Components.Add(Gui);
 

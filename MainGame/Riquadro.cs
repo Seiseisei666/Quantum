@@ -11,8 +11,8 @@ namespace Quantum_Game
     {
         private Rectangle _superficie; // rettangolo che rappresenta il Riquadro
         /// <summary>
-    /// Offset (in pixel) del Riquadro
-    /// </summary>
+        /// Offset (in pixel) del Riquadro
+        /// </summary>
         public Point Offset { get { return _superficie.Location; } }
         /// <summary>
         /// dimensione assoluta(in pixel) del Riquadro
@@ -24,15 +24,30 @@ namespace Quantum_Game
         public int Altezza { get { return _superficie.Height; } }
 
         private float _larghRel, _altRel;
+        private static GraphicsDevice graphicsDevice;
 
         #region Costruttori
         protected Riquadro
             (Game game, float xRel, float yRel, float LarghRelativa, float AltezzaRelativa)
         {
-            GraphicsDevice graphicsDevice = game.Services.GetService<GraphicsDevice>();
+            graphicsDevice = game.Services.GetService<GraphicsDevice>();
             costruzioneRiquadro
                 (xRel, yRel, LarghRelativa, AltezzaRelativa, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
         }
+        /// <summary>
+        /// Costruttore per un riquardo con dimensioni assolute in pixel
+        /// </summary>
+        protected Riquadro (int xAbs, int yAbs, int Largh, int Altezza)
+        {
+            _superficie = new Rectangle(xAbs, yAbs, Largh, Altezza);
+            if (graphicsDevice!= null)
+            { 
+            _larghRel = Largh / (float)graphicsDevice.Viewport.Width;
+            _altRel = Altezza / (float)graphicsDevice.Viewport.Height;
+            }
+            else _larghRel = _altRel = 1f;
+        }
+
         protected Riquadro 
             (float xRel, float yRel, float LarghRelativa, float AltezzaRelativa, int LarghSchermo, int AltezzaSchermo)
         {

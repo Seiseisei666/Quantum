@@ -14,6 +14,7 @@ namespace Quantum_Game
         Passa,
         Ricerca,
         UsaSpecial,
+        Riconfigura,
         Colonizza,
     }
 
@@ -26,6 +27,17 @@ namespace Quantum_Game
             _tipoBottone = TipoBottone;
             _cliccato = false;
         }
+        /// <summary>
+        /// Bottone con riquardo di dimensioni assolute.
+        /// Per i menu' a tendina
+        /// </summary>
+        public Bottone (bottone TipoBottone, int xAbs, int yAbs, int Largh, int Altezza) : 
+            base(xAbs, yAbs, Largh,Altezza)
+        {
+            _tipoBottone = TipoBottone;
+            _cliccato = false;
+        }
+      
 
         // proprietà pubbliche
         public string Caption
@@ -39,7 +51,9 @@ namespace Quantum_Game
                     case bottone.Ricerca:
                         return "Aumenta il livello di ricerca";
                     case bottone.UsaSpecial:
-                        return "Usa abilità speciale";
+                        return "Usa abilita speciale";
+                    case bottone.Riconfigura:
+                        return "Riconfigura";
                     case bottone.Colonizza:
                         return "Colonizza il Pianeta";
                     default:
@@ -48,20 +62,18 @@ namespace Quantum_Game
             }
         }   // nome del bottone, in caso dovessimo scriverlo a mano
         public bottone TipoBottone { get { return _tipoBottone; } }
-        public bool Check
+        public bool Check ()
         {
-            get
-            {
                 if (_cliccato)
                 {
                     _cliccato = false;
                     return true;
                 }
                 return false;
-            }
         }
 
         public SpriteFont Font { set { font = value; } }
+        public Vector2 grandezzaStringa { get { return font.MeasureString(Caption); } }
         // Override di Riquadro
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
@@ -72,13 +84,22 @@ namespace Quantum_Game
             }
         }
 
+        protected override void MouseOver(object sender, MouseEvntArgs args)
+        {
+            if (Compreso(args.Posizione))
+                _mouseover = true;
+            else _mouseover = false;
+        }
+
         public override void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
 
             Color color = Color.Gold;
             if (_contatoreIllumin > 0)
             { color = Color.Azure; _contatoreIllumin--; }
-
+            else if (_mouseover)
+                color = Color.Beige;
+            
                 //bordo
             spriteBatch.Draw(texture, new Rectangle(Offset.X, Offset.Y, Larghezza, Altezza), Color.White);
                 //sfondo
@@ -90,6 +111,7 @@ namespace Quantum_Game
 
         private bottone _tipoBottone;
         private bool _cliccato;
+        private bool _mouseover;
         private SpriteFont font;
         private int _contatoreIllumin;
         const int FRAME_ILLUMINATO = 8;

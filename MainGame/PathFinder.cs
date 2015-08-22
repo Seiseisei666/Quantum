@@ -71,7 +71,7 @@ namespace Quantum_Game
                 return;
             int LarghezzaCasellePix = tabellone.LarghezzaTilePx;
             int x, y, lungh = 0;
-            Color colore = Color.LightGreen;
+            Color colore = Color.Green;
 
                 // Illumina tutte le caselle raggiungibili
             for (int i = 0; i < _numCaselle; i++)
@@ -81,22 +81,22 @@ namespace Quantum_Game
              //     && _listaCaselle[i].EunaCasella
                                                     )
                 {
-                    id2nm(i, out x, out y);
+                    map.id2nm(i, out x, out y);
                     x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
                     x += tabellone.Offset.X; y += tabellone.Offset.Y;
-                    spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore * 0.2f);
+                    spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore );
                 }
             }
                 // Illumina il percorso
-            foreach (int i in PercorsoXCasella(tabellone.IdMouseOver))
-            {
-                id2nm(i, out x, out y);
-                x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
-                x += tabellone.Offset.X; y += tabellone.Offset.Y;
-                colore = lungh < _nave.Pwr ? Color.LawnGreen : Color.IndianRed; // verde se in range, sennò rosso
-                spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore);
-                lungh++;
-            }
+            //foreach (int i in PercorsoXCasella(tabellone.IdMouseOver))
+            //{
+            //    id2nm(i, out x, out y);
+            //    x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
+            //    x += tabellone.Offset.X; y += tabellone.Offset.Y;
+            //    colore = lungh < _nave.Pwr ? Color.LawnGreen : Color.IndianRed; // verde se in range, sennò rosso
+            //    spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore);
+            //    lungh++;
+            //}
         }
         /// <summary>
         /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile target
@@ -190,12 +190,6 @@ namespace Quantum_Game
                 return ((--pos % _colonne) != (_colonne - 1)) && pos >= 0;
             return false;
         }   
-            // Converte l'indice monodimensionale nelle coordinate n, m
-        private void id2nm(int id, out int x, out int y)
-        {
-            x = id % _colonne;
-            y = id / _colonne;
-        }
 
         // PROPRIETA' PRIVATE
         int _numCaselle { get { return map.NumeroCaselle; } }

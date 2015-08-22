@@ -56,14 +56,13 @@ namespace Quantum_Game
             _idSelezioneDestro = -1;
             _idMouseOver = -1;
             _partitaIniziata = false;
+            _mouseAttivo = true;
 
             Quantum.Ridimensionamento += GestisciRidimensionamento;
         }
 
         // PROPRIETA' PUBBLICHE
-        //public Tile Id2Tile(int ID) { return _listaCaselle[ID]; }
-        //public int Tile2Id(Tile t) { return _listaCaselle.FindIndex(x => x.Equals(t)); }
-
+        public bool MouseAttivo { set { _mouseAttivo = value; } }
         public int LarghezzaTilePx { get { return _latoCasella; } }
 
         public int IdMouseOver { get { return _idMouseOver; } }
@@ -71,13 +70,28 @@ namespace Quantum_Game
         public Tile TileClkDx { get { return _tileClkDx; } }
 
         // METODI PUBBLICI
+        public Point id2Pixel (int id)
+        {
+            int n, m;
+            mappa.id2nm(id, out n, out m);
+            return new Point
+                (n * _latoCasella + Offset.X, m * _latoCasella + Offset.Y);
+        }
+        public Point Tile2Pixel(Tile tile)
+        {
+            int n, m, id;
+            id = mappa.Tile2Id(tile);
+            mappa.id2nm(id, out n, out m);
+            return new Point
+                (n * _latoCasella + Offset.X, m * _latoCasella + Offset.Y);
+        }
 
-            // restituisce il pianeta più vicino alla casella argomento
+        // restituisce il pianeta più vicino alla casella argomento
         public Pianeta PianetaPiùVicino(Casella casella)
         {
             int Id, n, m;
             Id = mappa.Tile2Id(casella);
-            id2nm(Id, out n, out m);
+            mappa.id2nm(Id, out n, out m);
             n = (n / 3) * 3; m /= 3 * 3; n++; m++;
             Pianeta tempPlan = mappa.id2Tile(mappa.nm2id(n,m)) as Pianeta;
             return tempPlan;
@@ -93,9 +107,9 @@ namespace Quantum_Game
                 {             // se la casella non fa parte del gioco non la disegna
 
                     //calcolo delle coordinate su cui disegnare:
-                    id2xy(Idx, out x, out y);
-                    _target.X = x + Offset.X;
-                    _target.Y = y + Offset.Y;
+                    mappa.id2nm(Idx, out x, out y);
+                    _target.X = x * _latoCasella + Offset.X;
+                    _target.Y = y * _latoCasella + Offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     switch (tile.Tipo)
@@ -151,29 +165,15 @@ namespace Quantum_Game
             // restituisce il Tile su cui si è cliccato col sinistro
         private Tile _tileClkSn { get { return (_IdSelezione >= 0) ? mappa.id2Tile(_IdSelezione) : null; } }
             //stessa cosa col click destro
-        private Tile _tileClkDx { get { return (_idSelezioneDestro < 0) ? mappa.id2Tile(_idSelezioneDestro) : null; } }
+        private Tile _tileClkDx { get { return (_idSelezioneDestro >= 0) ? mappa.id2Tile(_idSelezioneDestro) : null; } }
 
-        // METODI PRIVATI 
-            //Funzioncine private di conversione fra le coordinate id ad una dimensione
-            // e le coordinate x,y (pixel) oppure n, m
-        private void id2xy(int id, out int x, out int y)
-        {
-            x = ((id % _colonne) * _latoCasella);
-            y = (id / _colonne) * _latoCasella;
-        }
-        private void id2nm(int id, out int n, out int m)
-        {
-            n = id % _colonne; m = id / _colonne;
-        }
-        private int nm2id(int n, int m)
-        {
-            return n + m * _colonne;
-        }
+        // METODI PRIVATI
+       
         /// <summary>
         /// Converte una coordinata in pixel nell'Id della casella corrispondente
         /// Restituisce false se il click è fuori dai bordi del tabellone
         /// </summary>
-        private bool coordinatePixel2Casella(ref int x, ref int y)
+        public bool coordinatePixel2Casella(ref int x, ref int y)
         {
             float tempX = x; float tempY = y;
             tempX -= Offset.X; tempY -= Offset.Y;
@@ -189,6 +189,7 @@ namespace Quantum_Game
             // calcola il tile su cui sta il mouse
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
+            if (!_mouseAttivo) return;
             if (Compreso(args.Posizione.X, args.Posizione.Y))
             {
                 int tempX = args.Posizione.X;
@@ -209,6 +210,8 @@ namespace Quantum_Game
         
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
+            if (!_mouseAttivo) return;
+
             _idSelezioneDestro = -1;      // annulliamo la selezione destra per prima cosa
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
                 _IdSelezione = _idMouseOver;
@@ -218,6 +221,8 @@ namespace Quantum_Game
 
         protected override void ClickDestro(object sender, MouseEvntArgs args)
         {
+            if (!_mouseAttivo) return;
+
 
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
             {
@@ -246,7 +251,7 @@ namespace Quantum_Game
         private int _idSelezioneDestro;
         private int _idMouseOver;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
-       
+        private bool _mouseAttivo;
         //inutile?
         private bool _partitaIniziata;
     }
