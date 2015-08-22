@@ -24,6 +24,7 @@ namespace Quantum_Game
         public PathFinder(Game game)
         {
             map = game.Services.GetService<Mappa>();
+            Initialize();
         }
 
         // METODI PUBBLICI
@@ -36,20 +37,29 @@ namespace Quantum_Game
                 _matrice[i] = new int[0];
         }
 
-        public void Start(Tile Partenza, Nave nave, int DistanzaMax = 12)
+        public void Start(Casella Partenza, int DistanzaMax = 12)
         {
             if (_partito) return;   // ignora chiamate successive multiple del metodo Start
             if (Partenza != null)
             {
                 _distanzaMax = DistanzaMax;
-                _posPartenza = Partenza;
                 _partito = true;
-                _nave = nave;
+                _nave = Partenza.Occupante;
                 int tile;
                 tile = map.Tile2Id(Partenza);
                 crawl(tile, 0, new int[0], Direzioni.nessuna);
             }
         }
+
+        public int DistanzaCasella (int IdCasella)
+        {
+            return PercorsoXCasella(IdCasella).Length;
+        }
+        public int DistanzaCasella(Tile tile)
+        {
+            return PercorsoXCasella(tile).Length;
+        }
+
         public void Clear()
         {
             if (_partito == false)
@@ -204,8 +214,6 @@ namespace Quantum_Game
         private int[][] _matrice; 
             // la nave che si sta muovendo
         private Nave _nave;
-            // la posizione da cui parte
-        private Tile _posPartenza;
             // distanza massima che calcoliamo, sarebbe meglio farla costante
         private int _distanzaMax;
 

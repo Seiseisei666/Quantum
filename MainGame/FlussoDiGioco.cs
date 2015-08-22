@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Quantum_Game.Azioni;
 
 namespace Quantum_Game
 {
@@ -24,12 +25,14 @@ namespace Quantum_Game
         // COSTRUTTORE
         public FlussoDiGioco(Game game)
         {
+            _game = game;
+
             gameSystem = game.Services.GetService<GameSystem>();
-            mouseInput = game.Services.GetService<MouseInput>();
             pathFinder = game.Components.OfType<PathFinder>().First();
             Gui = game.Components.OfType<GUI>().First();
             tabellone = Gui.tabellone;
 
+            _prossimaAzione = null;
             stato = Azione.nessuna;
         }
 
@@ -64,14 +67,16 @@ namespace Quantum_Game
                 BottonePremuto = Gui.BottonePremuto;
                 checkFineTurno(); // Controlla se il giocatore può agire; in caso contrario finisce il turno ed esce da Update
 
-                if (stato == Azione.nessuna)
-                    checkSelezione();
+                if (_prossimaAzione != null)
+                {
+                    _prossimaAzione.Esegui();
+                    _prossimaAzione = _prossimaAzione.AzioneSuccessiva;
+                }
+                else
+                    _prossimaAzione = new CheckSelezione(_game);
+                    
+           
 
-                else if (stato == Azione.Movimento)
-                    Movimento();
-
-                else if (stato == Azione.SelezioneDx)
-                    SelezioneDx();
             }
 
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
@@ -89,118 +94,12 @@ namespace Quantum_Game
             }
         }
 
-        void checkSelezione()   // aspetta una selezione valida
-        {
-            Nave nave =     
-                casellaCliccata?.Occupante ?? 
-                casellaCliccataDx?.Occupante;
-            if (nave == null) return;
+        
 
-            else if 
-                (clickSn && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
-            {
-                // Selezionata nave alleata e disponibile per il movimento
-                _naveSel = nave;
-                _casellaSel = casellaCliccata;
-                pathFinder.Start(tabellone.TileClkSn, _naveSel);
-                stato = Azione.Movimento;
-            }
-            else if 
-                (clickDx && nave.Alleato(giocatoreDiTurno) &&
-                (!nave.SpecialUsata || !nave.Riconfigurata))
-            {
-                _naveSel = nave;
-                _casellaSel = casellaCliccataDx;
+        
+        
 
-                MenuTendina menu = new MenuTendina
-                    (tabellone.Tile2Pixel(_casellaSel), bottone.Riconfigura, bottone.UsaSpecial);
-                Gui.PopupMenu(menu);
-                stato = Azione.SelezioneDx;
-                Debug.WriteLine("ClickDx");
-            }
-
-        }
-
-        void Movimento()    // gestisce Attacco/Movimento una volta che è stata fatta una selezione valida
-        {
-            if (clickDx || !clickSn)
-            {    // Click dx valido o click sn NON valido: deselezione
-                Deseleziona();
-                return;
-            }
-            
-            _casellaTarget = casellaCliccata;
-            int dist = _distanzaCasella;
-
-            if (dist == 0 || dist > _naveSel.Pwr)
-                return;
-
-            Nave nave = _casellaTarget.Occupante;
-            if (nave != null && 
-                !nave.Alleato(giocatoreDiTurno))
-            {   
-                // Combattimento
-
-                bool RisultatoAttacco;
-                Debug.WriteLine("Una nave {0} di colore {1} ha attaccato una nave {2} di colore {3}.",
-                            _naveSel.Tipo, _naveSel.Colore, nave.Tipo, nave.Colore);
-
-                RisultatoAttacco = _naveSel.Attacco(nave);
-                Debug.WriteLine("risultato: {0}", RisultatoAttacco);
-
-                if (RisultatoAttacco == true)
-                    _naveSel.Muovi(_casellaSel, _casellaTarget);
-            }
-            else if (_casellaTarget != null)
-
-            {
-                // Movimento
-
-                _naveSel.Muovi(_casellaSel, _casellaTarget);
-            }
-
-            // Fine procedura Movimento/Attacco
-            Deseleziona();
-            
-        }
-        void SelezioneDx()
-        {
-            if (!clickDx || clickSn)
-            {    // Click dx non valido o click sn valido: deselezione
-                Deseleziona();
-                return;
-            }
-            /* TODO:
-            Mostrare il menù di selezione fra riconfigurazione e special;
-            riconfigurazione -> si chiama il metodo e stop
-            Special -> si entra in un altro blocco di codice per la gestione dello special
-    */
-            
-
-            if (BottonePremuto == bottone.Riconfigura && !_naveSel.Riconfigurata)
-            {
-                e_nave t1 = _naveSel.Tipo;
-                _naveSel.Riconfig();
-                Gui.ChiudiMenu();
-                tabellone.MouseAttivo = true;
-                e_nave t2 = _naveSel.Tipo;
-                Deseleziona();
-
-                
-                Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
-
-            }
-            
-        }
-
-        void Deseleziona () // esce dalla routine di Attacco/Movimento
-        {
-            pathFinder.Clear();
-            stato = Azione.nessuna;
-            _naveSel = null;
-            _casellaTarget = _casellaSel = null;
-            Debug.WriteLine("deselezione");
-        }
+        
 
         void setupPartita() // loop della fase di setup della partita
         {
@@ -220,26 +119,19 @@ namespace Quantum_Game
         private Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
         private Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
         private Casella casellaCliccataDx { get { return tabellone.TileClkDx as Casella; } }
-            // distanza della casella su cui si prova a muovere /attaccare
-        private int _distanzaCasella
-        {
-            get
-            {
-                if (_casellaTarget != null)
-                    return pathFinder.PercorsoXCasella(_casellaTarget).Length;
-                else return 0;
-            }
-        }
-            // bool che ci dicono se c'è stato un click destro o sinistro sul tabellone
-        private bool clickDx { get { return casellaCliccataDx != null; } }
-        private bool clickSn { get { return casellaCliccata != null; } }
+        // distanza della casella su cui si prova a muovere /attaccare
+
+
+        private AzioneDiGioco _prossimaAzione;
+
+
 
 
         // CAMPI
         // oggetti di gioco a cui dobbiamo avere accesso
+        private Game _game;
         private GameSystem gameSystem;
         private Tabellone tabellone;
-        private MouseInput mouseInput;
         private PathFinder pathFinder;
         private GUI Gui;
             // stato del flusso di gioco

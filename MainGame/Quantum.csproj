@@ -54,6 +54,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Azioni\AzioneDiGioco.cs" />
+    <Compile Include="Azioni\CheckSelezione.cs" />
+    <Compile Include="Azioni\Movimento_Attacco.cs" />
     <Compile Include="Bottone.cs" />
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />

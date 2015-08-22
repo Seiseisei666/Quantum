@@ -9,24 +9,44 @@ namespace Quantum_Game.Azioni
     public abstract class AzioneDiGioco
     {
         // Costruttore
-        public AzioneDiGioco (Game game, FlussoDiGioco parent)
+        public AzioneDiGioco (Game game)
         {
+            Completata = false;
             _game = game;
-            _parent = parent;
-            Completato = false;
-            Inizializzazione();
+            gameSystem = game.Services.GetService<GameSystem>();
+            gui = game.Components.OfType<GUI>().First();
+            tabellone = gui.tabellone;
         }
-        public virtual bool Completato { get; protected set; }
 
-        public abstract void Corpo();
-        public virtual bool Cleanup()
+        protected virtual void Inizializzazione()
         {
-            return Completato;
+            AzioneSuccessiva = this;
         }
-        protected abstract void Inizializzazione();
 
-        protected FlussoDiGioco _parent;
+        public abstract void Esegui();
+
+        protected virtual void Cleanup()
+        {
+            Completata = true;
+        }
+
+        public virtual AzioneDiGioco AzioneSuccessiva { get; protected set; }
+        public bool Completata { get; protected set; }
+
+
+        // Informazioni che otteniamo da altri oggetti di gioco
+        protected Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
+        protected Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
+        protected Casella casellaCliccataDx { get { return tabellone.TileClkDx as Casella; } }
+        protected bool clickDx { get { return casellaCliccataDx != null; } }
+        protected bool clickSn { get { return casellaCliccata != null; } }
+
+        // Oggetti di gioco che ci interessano
         protected Game _game;
+        protected GameSystem gameSystem;
+        protected GUI gui;
+        protected Tabellone tabellone;
+
 
     }
 }
