@@ -64,9 +64,10 @@ namespace Quantum_Game
             {
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
-                BottonePremuto = Gui.BottonePremuto;
-                checkFineTurno(); // Controlla se il giocatore può agire; in caso contrario finisce il turno ed esce da Update
 
+                if (!giocatoreDiTurno.PuòAgire || Gui.BottonePremuto == bottone.Passa)
+                    _prossimaAzione = new FineTurno(_game);
+                
                 if (_prossimaAzione != null)
                 {
                     _prossimaAzione.Esegui();
@@ -82,24 +83,6 @@ namespace Quantum_Game
             else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
                 setupPartita();
         }
-
-        // METODI PRIVATI
-        void checkFineTurno() // controlla se è finito il turno
-        {
-            if (!giocatoreDiTurno.PuòAgire | BottonePremuto == bottone.Passa)   
-            {
-                gameSystem.NextTurn();
-                Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
-                return;
-            }
-        }
-
-        
-
-        
-        
-
-        
 
         void setupPartita() // loop della fase di setup della partita
         {
@@ -136,8 +119,6 @@ namespace Quantum_Game
         private GUI Gui;
             // stato del flusso di gioco
         private Azione stato;
-
-        private bottone BottonePremuto;
             // Qui ci salviamo le selezioni compiute dall'utente
         Nave _naveSel;  
         Casella _casellaSel; // la casella attualmente selezionata

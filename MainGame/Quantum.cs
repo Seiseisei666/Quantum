@@ -120,8 +120,11 @@ namespace Quantum_Game
             
             mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
                                  // l'oggetto mouseInput
+
+            Gui.Update();
+
+
             flussoGioco.Update();
-            
 
 
             base.Update(gameTime);

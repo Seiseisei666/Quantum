@@ -9,6 +9,10 @@ namespace Quantum_Game
 {
     public sealed class GUI: IGameComponent
     {
+        /// <summary>
+        /// Nelle intenzioni GUI sarebbe l'oggetto master che gestisce tutta l'interfaccia grafica
+        /// </summary>
+
         public GUI (Game game, Texture2D texture)
         {
             _game = game;
@@ -22,38 +26,38 @@ namespace Quantum_Game
 
         // Proprietà pubbliche
         public Tabellone tabellone { get { return _tabellone; } }
-        public bottone BottonePremuto   // Da controllare ogni update, fornisce il bottone che è stato premuto
+        public bottone BottonePremuto { get { return _bottonePremuto; } }
+        private bottone _bottonePremuto;
+        public void Update ()   // Da controllare ogni update, fornisce il bottone che è stato premuto
         {
-            get
-            {
-                foreach (var b in _bottoni)
-
-                    if (b.Check())
-                        return b.TipoBottone;
-
-                return bottone.nessuno;
-            }
+            foreach (var b in _bottoni)
+                if (b.Check())
+                {
+                    _bottonePremuto = b.TipoBottone;
+                    return;
+                }
+            _bottonePremuto = bottone.nessuno;
         }
         
         public SpriteFont Font { set { font = value; } }
 
         // METODI IMPORTANTI
 
-        public void Initialize() { }
+        public void Initialize()
+        {
+        }
        
 
         public void Draw ()
         {
+            // Da fare meglio
             foreach (var b in _bottoni)
             {
                 b.Draw(_spriteBatch, _texture);
             }
         }
 
-
-
-
-        // Metodi scemi
+        // Metodi scemi, pecionate temporanee
 
         public void AddElement (Bottone bot)
         {
@@ -74,6 +78,7 @@ namespace Quantum_Game
 
         public void PopupMenu(MenuTendina menu)
         {
+            // PECIONATA TEMPORANEA
             if (menu.Elementi.Count == 0)
                 throw new ArgumentException("Menu' a tendina vuoto");
             if (_menu != null)
@@ -89,6 +94,7 @@ namespace Quantum_Game
    
         public void ChiudiMenu ()
         {
+            //NON FUNZIONA, da sistemare
             foreach (Bottone b in _menu.Elementi)
             {
 
@@ -113,10 +119,6 @@ namespace Quantum_Game
 
         // Proprietà private
         private int _numElementi { get { return _bottoni.Count; } }
-
-        const int LARGH_MENU = 84;
-        const int ALT_MENU = 30;
-        const int OFFSETy = 10;
 
     }
 }

@@ -55,13 +55,10 @@ namespace Quantum_Game.Azioni
                     naveMossa.Muovi(_casellaPartenza, casellaCliccata);
             }
             else if (casellaCliccata != null && naveTarget == null)
-
             {
                 // Movimento
-
                 naveMossa.Muovi(_casellaPartenza, casellaCliccata);
             }
-
             // Fine procedura Movimento/Attacco
             Cleanup();
         }
@@ -70,11 +67,10 @@ namespace Quantum_Game.Azioni
         {
             pathFinder.Clear();
             AzioneSuccessiva = null;
-            base.Cleanup();
         }
 
+        Casella _casellaPartenza;
         private Nave naveMossa {get {return _casellaPartenza.Occupante;} }
         PathFinder pathFinder;
-        Casella _casellaPartenza;
     }
 }
