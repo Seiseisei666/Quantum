@@ -55,19 +55,31 @@ namespace Quantum_Game
             _IdSelezione = -1;
             _idSelezioneDestro = -1;
             _idMouseOver = -1;
-            _partitaIniziata = false;
             _mouseAttivo = true;
-
             Quantum.Ridimensionamento += GestisciRidimensionamento;
         }
 
         // PROPRIETA' PUBBLICHE
-        public bool MouseAttivo { set { _mouseAttivo = value; } }
-        public int LarghezzaTilePx { get { return _latoCasella; } }
 
-        public int IdMouseOver { get { return _idMouseOver; } }
+        /* SPIEGAZIONE DELL'OUTPUT DEI CLICK SUL TABELLONE
+        MouseAttivo lo possiamo usare da fuori per disattivare il 
+*/
+        bool _mouseAttivo;
+        public bool MouseAttivo
+        { private get { return _mouseAttivo; }
+            set {
+                _mouseAttivo = value;
+                if (_mouseAttivo == true)
+                    _IdSelezione = _idSelezioneDestro = -1;
+                UltimoClick = TipoEventoMouse.nessuno;
+            }
+        }
+        public int IdMouseOver { get { return MouseAttivo ? _idMouseOver : -1; } }
         public Tile TileClkSn { get { return _tileClkSn; } }
-        public Tile TileClkDx { get { return _tileClkDx; } }
+        public Tile TileClkDx { get { return  _tileClkDx; } }
+        public TipoEventoMouse UltimoClick { get; private set; }
+
+        public int LarghezzaTilePx { get { return _latoCasella; } } // TODO: soluzione poco elegante
 
         // METODI PUBBLICI
         public Point id2Pixel (int id)
@@ -155,7 +167,6 @@ namespace Quantum_Game
             // Al momento, del tutto inutile. Viene chiamata una volta per partita
         public void InizioPartita(object sender, EventArgs args)
         {
-            _partitaIniziata = true;
         }
 
 
@@ -189,7 +200,6 @@ namespace Quantum_Game
             // calcola il tile su cui sta il mouse
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            if (!_mouseAttivo) return;
             if (Compreso(args.Posizione.X, args.Posizione.Y))
             {
                 int tempX = args.Posizione.X;
@@ -210,24 +220,25 @@ namespace Quantum_Game
         
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-            if (!_mouseAttivo) return;
-
-            _idSelezioneDestro = -1;      // annulliamo la selezione destra per prima cosa
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
+            {
                 _IdSelezione = _idMouseOver;
+                _idSelezioneDestro = -1;
+                UltimoClick = TipoEventoMouse.ClkSin;
+            }
             else
                 _IdSelezione = -1;              // sennò annulliamo la selezione attuale
         }
 
         protected override void ClickDestro(object sender, MouseEvntArgs args)
         {
-            if (!_mouseAttivo) return;
 
 
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
             {
                 _idSelezioneDestro = _idMouseOver;
                 _IdSelezione = -1;
+                UltimoClick = TipoEventoMouse.ClkDx;
             }
             else
                 _idSelezioneDestro = -1;              // sennò annulliamo la selezione attuale
@@ -251,9 +262,6 @@ namespace Quantum_Game
         private int _idSelezioneDestro;
         private int _idMouseOver;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
-        private bool _mouseAttivo;
-        //inutile?
-        private bool _partitaIniziata;
     }
  }
 

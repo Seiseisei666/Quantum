@@ -15,7 +15,6 @@ namespace Quantum_Game.Azioni
         /// </summary>
         public FineTurno (Microsoft.Xna.Framework.Game game) : base (game)
         {
-
         }
 
         public override void Esegui()

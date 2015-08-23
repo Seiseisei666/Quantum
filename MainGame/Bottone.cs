@@ -81,7 +81,9 @@ namespace Quantum_Game
             {
                 _cliccato = true;
                 _contatoreIllumin = FRAME_ILLUMINATO;
+                return;
             }
+
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)

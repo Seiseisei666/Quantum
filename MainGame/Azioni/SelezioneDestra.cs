@@ -17,27 +17,26 @@ namespace Quantum_Game.Azioni
 
         protected override void Inizializzazione()
         {
+            gui.tabellone.MouseAttivo = false;
             MenuTendina menu = new MenuTendina
-                (tabellone.Tile2Pixel(_casellaPartenza), bottone.Riconfigura, bottone.UsaSpecial);
+                (gui.tabellone.Tile2Pixel(_casellaPartenza), bottone.Riconfigura, bottone.UsaSpecial);
 
             gui.PopupMenu(menu);
-            base.Inizializzazione();
         }
 
         public override void Esegui ()
         {
-            if (!clickDx || clickSn)
-            {    // Click dx non valido o click sn valido: deselezione
+            if (ultimoClick == TipoEventoMouse.ClkDx)
+            {    // Click non valido: deselezione
                 Cleanup();
                 return;
             }
             /* TODO:
             Mostrare il menù di selezione fra riconfigurazione e special;
             riconfigurazione -> si chiama il metodo e stop
-            Special -> si entra in un altro blocco di codice per la gestione dello special
-    */
+            Special -> si entra in un altro blocco di codice per la gestione dello special 
+            */
             
-
             if (gui.BottonePremuto == bottone.Riconfigura && !naveUsata.Riconfigurata)
             {
                 e_nave t1 = naveUsata.Tipo;
@@ -45,12 +44,18 @@ namespace Quantum_Game.Azioni
                 e_nave t2 = naveUsata.Tipo;
 
                 System.Diagnostics.Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
-
+                Cleanup();
             }
-
         }
 
-        private Casella _casellaPartenza;
+        protected override void Cleanup()
+        {
+            gui.ChiudiMenu();
+            base.Cleanup();
+            gui.tabellone.MouseAttivo = true;
+        }
+
+        private readonly Casella _casellaPartenza;
         private Nave naveUsata { get { return _casellaPartenza.Occupante; } }
 
     }

@@ -18,14 +18,13 @@ namespace Quantum_Game.Azioni
             this.game = game;
             gameSystem = game.Services.GetService<GameSystem>();
             gui = game.Components.OfType<GUI>().First();
-            tabellone = gui.tabellone;
+            AzioneSuccessiva = this;
         }
         /// <summary>
-        /// Inizializzazione standard. Dice semplicemente che la prossima azione sarà ancora questa
+        /// Inizializzazione
         /// </summary>
         protected virtual void Inizializzazione()
         {
-            AzioneSuccessiva = this;
         }
         /// <summary>
         /// Il corpo dell'azione. E' astratto, per cui è obbligatorio implementarlo
@@ -49,15 +48,15 @@ namespace Quantum_Game.Azioni
 
         // Informazioni a disposizione che prendiamo da altri oggetti di gioco
         protected Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
-        protected Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
-        protected Casella casellaCliccataDx { get { return tabellone.TileClkDx as Casella; } }
+        protected Casella casellaCliccata { get { return gui.tabellone.TileClkSn as Casella; } }
+        protected Casella casellaCliccataDx { get { return gui.tabellone.TileClkDx as Casella; } }
         protected bool clickDx { get { return casellaCliccataDx != null; } }
         protected bool clickSn { get { return casellaCliccata != null; } }
+        protected TipoEventoMouse ultimoClick { get { return gui.tabellone.UltimoClick; } }
 
         // Oggetti di gioco che ci portiamo dietro
         protected Game game;
         protected GameSystem gameSystem;    // per accedere al giocatore di turno
-        protected Tabellone tabellone;      // per accedere ai click sul tabellone
-        protected GUI gui;
+        protected GUI gui;                  // per accedere alla grafica e ai click sul tabellone
     }
 }

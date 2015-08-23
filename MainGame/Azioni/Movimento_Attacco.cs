@@ -15,20 +15,14 @@ namespace Quantum_Game.Azioni
                 throw new ArgumentNullException("La casella era null");
             _casellaPartenza = casellaCliccata;
             pathFinder = game.Components.OfType<PathFinder>().First();
-            Inizializzazione();
-        }
-
-        protected override void Inizializzazione()
-        {
             pathFinder.Start(_casellaPartenza);
-            AzioneSuccessiva = this;
         }
 
         public override void Esegui()
         {
 
-            if (clickDx || !clickSn)
-            {    // Click dx valido o click sn NON valido: deselezione
+            if (ultimoClick == TipoEventoMouse.ClkDx || casellaCliccata == null)
+            {    // Deselezione
                 Cleanup();
                 return;
             }

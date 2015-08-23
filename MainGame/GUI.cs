@@ -95,14 +95,8 @@ namespace Quantum_Game
         public void ChiudiMenu ()
         {
             //NON FUNZIONA, da sistemare
-            foreach (Bottone b in _menu.Elementi)
-            {
-
-                _bottoni.Remove(b);
-                System.Diagnostics.Debug.WriteLine(_bottoni.IndexOf(b));
-            }
-
-            _menu = null;
+            _bottoni.RemoveAll(b => b.TipoBottone == bottone.Riconfigura || b.TipoBottone == bottone.UsaSpecial);
+                        _menu = null;
         }
 
         // Campi privati
