@@ -53,35 +53,29 @@ namespace Quantum_Game
                                                       //va sostituito con quello definitivo
 
             _IdSelezione = -1;
-            _idSelezioneDestro = -1;
             _idMouseOver = -1;
-            _mouseAttivo = true;
+            SelezTileVisibile = true;
             Quantum.Ridimensionamento += GestisciRidimensionamento;
         }
 
         // PROPRIETA' PUBBLICHE
 
-        /* SPIEGAZIONE DELL'OUTPUT DEI CLICK SUL TABELLONE
-        MouseAttivo lo possiamo usare da fuori per disattivare il 
-*/
-        bool _mouseAttivo;
-        public bool MouseAttivo
-        { private get { return _mouseAttivo; }
-            set {
-                _mouseAttivo = value;
-                if (_mouseAttivo == true)
-                    _IdSelezione = _idSelezioneDestro = -1;
-                UltimoClick = TipoEventoMouse.nessuno;
-            }
-        }
-        public int IdMouseOver { get { return MouseAttivo ? _idMouseOver : -1; } }
-        public Tile TileClkSn { get { return _tileClkSn; } }
-        public Tile TileClkDx { get { return  _tileClkDx; } }
+        public bool SelezTileVisibile { set { _selezTileVisibile = value; } }
+
+        public Tile TileClick { get { return (_IdSelezione >= 0) ? mappa.id2Tile(_IdSelezione) : null; } }
         public TipoEventoMouse UltimoClick { get; private set; }
 
         public int LarghezzaTilePx { get { return _latoCasella; } } // TODO: soluzione poco elegante
 
         // METODI PUBBLICI
+        public void ResetSelezioneMouse()
+        {
+            // Annulla la selezione del mouse, in modo che una volta finita un'azione
+            // non venga automaticamente riselezionata la stessa ultima casella cliccata
+            _IdSelezione = -1;
+            UltimoClick = TipoEventoMouse.nessuno;
+        }
+
         public Point id2Pixel (int id)
         {
             int n, m;
@@ -158,10 +152,10 @@ namespace Quantum_Game
             // illumina la casella su cui sta il mouse
         public void DisegnaSelezione(SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (_idMouseOver >= 0)
+            if (_idMouseOver >= 0 && _selezTileVisibile)
             {
                 _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y;
-                spriteBatch.Draw(texture, _target, Color.IndianRed);
+                spriteBatch.Draw(texture, _target, Color.IndianRed*0.5f);
             }
         }
             // Al momento, del tutto inutile. Viene chiamata una volta per partita
@@ -169,14 +163,6 @@ namespace Quantum_Game
         {
         }
 
-
-
-        // PROPRIETA' PRIVATE
-
-            // restituisce il Tile su cui si è cliccato col sinistro
-        private Tile _tileClkSn { get { return (_IdSelezione >= 0) ? mappa.id2Tile(_IdSelezione) : null; } }
-            //stessa cosa col click destro
-        private Tile _tileClkDx { get { return (_idSelezioneDestro >= 0) ? mappa.id2Tile(_idSelezioneDestro) : null; } }
 
         // METODI PRIVATI
        
@@ -220,11 +206,10 @@ namespace Quantum_Game
         
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
+            UltimoClick = TipoEventoMouse.ClkSin;
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
             {
                 _IdSelezione = _idMouseOver;
-                _idSelezioneDestro = -1;
-                UltimoClick = TipoEventoMouse.ClkSin;
             }
             else
                 _IdSelezione = -1;              // sennò annulliamo la selezione attuale
@@ -232,16 +217,13 @@ namespace Quantum_Game
 
         protected override void ClickDestro(object sender, MouseEvntArgs args)
         {
-
-
+            UltimoClick = TipoEventoMouse.ClkDx;
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
             {
-                _idSelezioneDestro = _idMouseOver;
-                _IdSelezione = -1;
-                UltimoClick = TipoEventoMouse.ClkDx;
+                _IdSelezione = _idMouseOver;
             }
             else
-                _idSelezioneDestro = -1;              // sennò annulliamo la selezione attuale
+                _IdSelezione = -1;              // sennò annulliamo la selezione attuale
         }
 
         // CAMPI DELLA CLASSE
@@ -257,9 +239,9 @@ namespace Quantum_Game
             //utility per disegnare
         private Rectangle _source, _target;
 
-            // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
+        // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
+        bool _selezTileVisibile;
         private int _IdSelezione;
-        private int _idSelezioneDestro;
         private int _idMouseOver;
         private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
     }

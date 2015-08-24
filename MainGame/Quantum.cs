@@ -84,9 +84,10 @@ namespace Quantum_Game
             // CARICAMENTO CONTENUTO
             textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = Content.Load<SpriteFont>("Font\\Font");
-            // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
+            // texture di 1x1 pixel, per disegnare "a mano"
+            // indicativamente andrà sostituito per quasi tutti gli impieghi dal tileset definitivo
             contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
-            contornoCasella.SetData(new[] { (Color.White*0.5f) });
+            contornoCasella.SetData(new[] { (Color.White) });
 
             // Inizializzazione GUI
             Gui = new GUI(this, contornoCasella);

@@ -94,7 +94,8 @@ namespace Quantum_Game
                     map.id2nm(i, out x, out y);
                     x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
                     x += tabellone.Offset.X; y += tabellone.Offset.Y;
-                    spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore );
+                    spriteBatch.Draw
+                        (texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore *0.5f );
                 }
             }
                 // Illumina il percorso
@@ -204,8 +205,8 @@ namespace Quantum_Game
         // PROPRIETA' PRIVATE
         int _numCaselle { get { return map.NumeroCaselle; } }
         int _colonne { get { return map.Colonne; } }
-        // CAMPI
 
+        // CAMPI
             // status del pathfinder: se è già stato acceso deve essere spento prima di poterlo riutilizzare
         private bool _partito;
         // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare

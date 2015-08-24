@@ -14,20 +14,19 @@ namespace Quantum_Game.Azioni
         public override void Esegui()
         {
             Nave nave =
-               casellaCliccata?.Occupante ??
-               casellaCliccataDx?.Occupante;
+               casellaCliccata?.Occupante;
 
             if (nave == null) return;
 
             else if
-                (clickSn && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
+                (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
             {
                 AzioneSuccessiva = new MovimentoAttacco(game);
                 System.Diagnostics.Debug.WriteLine("Click Sinistro");
             }
 
             else if
-                (clickDx && nave.Alleato(giocatoreDiTurno) &&
+                (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) &&
                 (!nave.SpecialUsata || !nave.Riconfigurata))
             {
                 AzioneSuccessiva = new SelezioneDestra(game);

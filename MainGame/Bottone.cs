@@ -37,7 +37,7 @@ namespace Quantum_Game
             _tipoBottone = TipoBottone;
             _cliccato = false;
         }
-      
+
 
         // proprietà pubbliche
         public string Caption
@@ -72,7 +72,9 @@ namespace Quantum_Game
                 return false;
         }
 
-        public SpriteFont Font { set { font = value; } }
+        public SpriteFont Font { set { font = value; dimensioniScritta = font.MeasureString(Caption);
+            }
+        }
         public Vector2 grandezzaStringa { get { return font.MeasureString(Caption); } }
         // Override di Riquadro
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
@@ -107,16 +109,18 @@ namespace Quantum_Game
                 //sfondo
             spriteBatch.Draw(texture, new Rectangle(Offset.X+3, Offset.Y+3, Larghezza-6, Altezza-6), color);
 
-            spriteBatch.DrawString(font, this.Caption, new Vector2(Offset.X + 10, Offset.Y+ Altezza/2), Color.Black);
+            Vector2 pos = new Vector2(Offset.X + (Larghezza - dimensioniScritta.X) / 2, Offset.Y + (Altezza - dimensioniScritta.Y) / 2);
+            spriteBatch.DrawString(font, Caption, pos, Color.Black);
         }
 
 
         private bottone _tipoBottone;
         private bool _cliccato;
         private bool _mouseover;
-        private SpriteFont font;
         private int _contatoreIllumin;
         const int FRAME_ILLUMINATO = 8;
-
+        // Utlity spritefont
+        private SpriteFont font;
+        Vector2 dimensioniScritta;
     }
 }

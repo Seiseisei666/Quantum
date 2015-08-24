@@ -42,8 +42,8 @@ namespace Quantum_Game
         {
             get
             {
-                Casella cas = tabellone.TileClkSn as Casella;
-                Pianeta pian = tabellone.TileClkSn as Pianeta;
+                Casella cas = tabellone.TileClick as Casella;
+                Pianeta pian = tabellone.TileClick as Pianeta;
 
                 if (cas != null && cas.Occupante != null)
                     return cas.Occupante;
@@ -86,7 +86,7 @@ namespace Quantum_Game
 
         void setupPartita() // loop della fase di setup della partita
         {
-            Casella tempCas = tabellone.TileClkSn as Casella; // prova a castare il tile selezionato come casella
+            Casella tempCas = tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
             Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
             if (naveTemp != null)
             {
@@ -100,8 +100,7 @@ namespace Quantum_Game
 
         // PROPRIETA' PRIVATE
         private Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
-        private Casella casellaCliccata { get { return tabellone.TileClkSn as Casella; } }
-        private Casella casellaCliccataDx { get { return tabellone.TileClkDx as Casella; } }
+        private Casella casellaCliccata { get { return tabellone.TileClick as Casella; } }
         // distanza della casella su cui si prova a muovere /attaccare
 
 

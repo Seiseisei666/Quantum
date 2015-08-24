@@ -18,11 +18,11 @@ namespace Quantum_Game
             foreach (var b in Bottoni)
             {
                 _elementi.Add
-                    (new Bottone(b, 
-                    Posizione.X - LARGH_MENU / 2, 
-                    Posizione.Y + (ALT_MENU * i) + OFFSETy,
+                    (new Bottone (b, 
+                    Posizione.X - OFFSET, 
+                    Posizione.Y + (ALT_MENU * i++) + OFFSET,
                     LARGH_MENU, 
-                    ALT_MENU * ++i));
+                    ALT_MENU    )   );
             }
         }
         public List<Bottone> Elementi { get { return _elementi; } }
@@ -30,9 +30,9 @@ namespace Quantum_Game
 
 
         List<Bottone> _elementi;
-        const int LARGH_MENU = 84;
-        const int ALT_MENU = 30;
-        const int OFFSETy = 10;
+        const int LARGH_MENU = 138;
+        const int ALT_MENU = 35;
+        const int OFFSET = 20 ;
 
     }
 }

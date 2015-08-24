@@ -46,7 +46,9 @@ namespace Quantum_Game.Azioni
                 Debug.WriteLine("risultato: {0}", RisultatoAttacco);
 
                 if (RisultatoAttacco == true)
+                {
                     naveMossa.Muovi(_casellaPartenza, casellaCliccata);
+                }
             }
             else if (casellaCliccata != null && naveTarget == null)
             {
@@ -60,6 +62,7 @@ namespace Quantum_Game.Azioni
         protected override void Cleanup()
         {
             pathFinder.Clear();
+            gui.tabellone.ResetSelezioneMouse();
             AzioneSuccessiva = null;
         }
 

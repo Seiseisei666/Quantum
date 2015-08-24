@@ -48,10 +48,7 @@ namespace Quantum_Game.Azioni
 
         // Informazioni a disposizione che prendiamo da altri oggetti di gioco
         protected Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
-        protected Casella casellaCliccata { get { return gui.tabellone.TileClkSn as Casella; } }
-        protected Casella casellaCliccataDx { get { return gui.tabellone.TileClkDx as Casella; } }
-        protected bool clickDx { get { return casellaCliccataDx != null; } }
-        protected bool clickSn { get { return casellaCliccata != null; } }
+        protected Casella casellaCliccata { get { return gui.tabellone.TileClick as Casella; } }
         protected TipoEventoMouse ultimoClick { get { return gui.tabellone.UltimoClick; } }
 
         // Oggetti di gioco che ci portiamo dietro

@@ -99,6 +99,8 @@ namespace Quantum_Game
             if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1))
             {
                 target.Distruggi();
+                this._proprietario.Dominio++;
+                target._proprietario.Dominio--;
                 return true;
             }
             _proprietario.Azione();

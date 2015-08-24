@@ -35,6 +35,18 @@ public class Giocatore {
         public bool PuòAgire { get { return _azioni > 0; } }
         public bool PuòColonizzare { get { return _azioni > 1; } }
 
+        public int Dominio
+        {
+            get
+            { return _dominio; }
+            set // accetta solo incrementi o decrementi unitari
+            {   if (System.Math.Abs(value - _dominio) == 1)
+                    _dominio = value;
+                if (_dominio < 0) _dominio = 0;
+                System.Diagnostics.Debug.WriteLine("Punti Dominio del giocatore {0}: {1}", this.Colore, _dominio);
+            }
+        }
+
         //METODI PUBBLICI 
         public void GlobalInit() // inizializzazione globale
         {
@@ -79,7 +91,6 @@ public class Giocatore {
                 // Piazzare la mentina
             }
         }
-
         // METODI PRIVATI
         private void inizializzaFlotta(int NUMERO_NAVI_INIZIALI = 3)
         {
