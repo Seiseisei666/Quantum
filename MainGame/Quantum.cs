@@ -103,9 +103,12 @@ namespace Quantum_Game
             Gui.AddElement(new Bottone(bottone.Passa, 0.72f, 0.8f, 0.8f, 0.85f, 800, 600));
             tabellone = new Tabellone(this, 0.05f, 0.1f);
             Gui.AddElement(tabellone);
+            // GUI schermata iniziale
+            //Gui.AddElement(new Bottone(bottone.Exit, 0.72f, 0.8f, 0.8f, 0.85f, 800, 600));
+
+
             Components.Add(Gui);
-
-
+            
             flussoGioco = new FlussoDiGioco (this);
 
             base.LoadContent();
