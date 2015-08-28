@@ -14,6 +14,7 @@ namespace Quantum_Game.Azioni
             _naveMossa = casellaPartenza.Occupante;
         }
 
+        /// <summary> Per default, nelle Azioni di Gioco Complesse, l'inizializzazione è la prima fase </summary>
         protected override void inizializzazione()
         {
             System.Diagnostics.Debug.WriteLine("Clicca su un alleato adiacente");
@@ -67,7 +68,7 @@ namespace Quantum_Game.Azioni
 
                 else
                 {
-                    // Abortiamo la special?
+                    // TODO: qui bisogna abolire la special
                 }
             }
         }
