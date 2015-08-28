@@ -91,6 +91,7 @@ namespace Quantum_Game
             // CARICAMENTO CONTENUTO
 
             schermataIniziale = Content.Load<Texture2D>(@"Graphica\schermataIniziale_sfondo_2.1");
+            schermataIniziale = Content.Load<Texture2D>(@"Graphica\schermataIniziale_bottoni_2.1");
             textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = Content.Load<SpriteFont>(@"Font\Font");
             // texture di 1x1 pixel con alpha blending, per disegnare "a mano"
