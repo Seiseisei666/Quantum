@@ -54,10 +54,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Azioni\AzioneDiGioco.cs" />
+    <Compile Include="Azioni\AzioneDiGiocoComplessa.cs" />
     <Compile Include="Azioni\FineTurno.cs" />
     <Compile Include="Azioni\CheckSelezione.cs" />
     <Compile Include="Azioni\Movimento_Attacco.cs" />
     <Compile Include="Azioni\SelezioneDestra.cs" />
+    <Compile Include="Azioni\Special_Flagship.cs" />
     <Compile Include="Bottone.cs" />
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
@@ -73,8 +75,6 @@
     <Compile Include="Pianeta.cs" />
     <Compile Include="ResizeEvntArgs.cs" />
     <Compile Include="Riquadro.cs" />
-    <Compile Include="Settore.cs" />
-    <Compile Include="Tabellone2.cs" />
     <Compile Include="Tabellone.cs" />
     <Compile Include="Quantum.cs" />
     <Compile Include="Giocatore.cs" />

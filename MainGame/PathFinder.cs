@@ -14,7 +14,11 @@ namespace Quantum_Game
         Sopra,
         Sotto,
         Sinistra,
-        Destra
+        Destra,
+        AltoASinistra,
+        AltoADestra,
+        BassoASinistra,
+        BassoADestra
     }
 
     public class PathFinder: IGameComponent
@@ -45,6 +49,8 @@ namespace Quantum_Game
                 _distanzaMax = DistanzaMax;
                 _partito = true;
                 _nave = Partenza.Occupante;
+                if (_nave == null)
+                    throw new ArgumentNullException("Pathfinder chiamato con una casella di partenza su cui non c'è nessuna nave!!!");
                 int tile;
                 tile = map.Tile2Id(Partenza);
                 crawl(tile, 0, new int[0], Direzioni.nessuna);
@@ -128,13 +134,19 @@ namespace Quantum_Game
         /// </summary>
         public int[] PercorsoXCasella(int targetId)
         {
-            if (targetId >= 0) return _matrice[targetId];
+            if (map.idValido(targetId)) return _matrice[targetId];
             else return new int[0];
         }
 
         // METODI PRIVATI
 
-            // Algoritmo ricorsivo
+        /// <summary>
+        /// Algoritmo ricorsivo
+        /// </summary>
+        /// <param name="IDtile">Indirizzo del tile su cui sta adesso il pathfinder</param>
+        /// <param name="count">Lunghezza del percorso</param>
+        /// <param name="percorso">Array che rappresenta gli indirizzi delle caselle percorse da questo ramo dell'algoritmo</param>
+        /// <param name="DirezioneProvenienza">La direzione da cui è stato chiamato l'algoritmo; per evitare chiamate inutili non proseguirà il percorso in questa direzione</param>
         void crawl(int IDtile, int count, int[] percorso, Direzioni DirezioneProvenienza)
         {
             Tile tile = map.id2Tile(IDtile);

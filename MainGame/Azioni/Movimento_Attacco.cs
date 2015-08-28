@@ -7,67 +7,106 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game.Azioni
 {
-    public class MovimentoAttacco : AzioneDiGioco
+    public class MovimentoAttacco : AzioneDiGiocoComplessa
     {
         public MovimentoAttacco(Game game) : base(game)
         {
-            if (casellaCliccata == null)
-                throw new ArgumentNullException("La casella era null");
             _casellaPartenza = casellaCliccata;
             pathFinder = game.Components.OfType<PathFinder>().First();
-            pathFinder.Start(_casellaPartenza);
+            System.Diagnostics.Debug.WriteLine("Costruttore normale");
+        }
+        public MovimentoAttacco(Game game, Casella casellaPartenza) : base (game)
+        {
+            _casellaPartenza = casellaPartenza;
+            pathFinder = game.Components.OfType<PathFinder>().First();
+            System.Diagnostics.Debug.WriteLine("Costruttore nuovo");
         }
 
-        public override void Esegui()
+        protected override void inizializzazione()
         {
+            naveMossa = _casellaPartenza.Occupante;
+            gui.tabellone.ResetSelezioneMouse();
+            pathFinder.Start(_casellaPartenza);
+            faseAttuale = movimentoAttacco; // il puntatore faseAttuale viene chiamato dal metodo AzioneDiGiocoComplessa.Esegui()
+        }
 
-            if (ultimoClick == TipoEventoMouse.ClkDx || casellaCliccata == null)
+
+
+        void movimentoAttacco()
+        {
+            if (ultimoClick == TipoEventoMouse.ClkDx || (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata == null))
             {    // Deselezione
                 Cleanup();
                 return;
             }
-
-            int dist = pathFinder.DistanzaCasella(casellaCliccata);
+            _casellaTarget = casellaCliccata;
+            int dist = pathFinder.DistanzaCasella(_casellaTarget);
 
             if (dist == 0 || dist > naveMossa.Pwr)
                 return;
 
-            Nave naveTarget = casellaCliccata.Occupante;
+            Nave naveTarget = _casellaTarget.Occupante;
             if (naveTarget != null &&
                 !naveTarget.Alleato(giocatoreDiTurno))
             {
                 // Combattimento
 
-                bool RisultatoAttacco;
+                bool risultatoAttacco;
                 Debug.WriteLine("Una nave {0} di colore {1} ha attaccato una nave {2} di colore {3}.",
                             naveMossa.Tipo, naveMossa.Colore, naveTarget.Tipo, naveTarget.Colore);
 
-                RisultatoAttacco = naveMossa.Attacco(naveTarget);
-                Debug.WriteLine("risultato: {0}", RisultatoAttacco);
+                risultatoAttacco = naveMossa.Attacco(_casellaTarget);
 
-                if (RisultatoAttacco == true)
+                if (risultatoAttacco == true)
                 {
-                    naveMossa.Muovi(_casellaPartenza, casellaCliccata);
+                    Debug.WriteLine("Attacco riuscito! Piazza l'astronave sulla casella desiderata");
                 }
+                else
+                {
+                    Debug.WriteLine("Attacco fallito! Piazza l'astronave sulla casella desiderata");
+                }
+
+                _casellaPartenza.Occupante = null;  // rimuovo temporaneamente dal gioco la nave attaccante
+                giocatoreDiTurno.Azione();
+                gui.tabellone.ResetSelezioneMouse();
+                faseAttuale = indietreggia;     // nuova fase
             }
-            else if (casellaCliccata != null && naveTarget == null)
+
+            else if (_casellaTarget != null && naveTarget == null)
             {
                 // Movimento
-                naveMossa.Muovi(_casellaPartenza, casellaCliccata);
+                naveMossa.Muovi(_casellaPartenza, _casellaTarget);
+                giocatoreDiTurno.Azione();
+                Cleanup();
             }
-            // Fine procedura Movimento/Attacco
-            Cleanup();
+        }
+
+        /// <summary>L'attaccante viene posizionato nella casella da cui proveniva l'attacco (ovvero, una casella distante 1 in meno del massimo movimento della nave attaccante)</summary>
+        void indietreggia ()
+        {
+            int distanza = pathFinder.DistanzaCasella(casellaCliccata);
+            if ((distanza <= 0 || distanza >= naveMossa.Pwr) && 
+                casellaCliccata?.Equals(_casellaPartenza) == false)
+                return;
+            if (casellaCliccata?.Occupante == null &&
+               (casellaCliccata == _casellaTarget ||                   
+               casellaCliccata?.Circostante(_casellaTarget,true) == true))
+            {
+                naveMossa.Piazza(casellaCliccata);
+                Cleanup();
+            }
         }
 
         protected override void Cleanup()
         {
             pathFinder.Clear();
             gui.tabellone.ResetSelezioneMouse();
+            faseAttuale = null;
             AzioneSuccessiva = null;
         }
 
-        Casella _casellaPartenza;
-        private Nave naveMossa {get {return _casellaPartenza.Occupante;} }
+        Casella _casellaPartenza, _casellaTarget;
+        Nave naveMossa;
         PathFinder pathFinder;
     }
 }

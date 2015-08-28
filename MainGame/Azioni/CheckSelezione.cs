@@ -13,6 +13,12 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
+            if ((!giocatoreDiTurno.PuòAgire || gui.BottonePremuto == bottone.Passa))
+            {
+                AzioneSuccessiva = new FineTurno(game);
+                return;
+            }
+
             Nave nave =
                casellaCliccata?.Occupante;
 

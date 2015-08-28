@@ -19,16 +19,14 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
-            gameSystem.NextTurn();
-            System.Diagnostics.Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
             Cleanup();
         }
-            
-        
 
         protected override void Cleanup()
         {
             AzioneSuccessiva = null;
+            gameSystem.NextTurn();
+            System.Diagnostics.Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
         }
     }
 }

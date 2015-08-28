@@ -24,9 +24,16 @@ public class Giocatore {
         }
 
         // PROPRIETA' PUBBLICHE
-        public byte AzioniDisponibili { get { return _azioni; } }
+        public int AzioniDisponibili { get { return _azioni; } }
 
-        public int NumeroNavi { get { return _flotta.Count; } } // Quante navi in gioco ha il giocatore
+        /// <summary>Numero di navi in gioco</summary>
+        public int NumeroNaviInGioco
+        { get
+            {
+                var vive = _flotta.FindAll(nave => nave.Viva);
+                return vive.Count;
+            }
+        } 
         public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
 
         public e_color Colore { get { return this._colore; } }
@@ -105,10 +112,10 @@ public class Giocatore {
 
         // contatori statici
         static byte _count; // num giocatori
-        static byte _azioni;// azioni disponibili x turno
+        static int _azioni;// azioni disponibili x turno
 
         // costanti eterne immutabili
-        const byte NUM_AZIONI = 3;
+        const int NUM_AZIONI = 3;
         const byte PUNTI_x_VINCERE = 10;
     }
 		

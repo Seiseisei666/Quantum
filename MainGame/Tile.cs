@@ -39,20 +39,52 @@ namespace Quantum_Game
         {
             int id = mappa.Tile2Id(tile);
             switch (dir)
-            {
+            {   // ortogonali
                 case Direzioni.Sopra:
                     id -= mappa.Colonne; break;
                 case Direzioni.Sotto:
                     id += mappa.Colonne; break;
                 case Direzioni.Sinistra:
                     if (id % mappa.Colonne != 0)
-                        id--; break;
+                        id--;
+                    else return null;
+                    break;
                 case Direzioni.Destra:
                     if (id % mappa.Colonne != mappa.Colonne - 1)
-                        id++; break;
+                        id++;
+                    else return null;
+                    break;
+                // diagonali
+                case Direzioni.AltoADestra:
+                    if (id++ % mappa.Colonne != mappa.Colonne - 1)
+                        id -= mappa.Colonne; break;
+                case Direzioni.AltoASinistra:
+                    if (id-- % mappa.Colonne != 0)
+                        id -= mappa.Colonne; break;
+                case Direzioni.BassoADestra:
+                    if (id++ % mappa.Colonne != mappa.Colonne - 1)
+                        id += mappa.Colonne; break;
+                case Direzioni.BassoASinistra:
+                    if (id-- % mappa.Colonne != 0)
+                        id += mappa.Colonne; break;
             }
-            if (mappa.idValido(id)) return mappa.id2Tile(id);
+
+            if (mappa.idValido(id))
+                return mappa.id2Tile(id);
+
             else return null;
+        }
+
+        /// <summary>Calcola se questo tile è uno degli 8 intorno al tile argomento</summary>
+        public bool Circostante(Tile centro, bool SoloOrtogonali = false)
+        {
+            int max = SoloOrtogonali ? (int)Direzioni.Destra : (int)Direzioni.BassoADestra;
+            for (int dir = 1; dir <= max; dir++)
+            {
+                if (this.Equals(centro + (Direzioni)dir))
+                    return true;
+            }
+            return false;
         }
 
     }

@@ -86,7 +86,6 @@ namespace Quantum_Game
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
             this._mossa = true;
-            _proprietario.Azione();
         }
         /// <summary>
         /// Metodo per attaccare una nave target
@@ -103,9 +102,16 @@ namespace Quantum_Game
                 target._proprietario.Dominio--;
                 return true;
             }
-            _proprietario.Azione();
             return false;
         }
+        public bool Attacco (Casella casella)
+        {
+            bool risultato = Attacco(casella.Occupante);
+            if (risultato)
+                casella.Occupante = null;
+            return risultato;
+        }
+
         public void UsaSpecial()
         {
             //usare la special

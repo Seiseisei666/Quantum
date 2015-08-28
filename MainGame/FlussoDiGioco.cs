@@ -65,8 +65,6 @@ namespace Quantum_Game
                 /* QUI C'E' LA PARTITA VERA E PROPRIA!!!
                 ***************************************/
 
-                if (!giocatoreDiTurno.PuòAgire || Gui.BottonePremuto == bottone.Passa)
-                    _prossimaAzione = new FineTurno(_game);
                 
                 if (_prossimaAzione != null)
                 {
