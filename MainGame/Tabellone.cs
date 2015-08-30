@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Quantum_Game.Interfaccia;
 
 /// <summary>
 /// Il tabellone in verità non esiste. 
