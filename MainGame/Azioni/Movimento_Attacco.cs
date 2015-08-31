@@ -35,18 +35,17 @@ namespace Quantum_Game.Azioni
 
         void movimentoAttacco()
         {
-            if (ultimoClick == TipoEventoMouse.ClkDx || (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata == null))
+            int dist = pathFinder.DistanzaCasella(casellaCliccata);
+
+            if (ultimoClick == TipoEventoMouse.ClkDx || dist > naveMossa.Pwr || (dist == 0 && casellaCliccata?.Equals(_casellaPartenza) == false))
             {    // Deselezione
                 Cleanup();
                 return;
             }
             _casellaTarget = casellaCliccata;
-            int dist = pathFinder.DistanzaCasella(_casellaTarget);
 
-            if (dist == 0 || dist > naveMossa.Pwr)
-                return;
 
-            Nave naveTarget = _casellaTarget.Occupante;
+            Nave naveTarget = _casellaTarget?.Occupante;
             if (naveTarget != null &&
                 !naveTarget.Alleato(giocatoreDiTurno))
             {
