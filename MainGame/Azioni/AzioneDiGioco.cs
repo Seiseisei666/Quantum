@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game.Azioni
 {
@@ -16,8 +17,9 @@ namespace Quantum_Game.Azioni
         public AzioneDiGioco(Game game)
         {
             this.game = game;
-            gameSystem = game.Services.GetService<GameSystem>();
-            gui = game.Components.OfType<GUI>().First();
+
+            gameSystem = game.Services.GetService<ITurnazione>();
+            gui = game.Services.GetService<GuiManager>();
             AzioneSuccessiva = this;
         }
 
@@ -42,7 +44,7 @@ namespace Quantum_Game.Azioni
 
         // Oggetti di gioco che ci portiamo dietro
         protected Game game;
-        protected GameSystem gameSystem;    // per accedere al giocatore di turno
-        protected GUI gui;                  // per accedere alla grafica e ai click sul tabellone
+        protected ITurnazione gameSystem;    // per accedere al giocatore di turno
+        protected GuiManager gui;      // per accedere alla grafica e ai click sul tabellone
     }
 }

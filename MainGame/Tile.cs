@@ -86,6 +86,44 @@ namespace Quantum_Game
             }
             return false;
         }
+        /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
+        public Tile[] TileAdiacenti (bool soloOrtogonali = false)
+        {
+            Tile[] tiles = new Tile[8];
+            int max = soloOrtogonali ? (int)Direzioni.Destra : (int)Direzioni.BassoADestra;
+            for (int dir = 1; dir <= max; dir++)
+            {
+                tiles[dir - 1] = this + (Direzioni)dir;
+            }
+
+            return tiles;
+        }
+        /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
+        public int[] IdTileAdiacenti (bool soloOrtogonali = false)
+        {
+            int[] tiles = new int[8];
+            int c = 0;
+            foreach (Tile t in this.TileAdiacenti(soloOrtogonali))
+            {
+                tiles[c++] = mappa.Tile2Id(t);
+            }
+            return tiles;
+        }
+        public int[] IdTileAdiacenti(Func<Tile, bool> predicato, bool soloOrtogonali = false)
+        {
+            int[] tiles = new int[0];
+            int c = 0;
+            foreach (Tile t in this.TileAdiacenti(soloOrtogonali))
+            {
+                if (predicato(t))
+                {
+                    Array.Resize(ref tiles, c + 1);
+                    tiles[c++] = mappa.Tile2Id(t);
+                }
+
+            }
+            return tiles;
+        }
 
     }
     

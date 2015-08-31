@@ -14,16 +14,26 @@ namespace Quantum_Game.Azioni
             _naveMossa = casellaPartenza.Occupante;
         }
 
-        /// <summary> Per default, nelle Azioni di Gioco Complesse, l'inizializzazione è la prima fase </summary>
-        protected override void inizializzazione()
-        {
-            System.Diagnostics.Debug.WriteLine("Clicca su un alleato adiacente");
-            faseAttuale = new Fase(sceltaAlleato); //puntiamo il delegato sulla prima fase dell'azione special
-        }
-
         public override void Esegui()
         {
             faseAttuale();
+        }
+
+        /// <summary> Per default, nelle Azioni di Gioco Complesse, l'inizializzazione è la prima fase </summary>
+        protected override void inizializzazione()
+        {
+            Func<Tile, bool> filtraAlleati = (t =>
+            {
+                Casella c = t as Casella;
+                return c?.Occupante?.Alleato(giocatoreDiTurno) == true;
+            }
+            );
+
+            int[] caselle = _casellaPartenza.IdTileAdiacenti(filtraAlleati, false);
+            gui.tabellone.IlluminaCaselle(caselle);
+
+            System.Diagnostics.Debug.WriteLine("Clicca su un alleato adiacente");
+            faseAttuale = new Fase(sceltaAlleato); //puntiamo il delegato sulla prima fase dell'azione special
         }
 
         // Metodi su cui punterà di volta in volta il nostro delegato faseAttuale();
@@ -47,7 +57,7 @@ namespace Quantum_Game.Azioni
 
         void movimentoAttacco()
         {
-
+            Casella lastclick = casellaCliccata;
             azione.Esegui();
 
             if (azione.AzioneSuccessiva == null)    // l'azione di movimento/attacco si è conclusa
@@ -57,13 +67,17 @@ namespace Quantum_Game.Azioni
                     System.Diagnostics.Debug.WriteLine("Clicca sulla casella dove vuoi posizionare l'alleato");
                     
                     // La nave che ha usato la special si è mossa, per cui dobbiamo sapere dove sta ora
-                    // Dato che l'azione di movimento/Attacco si conclude piazzando la propria nave,
+                    // Ma dato che l'azione di movimento/Attacco si conclude piazzando la propria nave,
                     // siamo sicuri che questa si trova proprio sull'ultima casella cliccata
-                    _casellaPartenza = casellaCliccata;
+                    gui.tabellone.ResetSelezioneMouse();
+                    _casellaPartenza = lastclick;
 
                     azione = null;                  // annullo il mio riferimento all'azione di movimento
 
                     faseAttuale = piazzaAlleato;    // passo alla fase successiva
+                    System.Diagnostics.Debug.WriteLine("CasellaCliccata: {0}", casellaCliccata?.Tipo);
+                    System.Diagnostics.Debug.WriteLine("Casellapartenza: {0}", _casellaPartenza?.Tipo);
+
                 }
 
                 else
@@ -75,11 +89,10 @@ namespace Quantum_Game.Azioni
 
         void piazzaAlleato()
         {
-            bool libera = (casellaCliccata?.Occupante == null);
-            bool? circostante = casellaCliccata?.Circostante(_casellaPartenza);
+            bool libera = (casellaCliccata != null && casellaCliccata.Occupante == null);
+            bool circostante = casellaCliccata!= null && casellaCliccata.Circostante(_casellaPartenza);
 
-            if (libera &&
-                circostante == true)
+            if (libera && circostante)
             {
                 _naveTrasportata.Piazza(casellaCliccata);
                 Cleanup();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Quantum_Game.Interfaccia;
 
 
 namespace Quantum_Game.Azioni
@@ -17,7 +18,6 @@ namespace Quantum_Game.Azioni
 
         void Inizializzazione()
         {
-            gui.tabellone.SelezTileVisibile = false;
             gui.tabellone.ResetSelezioneMouse();
 
             bool special, riconfig;
@@ -32,9 +32,9 @@ namespace Quantum_Game.Azioni
                 bottoni[n++] = bottone.UsaSpecial;
 
             MenuTendina menu = new MenuTendina
-                (gui.tabellone.Tile2Pixel(_casellaPartenza), bottoni);
+                (gui.tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
 
-            gui.PopupMenu(menu);
+            gui.Iscrivi (menu);
         }
 
         public override void Esegui ()
@@ -78,9 +78,8 @@ namespace Quantum_Game.Azioni
 
         protected override void Cleanup()
         {
-            gui.ChiudiMenu();
+            gui.Rimuovi(this);
             gui.tabellone.ResetSelezioneMouse();
-            gui.tabellone.SelezTileVisibile = true;
         }
 
         // Controlla se la nave può usare la special

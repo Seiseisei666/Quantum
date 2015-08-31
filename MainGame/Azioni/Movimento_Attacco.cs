@@ -12,21 +12,22 @@ namespace Quantum_Game.Azioni
         public MovimentoAttacco(Game game) : base(game)
         {
             _casellaPartenza = casellaCliccata;
-            pathFinder = game.Components.OfType<PathFinder>().First();
-            System.Diagnostics.Debug.WriteLine("Costruttore normale");
         }
         public MovimentoAttacco(Game game, Casella casellaPartenza) : base (game)
         {
             _casellaPartenza = casellaPartenza;
-            pathFinder = game.Components.OfType<PathFinder>().First();
-            System.Diagnostics.Debug.WriteLine("Costruttore nuovo");
         }
 
         protected override void inizializzazione()
         {
             naveMossa = _casellaPartenza.Occupante;
             gui.tabellone.ResetSelezioneMouse();
+
+            pathFinder = new PathFinder(game);
             pathFinder.Start(_casellaPartenza);
+            
+            gui.tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);
+
             faseAttuale = movimentoAttacco; // il puntatore faseAttuale viene chiamato dal metodo AzioneDiGiocoComplessa.Esegui()
         }
 
@@ -67,8 +68,13 @@ namespace Quantum_Game.Azioni
                 }
 
                 _casellaPartenza.Occupante = null;  // rimuovo temporaneamente dal gioco la nave attaccante
+
                 giocatoreDiTurno.Azione();
+
                 gui.tabellone.ResetSelezioneMouse();
+
+                gui.tabellone.IlluminaCaselle ( pathFinder.IdCaselleAdiacenti (_casellaTarget));
+
                 faseAttuale = indietreggia;     // nuova fase
             }
 
@@ -101,6 +107,7 @@ namespace Quantum_Game.Azioni
         {
             pathFinder.Clear();
             gui.tabellone.ResetSelezioneMouse();
+            gui.tabellone.SpegniCaselle();
             faseAttuale = null;
             AzioneSuccessiva = null;
         }

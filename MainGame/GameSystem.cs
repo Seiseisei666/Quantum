@@ -18,7 +18,7 @@ namespace Quantum_Game
     /// e quella FasePartita.
     /// Invia un evento InizioPartita per informare tutto il programma che si comincia a giocare
     /// </summary>
-    public class GameSystem
+    public class GameSystem: ITurnazione
     {
 
         // COSTRUTTORE
@@ -96,4 +96,13 @@ namespace Quantum_Game
 
 
     }
+
+    public interface ITurnazione
+    {
+        Giocatore GiocatoreDiTurno { get; }
+        FasiDiGioco FasePartita { get; }
+        void NextTurn();
+    }
+
+
 }

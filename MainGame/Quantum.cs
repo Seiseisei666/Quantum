@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System;
+using Quantum_Game.Interfaccia;
 
 
 
@@ -16,18 +17,8 @@ namespace Quantum_Game
     public class Quantum : Game
     {
         private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private SpriteFont font;
         
-        private Texture2D textureCaselle;
-        private Texture2D contornoCasella;
-
-        private Tabellone tabellone;
-        private MouseInput mouseInput;
-        private GameSystem gameSystem;
         private FlussoDiGioco flussoGioco;
-        private PathFinder pathFinder;
-        private GUI Gui;
 
         static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
 
@@ -39,79 +30,64 @@ namespace Quantum_Game
             graphics.PreferredBackBufferHeight = 600;
             IsMouseVisible = true;
             graphics.ApplyChanges();
-            mouseInput = new MouseInput();
-
         }
 
         protected override void Initialize()
         {
+            //Crea la mappa
+            // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
+            MapGenerator generatore = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
+            Mappa mappa = new Mappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             // Crea il gamesystem con 4 giocatori
-            gameSystem = new GameSystem();
+            GameSystem gameSystem = new GameSystem();
             gameSystem.AggiungiGiocatori(2);
-
-            //Crea la mappa
-                // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
-            MapGenerator generatore = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
-            Mappa mappa = new Mappa( generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
             
             //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
             //avviene una volta per partita e lo associamo manualmente a tutti gli oggetti
             //che lo utilizzeranno
-            gameSystem.InizioPartita += this.InizioPartita;
+            gameSystem.InizioPartita += InizioPartita;
 
             // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
             gameSystem.IniziaSetupPartita();
             // DA TOGLIERE
 
-            Services.AddService(mappa);
-            Services.AddService(mouseInput);
-            Services.AddService(gameSystem);
+            // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
+            Services.AddService<Mappa>(mappa);
+            Services.AddService<ITurnazione>(gameSystem);
 
-            pathFinder = new PathFinder(this);
-            Components.Add(pathFinder);
+            MouseInput mouseInput = new MouseInput(this);
+            Components.Add(mouseInput);
+            GuiManager gui = new GuiManager(this);
+            Components.Add(gui);
+            flussoGioco = new FlussoDiGioco(this);
+            Components.Add(flussoGioco);
+            Tabellone tab = new Tabellone(this, 0, 0, 80, 100);
+            Components.Add(tab);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            // Caricamento e iscrizione ai servizi della roba x la grafica
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            Services.AddService(GraphicsDevice);
-            Services.AddService(spriteBatch);
+            var gui = Services.GetService<GuiManager>();
 
-            // CARICAMENTO CONTENUTO
-            textureCaselle = Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
-            font = Content.Load<SpriteFont>("Font\\Font");
-            // texture di 1x1 pixel, per disegnare "a mano"
-            // indicativamente andrà sostituito per quasi tutti gli impieghi dal tileset definitivo
-            contornoCasella = new Texture2D(GraphicsDevice, 1, 1);
-            contornoCasella.SetData(new[] { (Color.White) });
+            /*
+            QUI POSSIAMO CARICARE L'INTERFACCIA
+            */
 
-            // Inizializzazione GUI
-            Gui = new GUI(this, contornoCasella);
-            Gui.Font = font;
-            Gui.AddElement(new Bottone
-                (bottone.Passa,
-                0.72f, 0.8f, 0.8f, 0.85f, 800, 600))
-                ;
-            tabellone = new Tabellone
-    (this, 0f, 0f);
-            Gui.AddElement(tabellone);
-            Components.Add(Gui);
+            Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
+            gui.Iscrivi(passaTurno);
 
 
-            flussoGioco = new FlussoDiGioco (this);
+
 
             base.LoadContent();
         } 
 
         protected override void UnloadContent()
         {
-            spriteBatch.Dispose();
-            contornoCasella.Dispose();
-            textureCaselle.Dispose();
+            base.UnloadContent();
         }
         
         protected override void Update(GameTime gameTime)
@@ -119,12 +95,7 @@ namespace Quantum_Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit(); //questa ci stava per default, è per chiudere la finestra
             
-            mouseInput.Update(); // routine di aggiornamento dell'input del mouse, di cui si occupa
-                                 // l'oggetto mouseInput
-
-            Gui.Update();
-
-
+            
             flussoGioco.Update();
 
 
@@ -138,16 +109,6 @@ namespace Quantum_Game
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // qui cominciano le routine di disegno dei vari oggetti
-            spriteBatch.Begin();
-
-            tabellone.Draw(spriteBatch, textureCaselle);
-            tabellone.DisegnaSelezione(spriteBatch, contornoCasella);
-            pathFinder.Draw(tabellone, spriteBatch, contornoCasella);
-            Gui.Draw();
-
-            spriteBatch.End();
-            // finiscono qui
 
             base.Draw(gameTime);
         }
@@ -166,7 +127,6 @@ namespace Quantum_Game
         private void InizioPartita(object sender, EventArgs args)
         {
             Debug.WriteLine("Partita iniziata!!");
-            Debug.WriteLine("Turno del giocatore {0}", gameSystem.GiocatoreDiTurno.Colore);
         }       
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quantum_Game.Interfaccia;
 
 
 namespace Quantum_Game
@@ -28,6 +29,7 @@ namespace Quantum_Game
         public PathFinder(Game game)
         {
             map = game.Services.GetService<Mappa>();
+            tabellone = game.Services.GetService<GuiManager>().tabellone;
             Initialize();
         }
 
@@ -79,47 +81,50 @@ namespace Quantum_Game
             _nave = null;
             _partito = false;
         }
-        public void Draw(Tabellone tabellone, SpriteBatch spriteBatch, Texture2D texture)
-            // TODO: vorrei mettere questo metodo draw da un'altra parte, in modo da semplificarlo
-            // (e magari non avere bisogno del riferimento al tabellone)
-        {
-            if (_partito == false)
-                return;
-            int LarghezzaCasellePix = tabellone.LarghezzaTilePx;
-            int x, y, lungh = 0;
-            Color colore = Color.Green;
 
-                // Illumina tutte le caselle raggiungibili
-            for (int i = 0; i < _numCaselle; i++)
+        public int[] IdCaselleValide
+        {
+            get
             {
-                if (_matrice[i].Length > 0              // percorso esistente (almeno 1 casella)
-                    && _matrice[i].Length <= _nave.Pwr  // lunghezza percorso alla portata della nave
-             //     && _listaCaselle[i].EunaCasella
-                                                    )
+                int c = 0;
+                int[] caselle = new int[0];
+                for (int id = 0; id < _numCaselle; id++)
                 {
-                    map.id2nm(i, out x, out y);
-                    x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
-                    x += tabellone.Offset.X; y += tabellone.Offset.Y;
-                    spriteBatch.Draw
-                        (texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore *0.5f );
+                    if (_matrice[id].Length > 0              // percorso esistente (almeno 1 casella)
+                        && _matrice[id].Length <= _nave.Pwr) // lunghezza percorso alla portata della nave
+                    {
+                        Array.Resize(ref caselle, c + 1);
+                        caselle[c++] = id;
+                    }
+                }
+                return caselle;
+            }
+        }
+        
+        public int [] IdCaselleAdiacenti (Tile target)
+        {
+            int c = 0;
+            int[] caselle = new int[0];
+            Tile[] adiacenti = target.TileAdiacenti(true);
+            foreach (Tile t in adiacenti)
+            {
+                Casella cas = t as Casella;
+                if (cas != null && cas.Occupante == null)
+                {
+                    int id = map.Tile2Id(cas);
+                    int dist = DistanzaCasella(id);
+                    if (dist > 0 && dist < _nave.Pwr)
+                    {
+                        Array.Resize(ref caselle, c + 1);
+                        caselle[c++] = id;
+                    }
                 }
             }
-                // Illumina il percorso
-            //foreach (int i in PercorsoXCasella(tabellone.IdMouseOver))
-            //{
-            //    id2nm(i, out x, out y);
-            //    x *= LarghezzaCasellePix; y *= LarghezzaCasellePix;
-            //    x += tabellone.Offset.X; y += tabellone.Offset.Y;
-            //    colore = lungh < _nave.Pwr ? Color.LawnGreen : Color.IndianRed; // verde se in range, sennò rosso
-            //    spriteBatch.Draw(texture, new Rectangle(x, y, LarghezzaCasellePix, LarghezzaCasellePix), colore);
-            //    lungh++;
-            //}
+            return caselle;
+
         }
-        /// <summary>
-        /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile target
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
+
+
         public int[] PercorsoXCasella(Tile target)
         {
             if (target != null)
@@ -223,6 +228,7 @@ namespace Quantum_Game
         private bool _partito;
         // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare
         private Mappa map;
+        private Tabellone tabellone;
             // memorizza i percorsi per raggiungere le caselle circostanti
         private int[][] _matrice; 
             // la nave che si sta muovendo

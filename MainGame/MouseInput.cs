@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
@@ -11,7 +12,7 @@ namespace Quantum_Game
     /// e dell'inoltro degli eventi click dx, click sn e mouseover.
     /// Gli eventi vengono prodotti solo se qualche oggetto nel programma si è iscritto per riceverli
     /// </summary>
-    public class MouseInput
+    public class MouseInput: GameComponent
     {
         private MouseState newState, oldState;
 
@@ -20,10 +21,13 @@ namespace Quantum_Game
         public event EventHandler<MouseEvntArgs> MouseOver;
 
         //costruttore vuoto
-        public MouseInput() { }
+        public MouseInput(Game game) : base (game)
+        {
+            game.Services.AddService(this);
+        }
 
         //chiamata dagli update del gioco
-        public void Update ()
+        public override void Update (GameTime gametime)
         {
             newState = Mouse.GetState();
 
