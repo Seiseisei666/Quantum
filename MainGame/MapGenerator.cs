@@ -25,7 +25,7 @@ namespace Quantum_Game
         public List<Tile> GeneraMappa()
         {
             //legge tutte le righe del file
-            string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova2.txt");
+            string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova3.txt");
 
             //var width = mapData[0].Length;
             var height = mapData.Length;

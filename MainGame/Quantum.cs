@@ -26,8 +26,8 @@ namespace Quantum_Game
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 800;  
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1366;  
+            graphics.PreferredBackBufferHeight = 768;
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
@@ -36,7 +36,7 @@ namespace Quantum_Game
         {
             //Crea la mappa
             // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
-            MapGenerator generatore = new MapGenerator(9, 9); // <- da sistemare perché i 9 non possono rimanere fissi
+            MapGenerator generatore = new MapGenerator(9,15); // <- da sistemare perché i 9 non possono rimanere fissi
             Mappa mappa = new Mappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             // Crea il gamesystem con 4 giocatori
@@ -62,7 +62,7 @@ namespace Quantum_Game
             Components.Add(gui);
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
-            Tabellone tab = new Tabellone(this, 0, 0, 80, 100);
+            Tabellone tab = new Tabellone(this, 3, 3, 70, 85);
             Components.Add(tab);
 
             base.Initialize();
@@ -77,7 +77,9 @@ namespace Quantum_Game
             */
 
             Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
+            Bottone boh = Bottone.Standard(bottone.Ricerca, 82, 75);
             gui.Iscrivi(passaTurno);
+            gui.Iscrivi(boh);
 
 
 

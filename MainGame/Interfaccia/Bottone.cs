@@ -96,7 +96,7 @@ namespace Quantum_Game.Interfaccia
                     case bottone.Passa:
                         return "Passa il turno";
                     case bottone.Ricerca:
-                        return "Aumenta il livello di ricerca";
+                        return "Aumenta Ricerca";
                     case bottone.UsaSpecial:
                         return "Usa abilita speciale";
                     case bottone.Riconfigura:

@@ -107,6 +107,7 @@ namespace Quantum_Game
         // disegna il tabellone e le navi
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(pennello, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), Color.MidnightBlue);
             int x, y;
             for (int Idx = 0; Idx < mappa.NumeroCaselle; Idx++)
             {
