@@ -31,8 +31,7 @@ namespace Quantum_Game.Azioni
             if (special)
                 bottoni[n++] = bottone.UsaSpecial;
 
-            MenuTendina menu = new MenuTendina
-                (gui.tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
+            MenuTendina menu = new MenuTendina (gui.tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
 
             gui.Iscrivi (menu);
         }

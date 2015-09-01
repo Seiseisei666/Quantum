@@ -80,8 +80,10 @@ namespace Quantum_Game.Interfaccia
         {
             _spriteSheet = _game.Content.Load<Texture2D>(@"Graphica\TileSet_prova2");
             font = _game.Content.Load<SpriteFont>("Font\\Font");
+
             _texture = new Texture2D(GraphicsDevice, 1, 1);
             _texture.SetData(new[] { (Color.White) });
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 

@@ -96,7 +96,7 @@ namespace Quantum_Game.Interfaccia
                     case bottone.Passa:
                         return "Passa il turno";
                     case bottone.Ricerca:
-                        return "Aumenta il livello di ricerca";
+                        return "Aumenta Ricerca";
                     case bottone.UsaSpecial:
                         return "Usa abilita speciale";
                     case bottone.Riconfigura:
@@ -108,6 +108,7 @@ namespace Quantum_Game.Interfaccia
                 }
             }
         }   
+
         public bottone TipoBottone { get { return _tipoBottone; } }
         /// <summary>True se il bottone è stato cliccato dopo l'ultimo Reset. </summary>
         public bool Cliccato { get { return _cliccato; } }
@@ -141,7 +142,7 @@ namespace Quantum_Game.Interfaccia
         SpriteFont font;
         Color _colBordo = Color.White;
         Color _colSfondo = Color.Gold;
-        readonly Color _colMouseOver = Color.Azure;
+        Color _colMouseOver = Color.Azure;
 
         private readonly bottone _tipoBottone;
         private bool _cliccato;
