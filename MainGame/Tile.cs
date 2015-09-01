@@ -75,6 +75,8 @@ namespace Quantum_Game
             else return null;
         }
 
+        public int ID { get { return mappa.Tile2Id(this); } }
+
         /// <summary>Calcola se questo tile è uno degli 8 intorno al tile argomento</summary>
         public bool Circostante(Tile centro, bool SoloOrtogonali = false)
         {

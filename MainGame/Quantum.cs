@@ -20,8 +20,6 @@ namespace Quantum_Game
         
         private FlussoDiGioco flussoGioco;
 
-        static public event EventHandler<ResizeEvntArgs> Ridimensionamento;
-
         public Quantum()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -81,8 +79,8 @@ namespace Quantum_Game
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(boh);
 
-            TemplateElementoGui prova = new TemplateElementoGui();
-            gui.Iscrivi(prova);
+            ConsoleMessaggi console = new ConsoleMessaggi(3, 88, 70, 22);
+            gui.Iscrivi(console);
 
 
 
@@ -115,15 +113,6 @@ namespace Quantum_Game
 
 
             base.Draw(gameTime);
-        }
-        /// <summary>
-        /// Evento ipotetico per gestire un improbabile ridimensionamento delle finestre
-        /// </summary>
-        /// <param name="args"></param>
-        protected virtual void OnRidimensionamento(ResizeEvntArgs args) 
-        {
-            if (Ridimensionamento != null)
-                Ridimensionamento(this, args);
         }
 
         /*  Qua cominciano altre cose nostre */

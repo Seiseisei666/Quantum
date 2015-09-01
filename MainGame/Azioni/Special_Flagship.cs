@@ -30,7 +30,7 @@ namespace Quantum_Game.Azioni
             );
 
             int[] caselle = _casellaPartenza.IdTileAdiacenti(filtraAlleati, false);
-            gui.tabellone.IlluminaCaselle(caselle);
+            gui.Tabellone.IlluminaCaselle(caselle);
 
             System.Diagnostics.Debug.WriteLine("Clicca su un alleato adiacente");
             faseAttuale = new Fase(sceltaAlleato); //puntiamo il delegato sulla prima fase dell'azione special
@@ -69,7 +69,7 @@ namespace Quantum_Game.Azioni
                     // La nave che ha usato la special si è mossa, per cui dobbiamo sapere dove sta ora
                     // Ma dato che l'azione di movimento/Attacco si conclude piazzando la propria nave,
                     // siamo sicuri che questa si trova proprio sull'ultima casella cliccata
-                    gui.tabellone.ResetSelezioneMouse();
+                    gui.Tabellone.ResetSelezioneMouse();
                     _casellaPartenza = lastclick;
 
                     azione = null;                  // annullo il mio riferimento all'azione di movimento
@@ -101,7 +101,7 @@ namespace Quantum_Game.Azioni
 
         protected override void Cleanup()
         {
-            gui.tabellone.ResetSelezioneMouse();
+            gui.Tabellone.ResetSelezioneMouse();
             _naveMossa.UsaSpecial();
             faseAttuale = null;
             AzioneSuccessiva = null;

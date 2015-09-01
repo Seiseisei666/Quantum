@@ -34,7 +34,7 @@ namespace Quantum_Game.Interfaccia
         public Texture2D Pennello { get { return _texture; } }
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
         public SpriteFont Font { get { return font; } }
-        public Tabellone tabellone { get { return _tabellone; } }
+        public Tabellone Tabellone { get { return _tabellone; } }
 
 
         public void Iscrivi(RiquadroGui elemento)
@@ -127,7 +127,9 @@ namespace Quantum_Game.Interfaccia
             if (disposing)
             {
                 foreach (var elemento in elementi)
-                { var d = elemento as IDisposable;
+                {
+                    elemento.DissociaEventiMouse(_mouseInput);
+                    var d = elemento as IDisposable;
                     d?.Dispose();
                 }
             ResettoneGlobale();

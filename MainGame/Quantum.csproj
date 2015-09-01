@@ -66,6 +66,7 @@
     <Compile Include="GameSystem.cs" />
     <Compile Include="Interfaccia\Bottone.cs" />
     <Compile Include="Interfaccia\GuiManager.cs" />
+    <Compile Include="Interfaccia\ConsoleMessaggi.cs" />
     <Compile Include="Interfaccia\RiquadroGui.cs" />
     <Compile Include="Interfaccia\TemplateElementoGui.cs" />
     <Compile Include="Mappa.cs" />
@@ -75,8 +76,6 @@
     <Compile Include="MouseEvntArgs.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="Pianeta.cs" />
-    <Compile Include="ResizeEvntArgs.cs" />
-    <Compile Include="Riquadro.cs" />
     <Compile Include="Interfaccia\Tabellone.cs" />
     <Compile Include="Quantum.cs" />
     <Compile Include="Giocatore.cs" />

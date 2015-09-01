@@ -31,7 +31,7 @@ namespace Quantum_Game.Azioni
 
             gui = game.Services.GetService<Quantum_Game.Interfaccia.GuiManager>();
 
-            Point puntoCliccato = gui.tabellone.Tile2Pixel(casellaCliccata);
+            Point puntoCliccato = gui.Tabellone.Tile2Pixel(casellaCliccata);
 
             MenuTendina menu = new MenuTendina (puntoCliccato, new bottone[] { bottone.UsaSpecial, bottone.Colonizza, bottone.Passa }, this);
 
@@ -70,7 +70,7 @@ namespace Quantum_Game.Azioni
             selezioni in automatico, di nuovo, l'ultima casella cliccata!
             */
 
-            gui.tabellone.ResetSelezioneMouse();
+            gui.Tabellone.ResetSelezioneMouse();
 
             /*
             Annullando AzioneSuccessiva, questa azione viene ufficialmente conclusa e al prossimo loop il FlussoDiGioco 

@@ -56,7 +56,7 @@ namespace Quantum_Game
 
         void setupPartita() // loop della fase di setup della partita
         {
-            Casella tempCas = gui.tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
+            Casella tempCas = gui.Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
             Nave naveTemp = turno.GiocatoreDiTurno.NaveDaPiazzare;
             if (naveTemp != null)
             {

@@ -55,6 +55,46 @@ namespace Quantum_Game
             return (id >= 0 && id < NumeroCaselle);
         }
 
+        public int idAdiacente (int idTile, Direzioni dir)
+        {
+            if (!idValido(idTile)) return -1;
+
+            int id = idTile;
+
+            switch (dir)
+            {
+                case Direzioni.Sopra:
+                    id -= Colonne;
+                    break;
+                case Direzioni.Sotto:
+                    id += Colonne;
+                    break;
+                case Direzioni.Sinistra:
+                    if (id-- % Colonne == 0) return -1;
+                    break;
+                case Direzioni.Destra:
+                    if (++id % Colonne == 0) return -1;
+                    break;
+                case Direzioni.AltoADestra:
+                    return idAdiacente(idAdiacente(id, Direzioni.Sopra), Direzioni.Destra);
+
+                case Direzioni.AltoASinistra:
+                    return idAdiacente(idAdiacente(id, Direzioni.Sopra), Direzioni.Sinistra);
+
+                case Direzioni.BassoASinistra:
+                    return idAdiacente(idAdiacente(id, Direzioni.Sotto), Direzioni.Sinistra);
+
+                case Direzioni.BassoADestra:
+                    return idAdiacente(idAdiacente(id, Direzioni.Sotto), Direzioni.Destra);
+                default:
+                    return -1;
+            }
+
+            return idValido(id) ? id : -1;
+
+        }
+
+
         public int NumeroCaselle { get { return _listaCaselle.Count; } }
         public int Righe { get { return _righe; } }
         public int Colonne { get { return _colonne; } }

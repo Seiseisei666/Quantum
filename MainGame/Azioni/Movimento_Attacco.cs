@@ -21,12 +21,12 @@ namespace Quantum_Game.Azioni
         protected override void inizializzazione()
         {
             naveMossa = _casellaPartenza.Occupante;
-            gui.tabellone.ResetSelezioneMouse();
+            gui.Tabellone.ResetSelezioneMouse();
 
-            pathFinder = new PathFinder(game);
+            pathFinder = new PathFinder(game, true);
             pathFinder.Start(_casellaPartenza);
             
-            gui.tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);
+            gui.Tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);
 
             faseAttuale = movimentoAttacco; // il puntatore faseAttuale viene chiamato dal metodo AzioneDiGiocoComplessa.Esegui()
         }
@@ -37,7 +37,7 @@ namespace Quantum_Game.Azioni
         {
             int dist = pathFinder.DistanzaCasella(casellaCliccata);
 
-            if (ultimoClick == TipoEventoMouse.ClkDx || dist > naveMossa.Pwr || (dist == 0 && casellaCliccata?.Equals(_casellaPartenza) == false))
+            if (ultimoClick == TipoEventoMouse.ClkDx || (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata == null) || dist > naveMossa.Pwr || (dist == 0 && casellaCliccata?.Equals(_casellaPartenza) == false ))
             {    // Deselezione
                 Cleanup();
                 return;
@@ -52,27 +52,37 @@ namespace Quantum_Game.Azioni
                 // Combattimento
 
                 bool risultatoAttacco;
-                Debug.WriteLine("Una nave {0} di colore {1} ha attaccato una nave {2} di colore {3}.",
-                            naveMossa.Tipo, naveMossa.Colore, naveTarget.Tipo, naveTarget.Colore);
+
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Una nave" + naveMossa.Tipo + " di colore" + naveMossa.Colore + " ha attaccato una nave" + naveTarget.Tipo + " di colore" + naveTarget.Colore + ".", giocatoreDiTurno.SpriteColor);
 
                 risultatoAttacco = naveMossa.Attacco(_casellaTarget);
 
-                if (risultatoAttacco == true)
+
+
+                if (risultatoAttacco)
                 {
-                    Debug.WriteLine("Attacco riuscito! Piazza l'astronave sulla casella desiderata");
+                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco riuscito! \nPiazza l'astronave sulla casella desiderata");
+
                 }
                 else
                 {
-                    Debug.WriteLine("Attacco fallito! Piazza l'astronave sulla casella desiderata");
+                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco fallito! Piazza l'astronave sulla casella desiderata");
                 }
 
                 _casellaPartenza.Occupante = null;  // rimuovo temporaneamente dal gioco la nave attaccante
 
                 giocatoreDiTurno.Azione();
 
-                gui.tabellone.ResetSelezioneMouse();
+                gui.Tabellone.ResetSelezioneMouse();
 
-                gui.tabellone.IlluminaCaselle ( pathFinder.IdCaselleAdiacenti (_casellaTarget));
+                int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, risultatoAttacco);
+                if (_casellaPartenza.Circostante(_casellaTarget, true))
+                {
+                    Array.Resize(ref caselleAdiacentiTarget, caselleAdiacentiTarget.Length + 1);
+                    caselleAdiacentiTarget[caselleAdiacentiTarget.Length - 1] = _casellaPartenza.ID;
+                }
+
+                gui.Tabellone.IlluminaCaselle (caselleAdiacentiTarget);
 
                 faseAttuale = indietreggia;     // nuova fase
             }
@@ -90,8 +100,8 @@ namespace Quantum_Game.Azioni
         void indietreggia ()
         {
             int distanza = pathFinder.DistanzaCasella(casellaCliccata);
-            if ((distanza <= 0 || distanza >= naveMossa.Pwr) && 
-                casellaCliccata?.Equals(_casellaPartenza) == false)
+            if ((distanza > naveMossa.Pwr) || (distanza == 0 && 
+                casellaCliccata?.Equals(_casellaPartenza) == false))
                 return;
             if (casellaCliccata?.Occupante == null &&
                (casellaCliccata == _casellaTarget ||                   
@@ -105,8 +115,8 @@ namespace Quantum_Game.Azioni
         protected override void Cleanup()
         {
             pathFinder.Clear();
-            gui.tabellone.ResetSelezioneMouse();
-            gui.tabellone.SpegniCaselle();
+            gui.Tabellone.ResetSelezioneMouse();
+            gui.Tabellone.SpegniCaselle();
             faseAttuale = null;
             AzioneSuccessiva = null;
         }

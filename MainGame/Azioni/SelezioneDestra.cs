@@ -18,7 +18,7 @@ namespace Quantum_Game.Azioni
 
         void Inizializzazione()
         {
-            gui.tabellone.ResetSelezioneMouse();
+            gui.Tabellone.ResetSelezioneMouse();
 
             bool special, riconfig;
             riconfig = !naveUsata.Riconfigurata;
@@ -31,7 +31,7 @@ namespace Quantum_Game.Azioni
             if (special)
                 bottoni[n++] = bottone.UsaSpecial;
 
-            MenuTendina menu = new MenuTendina (gui.tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
+            MenuTendina menu = new MenuTendina (gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
 
             gui.Iscrivi (menu);
         }
@@ -78,7 +78,7 @@ namespace Quantum_Game.Azioni
         protected override void Cleanup()
         {
             gui.Rimuovi(this);
-            gui.tabellone.ResetSelezioneMouse();
+            gui.Tabellone.ResetSelezioneMouse();
         }
 
         // Controlla se la nave può usare la special

@@ -26,10 +26,10 @@ namespace Quantum_Game
     {
         // COSTRUTTORE
 
-        public PathFinder(Game game)
+        public PathFinder(Game game, bool soloOrtogonali = false)
         {
+            _soloOrtogonali = soloOrtogonali;
             map = game.Services.GetService<Mappa>();
-            tabellone = game.Services.GetService<GuiManager>().tabellone;
             Initialize();
         }
 
@@ -101,7 +101,7 @@ namespace Quantum_Game
             }
         }
         
-        public int [] IdCaselleAdiacenti (Tile target)
+        public int [] IdCaselleAdiacenti (Tile target, bool compresoTarget = false)
         {
             int c = 0;
             int[] caselle = new int[0];
@@ -111,7 +111,7 @@ namespace Quantum_Game
                 Casella cas = t as Casella;
                 if (cas != null && cas.Occupante == null)
                 {
-                    int id = map.Tile2Id(cas);
+                    int id = cas.ID;
                     int dist = DistanzaCasella(id);
                     if (dist > 0 && dist < _nave.Pwr)
                     {
@@ -119,6 +119,11 @@ namespace Quantum_Game
                         caselle[c++] = id;
                     }
                 }
+            }
+            if (compresoTarget && target.EunaCasella)
+            {
+                Array.Resize(ref caselle, caselle.Length+1);
+                caselle[caselle.Length-1] = target.ID;
             }
             return caselle;
 
@@ -176,6 +181,45 @@ namespace Quantum_Game
             // Chiamate ricorsive
             {
                 int pos = IDtile;
+
+                // Direzioni ortogonali
+                if (!_soloOrtogonali)
+                {
+                    pos = map.idAdiacente(IDtile, Direzioni.AltoASinistra);
+                    if (DirezioneProvenienza != Direzioni.AltoASinistra && map.idValido(pos))
+                    {
+                        int[] tempArray = new int[count];
+                        Array.Copy(percorso, tempArray, count - 1);
+                        crawl(pos, count, tempArray, Direzioni.BassoADestra);
+                    }
+
+                    pos = map.idAdiacente(IDtile, Direzioni.AltoADestra);
+                    if (DirezioneProvenienza != Direzioni.AltoADestra && map.idValido(pos))
+                    {
+                        int[] tempArray = new int[count];
+                        Array.Copy(percorso, tempArray, count - 1);
+                        crawl(pos, count, tempArray, Direzioni.BassoASinistra);
+                    }
+
+                    pos = map.idAdiacente(IDtile, Direzioni.BassoASinistra);
+                    if (DirezioneProvenienza != Direzioni.BassoASinistra && map.idValido(pos))
+                    {
+                        int[] tempArray = new int[count];
+                        Array.Copy(percorso, tempArray, count - 1);
+                        crawl(pos, count, tempArray, Direzioni.AltoADestra);
+                    }
+
+                    pos = map.idAdiacente(IDtile, Direzioni.BassoADestra);
+                    if (DirezioneProvenienza != Direzioni.BassoADestra && map.idValido(pos))
+                    {
+                        int[] tempArray = new int[count];
+                        Array.Copy(percorso, tempArray, count - 1);
+                        crawl(pos, count, tempArray, Direzioni.AltoASinistra);
+                    }
+                }
+
+                //Direzioni ortogonali
+
                 if (DirezioneProvenienza != Direzioni.Sopra && step(ref pos, Direzioni.Sopra))
                 {
                     int[] tempArray = new int[count];
@@ -216,6 +260,7 @@ namespace Quantum_Game
                 return ((++pos % _colonne) != 0) && pos < _numCaselle;
             else if (dir == Direzioni.Sinistra)
                 return ((--pos % _colonne) != (_colonne - 1)) && pos >= 0;
+
             return false;
         }   
 
@@ -226,9 +271,10 @@ namespace Quantum_Game
         // CAMPI
             // status del pathfinder: se è già stato acceso deve essere spento prima di poterlo riutilizzare
         private bool _partito;
+            // 
+        private bool _soloOrtogonali;
         // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare
         private Mappa map;
-        private Tabellone tabellone;
             // memorizza i percorsi per raggiungere le caselle circostanti
         private int[][] _matrice; 
             // la nave che si sta muovendo
