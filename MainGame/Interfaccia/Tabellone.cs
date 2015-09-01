@@ -74,9 +74,6 @@ namespace Quantum_Game
             //rettangoli per lo spritebatch:
             _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
             _source = new Rectangle(0, 0, 100, 100);  // TODO: 100 è il lato del nostro tileset di prova!! 
-
-
-            Debug.WriteLine("Dimensioni riquadro: {0}, {1}, {2}, {3}", Posizione.X, Posizione.Y, Larghezza, Altezza);
         }
 
         // PROPRIETA' PUBBLICHE

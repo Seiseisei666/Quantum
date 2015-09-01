@@ -60,12 +60,14 @@
     <Compile Include="Azioni\Movimento_Attacco.cs" />
     <Compile Include="Azioni\SelezioneDestra.cs" />
     <Compile Include="Azioni\Special_Flagship.cs" />
+    <Compile Include="Azioni\TemplateAzione.cs" />
     <Compile Include="Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
     <Compile Include="Interfaccia\Bottone.cs" />
     <Compile Include="Interfaccia\GuiManager.cs" />
     <Compile Include="Interfaccia\RiquadroGui.cs" />
+    <Compile Include="Interfaccia\TemplateElementoGui.cs" />
     <Compile Include="Mappa.cs" />
     <Compile Include="MenuTendina.cs" />
     <Compile Include="MouseInput.cs" />

@@ -79,6 +79,8 @@ namespace Quantum_Game
             Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
             gui.Iscrivi(passaTurno);
 
+            TemplateElementoGui prova = new TemplateElementoGui();
+            gui.Iscrivi(prova);
 
 
 
