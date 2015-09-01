@@ -61,7 +61,7 @@ namespace Quantum_Game.Azioni
 
                 if (risultatoAttacco)
                 {
-                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco riuscito! \nPiazza l'astronave sulla casella desiderata");
+                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco riuscito! Piazza l'astronave sulla casella desiderata");
 
                 }
                 else
