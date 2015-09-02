@@ -23,16 +23,15 @@ namespace Quantum_Game.Azioni
             bool special, riconfig;
             riconfig = !naveUsata.Riconfigurata;
             special = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
-            int size, n = 0;
-            size = Convert.ToInt16(riconfig) + Convert.ToInt16(special);
-            bottone[] bottoni = new bottone[size];
-            if (riconfig)
-                bottoni[n++] = bottone.Riconfigura;
-            if (special)
-                bottoni[n++] = bottone.UsaSpecial;
+
+            bottone[] bottoni = new bottone[2];
+            bottoni[0] = bottone.Riconfigura;
+            bottoni[1] = bottone.UsaSpecial;
 
             MenuTendina menu = new MenuTendina (gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
 
+            menu.Elementi[0].Enabled = riconfig;
+            menu.Elementi[1].Enabled = special;
             gui.Iscrivi (menu);
         }
 
@@ -52,18 +51,29 @@ namespace Quantum_Game.Azioni
             }
             else if (gui.BottonePremuto == bottone.UsaSpecial)
             {
+                bool esciDalLoop = false;
                 switch (naveUsata.Tipo)
                 {
                     case e_nave.Flagship:
                         AzioneSuccessiva = new Special_Flagship(game, _casellaPartenza);
                         break;
+                    case e_nave.Interceptor:
+                        naveUsata.UsaSpecial();
+                        esciDalLoop = true;
+                        break;
+                    case e_nave.Scout:
+                        naveUsata.Riconfig(true);
+                        naveUsata.UsaSpecial();
+                        esciDalLoop = true;
+                        break;
+
                     default:
                         System.Diagnostics.Debug.WriteLine("Special non ancora implementata");
                         AzioneSuccessiva = null;
                         break;
                 }
 
-                Cleanup();
+                Cleanup(esciDalLoop);
             }
 
             // Se c'è stato un click e il blocco precedente di codice non è stato eseguito
@@ -75,11 +85,18 @@ namespace Quantum_Game.Azioni
             }
         }
 
+        void Cleanup(bool esciDalLoop)
+        {
+            if (esciDalLoop) AzioneSuccessiva = null;
+            Cleanup();
+        }
         protected override void Cleanup()
         {
             gui.Rimuovi(this);
             gui.Tabellone.ResetSelezioneMouse();
         }
+
+
 
         // Controlla se la nave può usare la special
         bool checkSpecial(Nave nave)

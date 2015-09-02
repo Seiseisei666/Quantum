@@ -56,12 +56,12 @@ namespace Quantum_Game
         /// </summary>
         public void init()
         {
-            _riconfigurata = _mossa = _special = false;
+            _riconfigurata = _mossa = _special = _special5 = false;
         }
         /// <summary>
         /// riconfigurazione della nave (o primo roll)
         /// </summary>
-        public void Riconfig()
+        public void Riconfig(bool specialScout = false)
         {
             int risultato = 0;
             var TipoDiNaveIniziale = this._tipo;
@@ -70,7 +70,7 @@ namespace Quantum_Game
                 risultato = util.Dadi(1);
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
-            _riconfigurata = true;
+            if (!specialScout) _riconfigurata = true;
         }
         /// <summary>
         /// Metodo per piazzare per la prima volta una nave
@@ -116,6 +116,7 @@ namespace Quantum_Game
         {
             //usare la special
             this._special = true;
+            if (_tipo == e_nave.Interceptor) _special5 = true;
         }
         /// <summary>
         /// La nave viene distrutta
@@ -126,10 +127,10 @@ namespace Quantum_Game
             // per vedere se la nave è del colore di un giocatore
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
 
-
+        public bool MuoveInDiagonale { get { return _special5; } }
         // CAMPI 
         private Giocatore _proprietario;
-        private bool _mossa, _special, _ingioco, _riconfigurata;
+        private bool _mossa, _special, _ingioco, _riconfigurata, _special5;
 		private e_nave _tipo;
         
 

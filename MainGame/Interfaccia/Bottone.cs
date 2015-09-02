@@ -33,6 +33,7 @@ namespace Quantum_Game.Interfaccia
             _tipoBottone = TipoBottone;
             _cliccato = _mouseover = false;
             _parent = parent;
+            Enabled = true;
         }
         /// <summary> Costruttore statico per la voce di un menù a tendina </summary>
         public static Bottone MenuEntry (int num, bottone tipoBottone, object parent)
@@ -71,20 +72,22 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // FIXME: caricare la texture
             Color color = _colSfondo;
             if (_contatoreIllumin > 0)
-            { color = Color.Azure; _contatoreIllumin--; }
-            else if (_mouseover)
-                color = _colMouseOver;
+            { color = Color.OrangeRed; _contatoreIllumin--; }
+            else if (_mouseover) color = _colMouseOver;
+
+            if (!Enabled) color = Color.Gray;
 
             //bordo
             spriteBatch.Draw(_texture, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), _colBordo);
             //sfondo
             spriteBatch.Draw(_texture, new Rectangle(Posizione.X + 3, Posizione.Y + 3, Larghezza - 6, Altezza - 6), color);
             //scritta
-            spriteBatch.DrawString(font, Caption, posScritta, Color.Black);
+            spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
         }
+
+        public bool Enabled { get; set; }
 
         // proprietà pubbliche
         public string Caption
@@ -118,7 +121,7 @@ namespace Quantum_Game.Interfaccia
         #region MouseInput
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-            if (Compreso(args.Posizione.X, args.Posizione.Y))
+            if (Enabled && Compreso(args.Posizione.X, args.Posizione.Y))
             {
                 _cliccato = true;
                 _contatoreIllumin = FRAME_ILLUMINATO;
@@ -128,7 +131,7 @@ namespace Quantum_Game.Interfaccia
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            if (Compreso(args.Posizione))
+            if (Enabled && Compreso(args.Posizione))
                 _mouseover = true;
             else _mouseover = false;
         }
@@ -148,7 +151,7 @@ namespace Quantum_Game.Interfaccia
         private bool _cliccato;
         private bool _mouseover;
         private int _contatoreIllumin;
-        const int FRAME_ILLUMINATO = 8;
+        const int FRAME_ILLUMINATO = 10;
         // Costanti dei bottoni standard
         const int LARGH_BOT = 20;
         const int ALT_BOT = 10;

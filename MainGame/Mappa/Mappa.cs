@@ -93,6 +93,18 @@ namespace Quantum_Game
             return idValido(id) ? id : -1;
 
         }
+        // restituisce il pianeta più vicino alla casella argomento
+        public Pianeta PianetaPiùVicino(Casella casella)
+        {
+            foreach (Tile t in casella.TileAdiacenti(false))
+
+            {
+                Pianeta pianeta = t as Pianeta;
+                if (pianeta != null) return pianeta;
+            }
+            
+            return null;
+        }
 
 
         public int NumeroCaselle { get { return _listaCaselle.Count; } }

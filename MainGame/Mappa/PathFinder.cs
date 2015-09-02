@@ -22,33 +22,31 @@ namespace Quantum_Game
         BassoADestra
     }
 
-    public class PathFinder: IGameComponent
+    public class PathFinder
     {
         // COSTRUTTORE
 
-        public PathFinder(Game game, bool soloOrtogonali = false)
+        public PathFinder(Game game)
         {
-            _soloOrtogonali = soloOrtogonali;
             map = game.Services.GetService<Mappa>();
-            Initialize();
-        }
-
-        // METODI PUBBLICI
-        public void Initialize()
-        {
+            _numCaselle = map.NumeroCaselle;
+            _colonne = map.Colonne;
             _partito = false;
             //inizializzazione matrice
             _matrice = new int[_numCaselle][];
             for (int i = 0; i < _numCaselle; i++)
                 _matrice[i] = new int[0];
         }
-
-        public void Start(Casella Partenza, int DistanzaMax = 12)
+        /// <summary> Avvia il pathfinder per calcolare tutte le caselle raggiungibili. </summary>
+        /// <param name="Partenza">Casella di partenza</param>
+        /// <param name="muoveInDiagonale">determina se il movimento diagonale è abilitato</param>
+        public void Start(Casella Partenza, bool muoveInDiagonale)
         {
             if (_partito) return;   // ignora chiamate successive multiple del metodo Start
+            _muoveInDiagonale = muoveInDiagonale;
+
             if (Partenza != null)
             {
-                _distanzaMax = DistanzaMax;
                 _partito = true;
                 _nave = Partenza.Occupante;
                 if (_nave == null)
@@ -154,7 +152,7 @@ namespace Quantum_Game
         /// Algoritmo ricorsivo
         /// </summary>
         /// <param name="IDtile">Indirizzo del tile su cui sta adesso il pathfinder</param>
-        /// <param name="count">Lunghezza del percorso</param>
+        /// <param name="count">Lunghezza attuale del percorso di questo ramo</param>
         /// <param name="percorso">Array che rappresenta gli indirizzi delle caselle percorse da questo ramo dell'algoritmo</param>
         /// <param name="DirezioneProvenienza">La direzione da cui è stato chiamato l'algoritmo; per evitare chiamate inutili non proseguirà il percorso in questa direzione</param>
         void crawl(int IDtile, int count, int[] percorso, Direzioni DirezioneProvenienza)
@@ -177,13 +175,13 @@ namespace Quantum_Game
             count++;
             if (!tile.Attraversabile && !tile.PresenzaAlleata(_nave))
                 return;
-            if (count < _distanzaMax)
+            if (count < DISTANZAMAX)
             // Chiamate ricorsive
             {
                 int pos = IDtile;
 
                 // Direzioni ortogonali
-                if (!_soloOrtogonali)
+                if (_muoveInDiagonale)
                 {
                     pos = map.idAdiacente(IDtile, Direzioni.AltoASinistra);
                     if (DirezioneProvenienza != Direzioni.AltoASinistra && map.idValido(pos))
@@ -265,22 +263,21 @@ namespace Quantum_Game
         }   
 
         // PROPRIETA' PRIVATE
-        int _numCaselle { get { return map.NumeroCaselle; } }
-        int _colonne { get { return map.Colonne; } }
+        int _numCaselle;
+        int _colonne;
 
         // CAMPI
             // status del pathfinder: se è già stato acceso deve essere spento prima di poterlo riutilizzare
         private bool _partito;
             // 
-        private bool _soloOrtogonali;
+        private bool _muoveInDiagonale;
         // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare
         private Mappa map;
             // memorizza i percorsi per raggiungere le caselle circostanti
         private int[][] _matrice; 
             // la nave che si sta muovendo
         private Nave _nave;
-            // distanza massima che calcoliamo, sarebbe meglio farla costante
-        private int _distanzaMax;
-
+        // distanza massima che calcoliamo, sarebbe meglio farla costante
+        const int DISTANZAMAX = 12;
     }
 }

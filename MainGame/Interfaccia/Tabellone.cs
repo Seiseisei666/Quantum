@@ -62,7 +62,7 @@ namespace Quantum_Game
             // e per prendere i riferimenti del tileset
             tileset = gui.SpriteSheet;
             pennello = gui.Pennello;
-
+            font = gui.Font;
 
             base.Inizializzazione(gui);
 
@@ -90,16 +90,7 @@ namespace Quantum_Game
             _IdSelezione = -1;
             UltimoClick = TipoEventoMouse.nessuno;
         }
-        // restituisce il pianeta più vicino alla casella argomento
-        public Pianeta PianetaPiùVicino(Casella casella)
-        {
-            int Id, n, m;
-            Id = mappa.Tile2Id(casella);
-            mappa.id2nm(Id, out n, out m);
-            n = (n / 3) * 3; m /= 3 * 3; n++; m++;
-            Pianeta tempPlan = mappa.id2Tile(mappa.nm2id(n,m)) as Pianeta;
-            return tempPlan;
-        }
+
         #region Metodi di Disegno
         // disegna il tabellone e le navi
         public override void Draw(SpriteBatch spriteBatch)
@@ -144,6 +135,7 @@ namespace Quantum_Game
                         {
                             _source.X = 300;
                             spriteBatch.Draw(tileset, _target, _source, tempCas.Occupante.SpriteColor);
+                            spriteBatch.DrawString(font, tempCas.Occupante.Tipo.ToString(), new Vector2(_target.X, _target.Y + _latoCasella*0.75f), Color.White);
                         }
                     }
                 }
@@ -287,6 +279,7 @@ namespace Quantum_Game
         private Texture2D tileset;
         private Texture2D pennello;
         private Rectangle _source, _target;
+        private SpriteFont font;
 
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int _IdSelezione;
