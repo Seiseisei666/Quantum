@@ -62,6 +62,7 @@
     <Compile Include="Azioni\Special_Flagship.cs" />
     <Compile Include="Azioni\TemplateAzione.cs" />
     <Compile Include="Casella.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
     <Compile Include="Interfaccia\Bottone.cs" />
@@ -93,6 +94,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Graphica\schermataIniziale_bottoni_2.1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Graphica\schermataIniziale_sfondo_2.1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Graphica\TileSet_prova2.png" />
     <Content Include="Content\Mappe\mappa_prova1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Content\Font\Font.spritefont" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
