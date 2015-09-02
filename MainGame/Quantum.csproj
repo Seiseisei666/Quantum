@@ -61,8 +61,7 @@
     <Compile Include="Azioni\SelezioneDestra.cs" />
     <Compile Include="Azioni\Special_Flagship.cs" />
     <Compile Include="Azioni\TemplateAzione.cs" />
-    <Compile Include="Casella.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="Mappa\Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
     <Compile Include="GameSystem.cs" />
     <Compile Include="Interfaccia\Bottone.cs" />
@@ -70,20 +69,20 @@
     <Compile Include="Interfaccia\ConsoleMessaggi.cs" />
     <Compile Include="Interfaccia\RiquadroGui.cs" />
     <Compile Include="Interfaccia\TemplateElementoGui.cs" />
-    <Compile Include="Mappa.cs" />
-    <Compile Include="MenuTendina.cs" />
+    <Compile Include="Mappa\Mappa.cs" />
+    <Compile Include="Interfaccia\MenuTendina.cs" />
     <Compile Include="MouseInput.cs" />
-    <Compile Include="MapGenerator.cs" />
+    <Compile Include="Mappa\MapGenerator.cs" />
     <Compile Include="MouseEvntArgs.cs" />
-    <Compile Include="PathFinder.cs" />
-    <Compile Include="Pianeta.cs" />
+    <Compile Include="Mappa\PathFinder.cs" />
+    <Compile Include="Mappa\Pianeta.cs" />
     <Compile Include="Interfaccia\Tabellone.cs" />
     <Compile Include="Quantum.cs" />
     <Compile Include="Giocatore.cs" />
     <Compile Include="Nave.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="Mappa\Tile.cs" />
     <Compile Include="util.cs" />
   </ItemGroup>
   <ItemGroup>
