@@ -63,6 +63,7 @@ namespace Quantum_Game
         {
 
             bot.AssociaEvento(mouseInput, TipoEventoMouse.ClkSin);
+            bot.AssociaEvento(mouseInput, TipoEventoMouse.Over);
             bot.Font = this.font;
             _bottoni.Add(bot);
         }

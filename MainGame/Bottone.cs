@@ -16,6 +16,7 @@ namespace Quantum_Game
         UsaSpecial,
         Riconfigura,
         Colonizza,
+        Exit
     }
 
     public class Bottone: Riquadro, IBottone
