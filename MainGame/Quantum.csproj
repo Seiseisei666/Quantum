@@ -138,7 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Content\bin\Windows\Font\Font.xnb" />
     <None Include="Content\Font\Font.spritefont" />
+    <None Include="Content\obj\Windows\Font\Font.mgcontent" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
