@@ -29,12 +29,11 @@ namespace Quantum_Game
         public QuantumTile Tipo { get { return _tipo; } }
 
         abstract public bool Esistente { get; }
-        public virtual bool Attraversabile { get { return false; } }
-        public virtual bool EunPianeta { get { return false; } }
         public virtual bool EunaCasella { get { return false; } }
         public virtual bool PresenzaAlleata (Nave nave) { return false; }
+        public virtual bool PresenzaAlleata (Giocatore giocatore) { return false; }
 
-        // Da oggi possiamo fare TileX + Sopra e trovare il tile che sta sopra!!!!1
+        /// <summary>Overload dell'operatore + , permette di accedere ad un tile adiacente utilizzando la formula Tile + Direzione</summary>
         public static Tile operator+ (Tile tile, Direzioni dir)
         {
             int id = mappa.Tile2Id(tile);
@@ -77,10 +76,10 @@ namespace Quantum_Game
 
         public int ID { get { return mappa.Tile2Id(this); } }
 
-        /// <summary>Calcola se questo tile è uno degli 8 intorno al tile argomento</summary>
-        public bool Circostante(Tile centro, bool SoloOrtogonali = false)
+        /// <summary>Calcola se questo tile è uno degli 8 vicini al tile argomento</summary><param name="compreseDiagonali">Se false, controlliamo solo in alto, in basso, a sin e a dx</param>
+        public bool Adiacente(Tile centro, bool compreseDiagonali)
         {
-            int max = SoloOrtogonali ? (int)Direzioni.Destra : (int)Direzioni.BassoADestra;
+            int max = compreseDiagonali ? (int)Direzioni.BassoADestra : (int)Direzioni.Destra;
             for (int dir = 1; dir <= max; dir++)
             {
                 if (this.Equals(centro + (Direzioni)dir))
@@ -88,11 +87,16 @@ namespace Quantum_Game
             }
             return false;
         }
+        /// <summary>Calcola se questo tile è uno degli 8 vicini al tile argomento</summary><param name="compreseDiagonali">Se false, controlliamo solo in alto, in basso, a sin e a dx</param>
+        public bool Adiacente (int idCentro, bool compreseDiagonali)
+        {
+            return Adiacente(mappa.id2Tile(idCentro), compreseDiagonali);
+        }
         /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
-        public Tile[] TileAdiacenti (bool soloOrtogonali = false)
+        public Tile[] TileAdiacenti (bool compresoTarget, bool compreseDiagonali)
         {
             Tile[] tiles = new Tile[8];
-            int max = soloOrtogonali ? (int)Direzioni.Destra : (int)Direzioni.BassoADestra;
+            int max = compreseDiagonali ? (int)Direzioni.BassoADestra : (int)Direzioni.Destra;
             for (int dir = 1; dir <= max; dir++)
             {
                 tiles[dir - 1] = this + (Direzioni)dir;
@@ -101,21 +105,21 @@ namespace Quantum_Game
             return tiles;
         }
         /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
-        public int[] IdTileAdiacenti (bool soloOrtogonali = false)
+        public int[] IdTileAdiacenti (bool compreseDiagonali)
         {
             int[] tiles = new int[8];
             int c = 0;
-            foreach (Tile t in this.TileAdiacenti(soloOrtogonali))
+            foreach (Tile t in this.TileAdiacenti(false, compreseDiagonali))
             {
                 tiles[c++] = mappa.Tile2Id(t);
             }
             return tiles;
         }
-        public int[] IdTileAdiacenti(Func<Tile, bool> predicato, bool soloOrtogonali = false)
+        public int[] IdTileAdiacenti(Func<Tile, bool> predicato, bool compreseDiagonali)
         {
             int[] tiles = new int[0];
             int c = 0;
-            foreach (Tile t in this.TileAdiacenti(soloOrtogonali))
+            foreach (Tile t in this.TileAdiacenti(false, compreseDiagonali))
             {
                 if (predicato(t))
                 {
@@ -126,7 +130,62 @@ namespace Quantum_Game
             }
             return tiles;
         }
+        /// <summary> Filtra le caselle della mappa in base ad una data condizione. Restituisce gli ID delle caselle</summary>
+        public static int[] IdTiles (Func<Tile,bool> filtro)
+        {
 
+            if (filtro == null) throw new ArgumentNullException("filtro");
+            int[] risultato = new int[0];
+            for (int i = 0; i < mappa.NumeroCaselle; i++)
+            {
+                if (filtro(mappa.id2Tile(i)))
+                    risultato = risultato.Concat(new int[] { i }).ToArray();
+            }
+            System.Diagnostics.Debug.WriteLine(risultato.ToString());
+            return risultato;
+        }
+        /// <summary> Filtra le caselle della mappa in base ad una data condizione </summary>
+        public static Tile[] Tiles (Func<Tile,bool> filtro)
+        {
+            if (filtro == null) throw new ArgumentNullException("filtro");
+
+            return mappa._listaCaselle.Where(t => filtro(t)).ToArray();
+
+            Tile[] risultato = new Tile[0];
+            for (int i = 0; i < mappa.NumeroCaselle; i++)
+            {
+                Tile t = mappa.id2Tile(i);
+                if (filtro(t))
+                    risultato = Enumerable.Empty<Tile>().Concat(new Tile[] { t }).ToArray();
+            }
+
+            return risultato;
+
+        }
+
+        public static Tile[] ToTile (int[] tiles)
+        {
+            if (tiles == null) throw new ArgumentNullException("tiles");
+            Tile[] risultato = new Tile[0];
+            foreach (int i in tiles)
+            {
+                risultato = Enumerable.Empty<Tile>().Concat(new Tile[] { mappa.id2Tile(i) }).ToArray();
+
+            }
+            return risultato;
+        }
+        // restituisce il pianeta più vicino alla casella argomento
+        public Pianeta PianetaPiùVicino()
+        {
+            foreach (Tile t in this.TileAdiacenti(false, true))
+
+            {
+                Pianeta pianeta = t as Pianeta;
+                if (pianeta != null) return pianeta;
+            }
+
+            return null;
+        }
     }
     
     /// <summary>

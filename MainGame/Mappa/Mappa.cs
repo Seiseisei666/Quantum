@@ -93,17 +93,19 @@ namespace Quantum_Game
             return idValido(id) ? id : -1;
 
         }
-        // restituisce il pianeta più vicino alla casella argomento
-        public Pianeta PianetaPiùVicino(Casella casella)
-        {
-            foreach (Tile t in casella.TileAdiacenti(false))
+       
 
+        public Tile[] FiltraTile(Func<Tile, bool> condizione)
+        {
+            Tile[] tiles = new Tile[0];
+
+            foreach (Tile t in _listaCaselle)
             {
-                Pianeta pianeta = t as Pianeta;
-                if (pianeta != null) return pianeta;
+                if (condizione(t))
+                    tiles = Enumerable.Empty<Tile>().Concat(Enumerable.Repeat(t, 1)).ToArray();
             }
-            
-            return null;
+
+            return tiles;
         }
 
 
@@ -111,7 +113,8 @@ namespace Quantum_Game
         public int Righe { get { return _righe; } }
         public int Colonne { get { return _colonne; } }
 
-        List<Tile> _listaCaselle;
+        public List<Tile> _listaCaselle; // FIXME: la lista è pubblica solo temporaneamente
+                                         // presto l'oggetto mappa verrà eliminato e sostituito da metodi statici di Tile
         int _righe, _colonne;
     }
 }

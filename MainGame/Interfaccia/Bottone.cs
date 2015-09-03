@@ -45,7 +45,11 @@ namespace Quantum_Game.Interfaccia
         {
             return new Bottone(tipoBottone, xRel, yRel, LARGH_BOT, ALT_BOT);
         }
-
+        /// <summary> Costruttore statico per un Bottone di dimensioni standard con parent</summary>
+        public static Bottone Standard(bottone tipoBottone, int xRel, int yRel, object parent)
+        {
+            return new Bottone(tipoBottone, xRel, yRel, LARGH_BOT, ALT_BOT, parent);
+        }
         #endregion
 
         public override void Inizializzazione(GuiManager gui)

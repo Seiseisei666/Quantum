@@ -22,7 +22,6 @@ namespace Quantum_Game
 
             //override di Tile
         public override bool Esistente { get { return true; } }
-        public override bool EunPianeta { get { return true; } }
             // l'array delle mentine
         public e_color[] Colonizzazioni { get { return _colonizzazioni; } }
 
@@ -32,10 +31,22 @@ namespace Quantum_Game
         {
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
+        /// <summary>Determina se il giocatore argomento può colonizzare il pianeta.</summary>
         public bool Colonizzabile(Giocatore player)
         {
+            int punteggio = 0;
             e_color colore = player.Colore;
-            return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
+            bool spazio = _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
+
+            foreach (Tile t in this.TileAdiacenti(false, false))
+                if (t?.PresenzaAlleata(player) == true)
+                {
+                    var c = (Casella)t;
+                    punteggio += c.Occupante.Pwr;
+                }
+            System.Diagnostics.Debug.WriteLine(punteggio);
+            if (spazio && punteggio == (int)this.Tipo) return true;
+            else return false;
         }
             // L'azione di colonizzazione vera e propria
         public bool Colonizza(Giocatore plyr)

@@ -99,11 +99,11 @@ namespace Quantum_Game
             }
         }
         
-        public int [] IdCaselleAdiacenti (Tile target, bool compresoTarget = false)
+        public int [] IdCaselleAdiacenti (Tile target, bool compreseDiagonali, bool compresoTarget)
         {
             int c = 0;
             int[] caselle = new int[0];
-            Tile[] adiacenti = target.TileAdiacenti(true);
+            Tile[] adiacenti = target.TileAdiacenti(compresoTarget, compreseDiagonali);
             foreach (Tile t in adiacenti)
             {
                 Casella cas = t as Casella;
@@ -157,10 +157,10 @@ namespace Quantum_Game
         /// <param name="DirezioneProvenienza">La direzione da cui è stato chiamato l'algoritmo; per evitare chiamate inutili non proseguirà il percorso in questa direzione</param>
         void crawl(int IDtile, int count, int[] percorso, Direzioni DirezioneProvenienza)
         {
-            Tile tile = map.id2Tile(IDtile);
-            if (!tile.EunaCasella                // non è una casella valida
+            Casella casella = map.id2Tile(IDtile) as Casella;
+            if (casella == null                // non è una casella valida
                     // OR c'è una nave alleata che non è la nave che stiamo muovendo
-                || (tile.PresenzaAlleata(_nave) && count != 0) 
+                || (casella.PresenzaAlleata(_nave) && count != 0) 
                     // OR percorso già esistente e più breve di quello che ha trovato questo ramo della ricorsione
                 || (_matrice[IDtile].Length > 0 && _matrice[IDtile].Length <= percorso.Length))
                 return;
@@ -173,7 +173,7 @@ namespace Quantum_Game
                 Array.Copy(percorso, _matrice[IDtile], count);
             }
             count++;
-            if (!tile.Attraversabile && !tile.PresenzaAlleata(_nave))
+            if (casella.Occupante != null && !casella.PresenzaAlleata(_nave))
                 return;
             if (count < DISTANZAMAX)
             // Chiamate ricorsive

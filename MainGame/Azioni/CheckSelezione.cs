@@ -20,6 +20,13 @@ namespace Quantum_Game.Azioni
                 return;
             }
 
+            Pianeta p = gui.Tabellone.TileClick as Pianeta;
+            if (p!= null)
+            {
+                AzioneSuccessiva = new SelezionePianeta(game);
+                return;
+            }
+
             Nave nave =
                casellaCliccata?.Occupante;
 

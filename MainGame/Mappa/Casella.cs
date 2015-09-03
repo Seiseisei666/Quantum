@@ -19,16 +19,15 @@ namespace Quantum_Game
     public class Casella : Tile
     {
         // override di Tile
-        public override bool Attraversabile { get { return (this._occupante == null); } }
         public override bool Esistente { get { return true; } }
         public override bool EunaCasella { get { return true; } }
         public override bool PresenzaAlleata (Nave nave) { return (_occupante != null && _occupante.Colore == nave.Colore); }
+        public override bool PresenzaAlleata(Giocatore giocatore) { return (_occupante != null && _occupante.Colore == giocatore.Colore); }
 
         //campi propri
         private Nave _occupante;
         public Nave Occupante { get { return _occupante; } set { _occupante = value; } }
 
-        private bool _orbita;
         public bool Orbita { get { return _tipo == QuantumTile.orbita; } }
 
         //costruttore

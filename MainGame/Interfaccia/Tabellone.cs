@@ -130,7 +130,7 @@ namespace Quantum_Game
                     spriteBatch.Draw(tileset, _target, _source, Color.White);
                     if (tile.EunaCasella)
                     {
-                        Casella tempCas = tile as Casella;
+                        Casella tempCas = (Casella)tile;
                         if (tempCas.Occupante != null)
                         {
                             _source.X = 300;

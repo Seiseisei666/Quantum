@@ -13,6 +13,7 @@ namespace Quantum_Game.Azioni
         {
             _casellaPartenza = casellaCliccata;
         }
+        /// <summary>Costruttore per un movimento/attacco che parte da una casella ben definita</summary>
         public MovimentoAttacco(Game game, Casella casellaPartenza) : base (game)
         {
             _casellaPartenza = casellaPartenza;
@@ -75,11 +76,12 @@ namespace Quantum_Game.Azioni
 
                 gui.Tabellone.ResetSelezioneMouse();
 
-                int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, risultatoAttacco);
-                if (_casellaPartenza.Circostante(_casellaTarget, true))
+                int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, naveMossa.MuoveInDiagonale, risultatoAttacco);
+                if (_casellaPartenza.Adiacente(_casellaTarget, naveMossa.MuoveInDiagonale))
                 {
-                    Array.Resize(ref caselleAdiacentiTarget, caselleAdiacentiTarget.Length + 1);
-                    caselleAdiacentiTarget[caselleAdiacentiTarget.Length - 1] = _casellaPartenza.ID;
+                    caselleAdiacentiTarget = Enumerable.Empty<int>().Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
+                    //Array.Resize(ref caselleAdiacentiTarget, caselleAdiacentiTarget.Length + 1);
+                    //caselleAdiacentiTarget[caselleAdiacentiTarget.Length - 1] = _casellaPartenza.ID;
                 }
 
                 gui.Tabellone.IlluminaCaselle (caselleAdiacentiTarget);
@@ -105,7 +107,7 @@ namespace Quantum_Game.Azioni
                 return;
             if (casellaCliccata?.Occupante == null &&
                (casellaCliccata == _casellaTarget ||                   
-               casellaCliccata?.Circostante(_casellaTarget,true) == true))
+               casellaCliccata?.Adiacente(_casellaTarget,true) == true))
             {
                 naveMossa.Piazza(casellaCliccata);
                 Cleanup();
