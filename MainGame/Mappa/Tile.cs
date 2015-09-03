@@ -150,17 +150,6 @@ namespace Quantum_Game
             if (filtro == null) throw new ArgumentNullException("filtro");
 
             return mappa._listaCaselle.Where(t => filtro(t)).ToArray();
-
-            Tile[] risultato = new Tile[0];
-            for (int i = 0; i < mappa.NumeroCaselle; i++)
-            {
-                Tile t = mappa.id2Tile(i);
-                if (filtro(t))
-                    risultato = Enumerable.Empty<Tile>().Concat(new Tile[] { t }).ToArray();
-            }
-
-            return risultato;
-
         }
 
         public static Tile[] ToTile (int[] tiles)

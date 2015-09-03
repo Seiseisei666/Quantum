@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Asus/Documents/GitHubVisualStudio/Quantum/MainGame/Content/TileSet_prova1.png</SourceFile>
-  <SourceTime>2015-08-08T14:34:19.6210244+02:00</SourceTime>
-  <DestFile>C:/Users/Asus/Documents/GitHubVisualStudio/Quantum/MainGame/Content/bin/Windows/TileSet_prova1.xnb</DestFile>
-  <DestTime>2015-08-08T15:02:13.0887413+02:00</DestTime>
+  <SourceFile>C:/Users/Mirco/Repos/Quantum/MainGame/Content/TileSet_prova1.png</SourceFile>
+  <SourceTime>2015-08-22T12:53:04.9256693+02:00</SourceTime>
+  <DestFile>C:/Users/Mirco/Repos/Quantum/MainGame/Content/bin/Windows/TileSet_prova1.xnb</DestFile>
+  <DestTime>2015-09-01T01:30:19.3207582+02:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2015-04-29T19:14:44+02:00</ImporterTime>
+  <ImporterTime>2015-07-28T10:27:58+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2015-04-29T19:14:44+02:00</ProcessorTime>
+  <ProcessorTime>2015-07-28T10:27:58+02:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>
