@@ -28,9 +28,8 @@ namespace Quantum_Game
 
         public PathFinder(Game game)
         {
-            map = game.Services.GetService<Mappa>();
-            _numCaselle = map.NumeroCaselle;
-            _colonne = map.Colonne;
+            _numCaselle = Tile.Righe*Tile.Colonne;
+            _colonne = Tile.Colonne;
             _partito = false;
             //inizializzazione matrice
             _matrice = new int[_numCaselle][];
@@ -51,9 +50,7 @@ namespace Quantum_Game
                 _nave = Partenza.Occupante;
                 if (_nave == null)
                     throw new ArgumentNullException("Pathfinder chiamato con una casella di partenza su cui non c'è nessuna nave!!!");
-                int tile;
-                tile = map.Tile2Id(Partenza);
-                crawl(tile, 0, new int[0], Direzioni.nessuna);
+                crawl(Partenza.ID, 0, new int[0], Direzioni.nessuna);
             }
         }
 
@@ -68,18 +65,13 @@ namespace Quantum_Game
 
         public void Clear()
         {
+            // TODO: non credo che il metodo Clear serva più, dato che ora il pathfinder è una risorsa allocata
+            // dinamicamente quando ne abbiamo bisogno
             if (_partito == false)
                 return;
-
-            for (int i = 0; i < _numCaselle; i++)
-            {
-                // System.Diagnostics.Debug.WriteLine(PercorsoXCasella(i).Length);
-                Array.Resize(ref _matrice[i], 0);
-            }
-            _nave = null;
-            _partito = false;
+            _matrice = null;
         }
-
+        /// <summary>Restituisce la lista degli ID delle caselle valide</summary>
         public int[] IdCaselleValide
         {
             get
@@ -98,7 +90,7 @@ namespace Quantum_Game
                 return caselle;
             }
         }
-        
+        //TODO questo metodo non mi piace qui, non dovrebbe essere compito del pathfinder trovare caselle adiacenti
         public int [] IdCaselleAdiacenti (Tile target, bool compreseDiagonali, bool compresoTarget)
         {
             int c = 0;
@@ -127,22 +119,19 @@ namespace Quantum_Game
 
         }
 
-
+        /// <summary>
+        /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId
+        /// </summary>
         public int[] PercorsoXCasella(Tile target)
         {
-            if (target != null)
-            {
-                int id = map.Tile2Id(target);
-                return _matrice[id];
-            }
-            else return new int[0];
+            return PercorsoXCasella(target.ID);
         }
         /// <summary>
         /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId
         /// </summary>
         public int[] PercorsoXCasella(int targetId)
         {
-            if (map.idValido(targetId)) return _matrice[targetId];
+            if (Tile.idValido(targetId)) return _matrice[targetId];
             else return new int[0];
         }
 
@@ -154,10 +143,10 @@ namespace Quantum_Game
         /// <param name="IDtile">Indirizzo del tile su cui sta adesso il pathfinder</param>
         /// <param name="count">Lunghezza attuale del percorso di questo ramo</param>
         /// <param name="percorso">Array che rappresenta gli indirizzi delle caselle percorse da questo ramo dell'algoritmo</param>
-        /// <param name="DirezioneProvenienza">La direzione da cui è stato chiamato l'algoritmo; per evitare chiamate inutili non proseguirà il percorso in questa direzione</param>
-        void crawl(int IDtile, int count, int[] percorso, Direzioni DirezioneProvenienza)
+        /// <param name="direzioneProvenienza">La direzione da cui è stato chiamato l'algoritmo; per evitare chiamate inutili non proseguirà il percorso in questa direzione</param>
+        void crawl(int IDtile, int count, int[] percorso, Direzioni direzioneProvenienza)
         {
-            Casella casella = map.id2Tile(IDtile) as Casella;
+            Casella casella = Tile.id2Tile(IDtile) as Casella;
             if (casella == null                // non è una casella valida
                     // OR c'è una nave alleata che non è la nave che stiamo muovendo
                 || (casella.PresenzaAlleata(_nave) && count != 0) 
@@ -178,37 +167,37 @@ namespace Quantum_Game
             if (count < DISTANZAMAX)
             // Chiamate ricorsive
             {
-                int pos = IDtile;
+                int pos;
 
                 // Direzioni ortogonali
                 if (_muoveInDiagonale)
                 {
-                    pos = map.idAdiacente(IDtile, Direzioni.AltoASinistra);
-                    if (DirezioneProvenienza != Direzioni.AltoASinistra && map.idValido(pos))
+                    pos = (casella + Direzioni.AltoASinistra)?.ID ?? -1;
+                    if (direzioneProvenienza != Direzioni.AltoASinistra && Tile.idValido(pos))
                     {
                         int[] tempArray = new int[count];
                         Array.Copy(percorso, tempArray, count - 1);
                         crawl(pos, count, tempArray, Direzioni.BassoADestra);
                     }
 
-                    pos = map.idAdiacente(IDtile, Direzioni.AltoADestra);
-                    if (DirezioneProvenienza != Direzioni.AltoADestra && map.idValido(pos))
+                    pos = (casella + Direzioni.AltoADestra)?.ID ?? -1;
+                    if (direzioneProvenienza != Direzioni.AltoADestra && Tile.idValido(pos))
                     {
                         int[] tempArray = new int[count];
                         Array.Copy(percorso, tempArray, count - 1);
                         crawl(pos, count, tempArray, Direzioni.BassoASinistra);
                     }
 
-                    pos = map.idAdiacente(IDtile, Direzioni.BassoASinistra);
-                    if (DirezioneProvenienza != Direzioni.BassoASinistra && map.idValido(pos))
+                    pos = (casella + Direzioni.BassoASinistra)?.ID ?? -1;
+                    if (direzioneProvenienza != Direzioni.BassoASinistra && Tile.idValido(pos))
                     {
                         int[] tempArray = new int[count];
                         Array.Copy(percorso, tempArray, count - 1);
                         crawl(pos, count, tempArray, Direzioni.AltoADestra);
                     }
 
-                    pos = map.idAdiacente(IDtile, Direzioni.BassoADestra);
-                    if (DirezioneProvenienza != Direzioni.BassoADestra && map.idValido(pos))
+                    pos = (casella + Direzioni.BassoADestra)?.ID ?? -1;
+                    if (direzioneProvenienza != Direzioni.BassoADestra && Tile.idValido(pos))
                     {
                         int[] tempArray = new int[count];
                         Array.Copy(percorso, tempArray, count - 1);
@@ -217,29 +206,29 @@ namespace Quantum_Game
                 }
 
                 //Direzioni ortogonali
-
-                if (DirezioneProvenienza != Direzioni.Sopra && step(ref pos, Direzioni.Sopra))
+                pos = (casella + Direzioni.Sopra)?.ID ?? -1;
+                if (direzioneProvenienza != Direzioni.Sopra && Tile.idValido(pos))
                 {
                     int[] tempArray = new int[count];
                     Array.Copy(percorso, tempArray, count - 1);
                     crawl(pos, count, tempArray, Direzioni.Sotto);
                 }
-                pos = IDtile;
-                if (DirezioneProvenienza != Direzioni.Sotto && step(ref pos, Direzioni.Sotto))
+                pos = (casella + Direzioni.Sotto)?.ID ?? -1;
+                if (direzioneProvenienza != Direzioni.Sotto && Tile.idValido(pos))
                 {
                     int[] tempArray = new int[count];
                     Array.Copy(percorso, tempArray, count - 1);
                     crawl(pos, count, tempArray, Direzioni.Sopra);
                 }
-                pos = IDtile;
-                if (DirezioneProvenienza != Direzioni.Sinistra && step(ref pos, Direzioni.Sinistra))
+                pos = (casella + Direzioni.Sinistra)?.ID ?? -1;
+                if (direzioneProvenienza != Direzioni.Sinistra && Tile.idValido(pos))
                 {
                     int[] tempArray = new int[count];
                     Array.Copy(percorso, tempArray, count - 1);
                     crawl(pos, count, tempArray, Direzioni.Destra);
                 }
-                pos = IDtile;
-                if (DirezioneProvenienza != Direzioni.Destra && step(ref pos, Direzioni.Destra))
+                pos = (casella + Direzioni.Destra)?.ID ?? -1;
+                if (direzioneProvenienza != Direzioni.Destra && Tile.idValido(pos))
                 {
                     int[] tempArray = new int[count];
                     Array.Copy(percorso, tempArray, count - 1);
@@ -247,37 +236,19 @@ namespace Quantum_Game
                 }
             }
         }
-            // Per trovare l'indice di una casella adiacente
-        bool step(ref int pos, Direzioni dir)
-        {
-            if (dir == Direzioni.Sopra)
-                return (pos -= _colonne) >= 0;
-            else if (dir == Direzioni.Sotto)
-                return (pos += _colonne) < _numCaselle;
-            else if (dir == Direzioni.Destra)
-                return ((++pos % _colonne) != 0) && pos < _numCaselle;
-            else if (dir == Direzioni.Sinistra)
-                return ((--pos % _colonne) != (_colonne - 1)) && pos >= 0;
-
-            return false;
-        }   
-
-        // PROPRIETA' PRIVATE
-        int _numCaselle;
-        int _colonne;
 
         // CAMPI
+        int _numCaselle;
+        int _colonne;
             // status del pathfinder: se è già stato acceso deve essere spento prima di poterlo riutilizzare
         private bool _partito;
-            // 
+            // se true, il pathfinder si muoverà anche in diagonale
         private bool _muoveInDiagonale;
-        // la lista caselle del tabellone... non è elegante come soluzione ma non sapevo come fare
-        private Mappa map;
             // memorizza i percorsi per raggiungere le caselle circostanti
         private int[][] _matrice; 
             // la nave che si sta muovendo
         private Nave _nave;
-        // distanza massima che calcoliamo, sarebbe meglio farla costante
+            // distanza massima che calcoliamo
         const int DISTANZAMAX = 12;
     }
 }

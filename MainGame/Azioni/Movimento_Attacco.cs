@@ -79,9 +79,7 @@ namespace Quantum_Game.Azioni
                 int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, naveMossa.MuoveInDiagonale, risultatoAttacco);
                 if (_casellaPartenza.Adiacente(_casellaTarget, naveMossa.MuoveInDiagonale))
                 {
-                    caselleAdiacentiTarget = Enumerable.Empty<int>().Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
-                    //Array.Resize(ref caselleAdiacentiTarget, caselleAdiacentiTarget.Length + 1);
-                    //caselleAdiacentiTarget[caselleAdiacentiTarget.Length - 1] = _casellaPartenza.ID;
+                    caselleAdiacentiTarget = caselleAdiacentiTarget.Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
                 }
 
                 gui.Tabellone.IlluminaCaselle (caselleAdiacentiTarget);

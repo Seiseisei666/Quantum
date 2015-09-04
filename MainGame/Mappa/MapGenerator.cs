@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Quantum_Game
+namespace Quantum_Game.Mappa
 {
     public class MapGenerator
     {

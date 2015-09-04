@@ -68,7 +68,7 @@ public class Giocatore {
             {
                 Nave n = new Nave(this);
                 _flotta.Add(n);
-                n.Riconfig();
+                n.Riconfigura();
             }
         }
         /// <summary>
@@ -77,7 +77,7 @@ public class Giocatore {
         public void Init()
         {
             foreach (var n in _flotta)
-                n.init(); 
+                n.InizioTurno(); 
             _azioni = NUM_AZIONI;
         }
         /// <summary>

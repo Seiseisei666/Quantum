@@ -70,8 +70,8 @@
     <Compile Include="Interfaccia\ConsoleMessaggi.cs" />
     <Compile Include="Interfaccia\RiquadroGui.cs" />
     <Compile Include="Interfaccia\TemplateElementoGui.cs" />
-    <Compile Include="Mappa\Mappa.cs" />
     <Compile Include="Interfaccia\MenuTendina.cs" />
+    <Compile Include="Mappa\Vuoto.cs" />
     <Compile Include="MouseInput.cs" />
     <Compile Include="Mappa\MapGenerator.cs" />
     <Compile Include="MouseEvntArgs.cs" />

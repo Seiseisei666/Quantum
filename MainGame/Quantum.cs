@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System;
 using Quantum_Game.Interfaccia;
+using Quantum_Game.Mappa;
 
 
 
@@ -35,7 +36,7 @@ namespace Quantum_Game
             //Crea la mappa
             // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
             MapGenerator generatore = new MapGenerator(9,15); // <- da sistemare perché i 9 non possono rimanere fissi
-            Mappa mappa = new Mappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             // Crea il gamesystem con 4 giocatori
             GameSystem gameSystem = new GameSystem();
@@ -51,7 +52,6 @@ namespace Quantum_Game
             // DA TOGLIERE
 
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
-            Services.AddService<Mappa>(mappa);
             Services.AddService<ITurnazione>(gameSystem);
 
             MouseInput mouseInput = new MouseInput(this);

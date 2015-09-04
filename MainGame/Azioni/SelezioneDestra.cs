@@ -40,7 +40,7 @@ namespace Quantum_Game.Azioni
             if (gui.BottonePremuto == bottone.Riconfigura)
             {
                 e_nave t1 = naveUsata.Tipo;
-                naveUsata.Riconfig();
+                naveUsata.Riconfigura();
                 giocatoreDiTurno.Azione();
                 e_nave t2 = naveUsata.Tipo;
 
@@ -62,7 +62,7 @@ namespace Quantum_Game.Azioni
                         esciDalLoop = true;
                         break;
                     case e_nave.Scout:
-                        naveUsata.Riconfig(true);
+                        naveUsata.Riconfigura(true);
                         naveUsata.UsaSpecial();
                         esciDalLoop = true;
                         break;

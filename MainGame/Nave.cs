@@ -54,14 +54,14 @@ namespace Quantum_Game
         /// <summary>
         /// inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
         /// </summary>
-        public void init()
+        public void InizioTurno()
         {
-            _riconfigurata = _mossa = _special = _special5 = false;
+            _riconfigurata = _mossa = _special = _muoveinDiagonale = false;
         }
         /// <summary>
         /// riconfigurazione della nave (o primo roll)
         /// </summary>
-        public void Riconfig(bool specialScout = false)
+        public void Riconfigura(bool specialScout = false)
         {
             int risultato = 0;
             var TipoDiNaveIniziale = this._tipo;
@@ -71,16 +71,20 @@ namespace Quantum_Game
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
             if (!specialScout) _riconfigurata = true;
+
+            // Mi assicuro che, se uso la special della 5 e poi riconfiguro, la nave che ottengo non si possa muovere in diagonale
+            _muoveinDiagonale = false;      
         }
         /// <summary>
         /// Metodo per piazzare per la prima volta una nave
-        /// E' l'unico modo con cui una nave può essere dichiarata IN GIOCO
+        /// E' anche l'unico modo con cui una nave può essere dichiarata IN GIOCO
         /// </summary>
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
             _ingioco = true;
         }
+        /// <summary>Muove la nave da una casella a un'altra.</summary>
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
         {
             CasellaPartenza.Occupante = null;
@@ -111,26 +115,24 @@ namespace Quantum_Game
                 casella.Occupante = null;
             return risultato;
         }
-
+        /// <summary>Usa la special. niente di sensazionale</summary>
         public void UsaSpecial()
         {
-            //usare la special
             this._special = true;
-            if (_tipo == e_nave.Interceptor) _special5 = true;
+            if (_tipo == e_nave.Interceptor) _muoveinDiagonale = true;
         }
         /// <summary>
         /// La nave viene distrutta
         /// </summary>
 		public void Distruggi() { this._tipo = e_nave.Rottame; }
 
-        public void Gioca() { _ingioco = true; }
             // per vedere se la nave è del colore di un giocatore
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
-
-        public bool MuoveInDiagonale { get { return _special5; } }
+        /// <summary>True se la nave può muoversi in diagonale</summary>
+        public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
         // CAMPI 
         private Giocatore _proprietario;
-        private bool _mossa, _special, _ingioco, _riconfigurata, _special5;
+        private bool _mossa, _special, _ingioco, _riconfigurata, _muoveinDiagonale;
 		private e_nave _tipo;
         
 

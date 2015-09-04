@@ -36,13 +36,14 @@ namespace Quantum_Game.Interfaccia
         public SpriteFont Font { get { return font; } }
         public Tabellone Tabellone { get { return _tabellone; } }
 
-
+        /// <summary>Iscrive un RiquadroGui all'interfaccia </summary>
         public void Iscrivi(RiquadroGui elemento)
         {
             elemento.Inizializzazione(this);
             elemento.AssociaEventiMouse(_mouseInput);
             elementi.Add(elemento);
         }
+        /// <summary>Rimuove un RiquadroGui dall'interfaccia </summary>
         public void Rimuovi(RiquadroGui elemento)
         {
             elemento.DissociaEventiMouse(_mouseInput);
@@ -55,7 +56,7 @@ namespace Quantum_Game.Interfaccia
             Iscrivi(tab as RiquadroGui);
             _tabellone = tab;
         }
-
+        /// <summary>Iscrive un Menu a tendina all'interfaccia </summary>
         public void Iscrivi(MenuTendina menu)
         {
             foreach (var voce in menu.Elementi)
@@ -64,7 +65,7 @@ namespace Quantum_Game.Interfaccia
                 voce.Riposiziona(menu.Posizione);
             }
         }
-
+        /// <summary>Rimuove dall'interfaccia tutti i "figli" dell'oggetto argomento </summary>
         public void Rimuovi(object parent)
         {
             var lista = elementi.FindAll(x => x.Parent?.Equals(parent) == true);

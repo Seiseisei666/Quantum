@@ -21,10 +21,25 @@ namespace Quantum_Game
         Pianeta9,
         Pianeta10
     }
-    
+
     public abstract class Tile
     {
-        public static Mappa mappa { private get; set; }
+        public Tile() { ID = _id++; System.Diagnostics.Debug.WriteLine(ID); }
+
+        static List<Tile> _caselle;
+        static int _colonne;
+        static int _righe;
+        static int _id = 0;
+        public static int Righe {get {return _righe;} }
+        public static int Colonne { get { return _colonne; } }
+
+        public static void CreaMappa (List<Tile> Lista, int r, int c)
+        {
+            _caselle = Lista; _righe = r; _colonne = c;
+        }
+
+        public int ID { get; private set; }
+
         protected QuantumTile _tipo;
         public QuantumTile Tipo { get { return _tipo; } }
 
@@ -33,48 +48,44 @@ namespace Quantum_Game
         public virtual bool PresenzaAlleata (Nave nave) { return false; }
         public virtual bool PresenzaAlleata (Giocatore giocatore) { return false; }
 
+
         /// <summary>Overload dell'operatore + , permette di accedere ad un tile adiacente utilizzando la formula Tile + Direzione</summary>
         public static Tile operator+ (Tile tile, Direzioni dir)
         {
-            int id = mappa.Tile2Id(tile);
+            if (tile == null) return null;
+            int id = tile.ID;
             switch (dir)
-            {   // ortogonali
+            {   
+                // ortogonali
                 case Direzioni.Sopra:
-                    id -= mappa.Colonne; break;
+                    id -= _colonne; break;
                 case Direzioni.Sotto:
-                    id += mappa.Colonne; break;
+                    id += _colonne; break;
                 case Direzioni.Sinistra:
-                    if (id % mappa.Colonne != 0)
+                    if (id % _colonne != 0)
                         id--;
                     else return null;
                     break;
                 case Direzioni.Destra:
-                    if (id % mappa.Colonne != mappa.Colonne - 1)
+                    if (id % _colonne != _colonne - 1)
                         id++;
                     else return null;
                     break;
+
                 // diagonali
                 case Direzioni.AltoADestra:
-                    if (id++ % mappa.Colonne != mappa.Colonne - 1)
-                        id -= mappa.Colonne; break;
+                    return (tile + Direzioni.Sopra) + Direzioni.Destra;
                 case Direzioni.AltoASinistra:
-                    if (id-- % mappa.Colonne != 0)
-                        id -= mappa.Colonne; break;
+                    return (tile + Direzioni.Sopra) + Direzioni.Sinistra;
                 case Direzioni.BassoADestra:
-                    if (id++ % mappa.Colonne != mappa.Colonne - 1)
-                        id += mappa.Colonne; break;
+                    return (tile + Direzioni.Sotto) + Direzioni.Destra;
                 case Direzioni.BassoASinistra:
-                    if (id-- % mappa.Colonne != 0)
-                        id += mappa.Colonne; break;
+                    return (tile + Direzioni.Sotto) + Direzioni.Sinistra;
             }
 
-            if (mappa.idValido(id))
-                return mappa.id2Tile(id);
-
+            if (idValido(id)) return _caselle[id];
             else return null;
         }
-
-        public int ID { get { return mappa.Tile2Id(this); } }
 
         /// <summary>Calcola se questo tile è uno degli 8 vicini al tile argomento</summary><param name="compreseDiagonali">Se false, controlliamo solo in alto, in basso, a sin e a dx</param>
         public bool Adiacente(Tile centro, bool compreseDiagonali)
@@ -87,10 +98,10 @@ namespace Quantum_Game
             }
             return false;
         }
-        /// <summary>Calcola se questo tile è uno degli 8 vicini al tile argomento</summary><param name="compreseDiagonali">Se false, controlliamo solo in alto, in basso, a sin e a dx</param>
+        /// <summary>Calcola se questo ID fa riferimento ad uno dei tile vicini al tile argomento</summary><param name="compreseDiagonali">Se false, controlliamo solo in alto, in basso, a sin e a dx</param>
         public bool Adiacente (int idCentro, bool compreseDiagonali)
         {
-            return Adiacente(mappa.id2Tile(idCentro), compreseDiagonali);
+            return Adiacente(id2Tile(idCentro), compreseDiagonali);
         }
         /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
         public Tile[] TileAdiacenti (bool compresoTarget, bool compreseDiagonali)
@@ -104,66 +115,37 @@ namespace Quantum_Game
 
             return tiles;
         }
-        /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
-        public int[] IdTileAdiacenti (bool compreseDiagonali)
-        {
-            int[] tiles = new int[8];
-            int c = 0;
-            foreach (Tile t in this.TileAdiacenti(false, compreseDiagonali))
-            {
-                tiles[c++] = mappa.Tile2Id(t);
-            }
-            return tiles;
-        }
-        public int[] IdTileAdiacenti(Func<Tile, bool> predicato, bool compreseDiagonali)
-        {
-            int[] tiles = new int[0];
-            int c = 0;
-            foreach (Tile t in this.TileAdiacenti(false, compreseDiagonali))
-            {
-                if (predicato(t))
-                {
-                    Array.Resize(ref tiles, c + 1);
-                    tiles[c++] = mappa.Tile2Id(t);
-                }
 
-            }
-            return tiles;
-        }
         /// <summary> Filtra le caselle della mappa in base ad una data condizione. Restituisce gli ID delle caselle</summary>
         public static int[] IdTiles (Func<Tile,bool> filtro)
         {
-
             if (filtro == null) throw new ArgumentNullException("filtro");
+            var tiles = Tiles(filtro);
+
             int[] risultato = new int[0];
-            for (int i = 0; i < mappa.NumeroCaselle; i++)
+            foreach (Tile t in tiles)
             {
-                if (filtro(mappa.id2Tile(i)))
-                    risultato = risultato.Concat(new int[] { i }).ToArray();
+                    risultato = risultato.Concat(new int[] { t.ID }).ToArray();
             }
-            System.Diagnostics.Debug.WriteLine(risultato.ToString());
             return risultato;
         }
+        // USATO SOLO DA IdTiles ^^^
         /// <summary> Filtra le caselle della mappa in base ad una data condizione </summary>
         public static Tile[] Tiles (Func<Tile,bool> filtro)
         {
             if (filtro == null) throw new ArgumentNullException("filtro");
 
-            return mappa._listaCaselle.Where(t => filtro(t)).ToArray();
-        }
+            return _caselle.Where(t => filtro(t)).ToArray();
 
+        }
+        // NON USATO
         public static Tile[] ToTile (int[] tiles)
         {
             if (tiles == null) throw new ArgumentNullException("tiles");
-            Tile[] risultato = new Tile[0];
-            foreach (int i in tiles)
-            {
-                risultato = Enumerable.Empty<Tile>().Concat(new Tile[] { mappa.id2Tile(i) }).ToArray();
-
-            }
-            return risultato;
+            return tiles.Select(i => id2Tile(i)).ToArray();
         }
-        // restituisce il pianeta più vicino alla casella argomento
+
+        ///<summary> Restituisce il pianeta più vicino alla casella argomento</summary>
         public Pianeta PianetaPiùVicino()
         {
             foreach (Tile t in this.TileAdiacenti(false, true))
@@ -175,19 +157,32 @@ namespace Quantum_Game
 
             return null;
         }
-    }
-    
-    /// <summary>
-    /// Settore vuoto... non fa assolutamente niente!
-    /// </summary>
-    public class Vuoto : Tile
-    {
-        public override bool Esistente { get { return false; } }
-        public Vuoto ()
+
+        #region Ex Mappa
+
+        ///<summary>Conversione da ID a Tile</summary>
+        public static Tile id2Tile(int id)
         {
-            this._tipo = QuantumTile.vuoto;
+            if (idValido (id))
+                return _caselle[id];
+            else return null;
         }
+
+        public static bool idValido(int id)
+        {
+            return (id >= 0 && id < _righe*_colonne);
+        }
+
+        public int idAdiacente(int id, Direzioni dir)
+        {
+            return (id2Tile(id) + dir)?.ID ?? -1; // -1 se il tile di arrivo non è valido (vuoto/inesistente)
+        }
+        #endregion
+
+
     }
+
+
 
 }
 

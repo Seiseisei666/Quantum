@@ -44,12 +44,6 @@ namespace Quantum_Game
 
         public void Initialize()
         {
-            // Caricamento mappa
-            mappa = _game.Services.GetService<Mappa>();
-            _righe = mappa.Righe; _colonne = mappa.Colonne;
-
-                                                      //    va sostituito con quello definitivo
-
             // Iscrizione al Gui
             GuiManager gui = _game.Services.GetService<GuiManager>();
             gui.Iscrivi(this);
@@ -68,7 +62,7 @@ namespace Quantum_Game
 
 
             //Calcolo il lato delle caselle:
-            float h = Altezza / (float)_righe; float w = Larghezza / (float)_colonne;
+            float h = Altezza / (float)Tile.Righe; float w = Larghezza / (float)Tile.Colonne;
             _latoCasella = (w <= h) ? (int)w : (int)h;
 
             //rettangoli per lo spritebatch:
@@ -78,7 +72,7 @@ namespace Quantum_Game
 
         // PROPRIETA' PUBBLICHE
 
-        public Tile TileClick { get { return (_IdSelezione >= 0) ? mappa.id2Tile(_IdSelezione) : null; } }
+        public Tile TileClick { get { return (_IdSelezione >= 0) ? Tile.id2Tile(_IdSelezione) : null; } }
         public TipoEventoMouse UltimoClick { get; private set; }
 
         // METODI PUBBLICI
@@ -97,14 +91,14 @@ namespace Quantum_Game
         {
             spriteBatch.Draw(pennello, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), Color.MidnightBlue);
             int x, y;
-            for (int Idx = 0; Idx < mappa.NumeroCaselle; Idx++)
+            for (int Idx = 0; Idx < Tile.Righe*Tile.Colonne; Idx++)
             {
-                Tile tile = mappa.id2Tile(Idx); 
+                Tile tile = Tile.id2Tile(Idx); 
                 if (tile.Esistente)
                 {             // se la casella non fa parte del gioco non la disegna
 
                     //calcolo delle coordinate su cui disegnare:
-                    mappa.id2nm(Idx, out x, out y);
+                    id2nm(Idx, out x, out y);
                     _target.X = x * _latoCasella + Posizione.X;
                     _target.Y = y * _latoCasella + Posizione.Y;
 
@@ -202,22 +196,20 @@ namespace Quantum_Game
             tempX -= Posizione.X; tempY -= Posizione.Y;
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
-            if (x < 0 || x > _colonne - 1 || y < 0 || y > _righe - 1)
+            if (x < 0 || x > Tile.Colonne - 1 || y < 0 || y > Tile.Righe - 1)
                 return false;
             return true;
         }
         private Point id2Pixel(int id)
         {
             int n, m;
-            mappa.id2nm(id, out n, out m);
+            id2nm(id, out n, out m);
             return new Point
                 (n * _latoCasella + Posizione.X, m * _latoCasella + Posizione.Y);
         }
         public Point Tile2Pixel(Tile tile)
         {
-            int id;
-            id = mappa.Tile2Id(tile);
-            return id2Pixel(id);
+            return id2Pixel(tile.ID);
         }
 
         #region Input Mouse
@@ -232,9 +224,9 @@ namespace Quantum_Game
                 int tempY = args.Posizione.Y;
 
                 if (coordinatePixel2Casella(ref tempX, ref tempY) &&
-                    mappa.id2Tile(_idMouseOver = (tempX + tempY * _colonne)).Esistente)
+                    Tile.id2Tile(_idMouseOver = (tempX + tempY * Tile.Colonne)).Esistente)
                 {
-                    mappa.id2nm(_idMouseOver, out tempX, out tempY);
+                    id2nm(_idMouseOver, out tempX, out tempY);
                     _SelezPixCoord.X = tempX*_latoCasella + Posizione.X; _SelezPixCoord.Y = tempY*_latoCasella + Posizione.Y;
                     return;
                 }
@@ -267,11 +259,16 @@ namespace Quantum_Game
         }
         #endregion
         // CAMPI DELLA CLASSE
+        void id2nm(int idCasella, out int n, out int m)
+        {
+            if (!Tile.idValido(idCasella))
+                throw new IndexOutOfRangeException("Indice non esistente");
 
-        // gli elementi costitutivi del tabellone
-        private int _righe, _colonne;
+            n = idCasella % Tile.Colonne;
+            m = idCasella / Tile.Colonne;
+        }
+
         private Game _game;
-        private Mappa mappa;
 
         // Per disegnare
         private int _latoCasella;
