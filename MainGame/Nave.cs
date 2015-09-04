@@ -56,7 +56,7 @@ namespace Quantum_Game
         /// </summary>
         public void init()
         {
-            _riconfigurata = _mossa = _special = _special5 = false;
+            _riconfigurata = _mossa = _special = _muoveinDiagonale = false;
         }
         /// <summary>
         /// riconfigurazione della nave (o primo roll)
@@ -71,6 +71,7 @@ namespace Quantum_Game
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
             if (!specialScout) _riconfigurata = true;
+            _muoveinDiagonale = false;      // Mi assicuro che se uso la special della 5 e poi riconfiguro, la nave che ottengo non si possa muovere in diagonale
         }
         /// <summary>
         /// Metodo per piazzare per la prima volta una nave
@@ -116,7 +117,7 @@ namespace Quantum_Game
         {
             //usare la special
             this._special = true;
-            if (_tipo == e_nave.Interceptor) _special5 = true;
+            if (_tipo == e_nave.Interceptor) _muoveinDiagonale = true;
         }
         /// <summary>
         /// La nave viene distrutta
@@ -126,11 +127,11 @@ namespace Quantum_Game
         public void Gioca() { _ingioco = true; }
             // per vedere se la nave è del colore di un giocatore
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
-
-        public bool MuoveInDiagonale { get { return _special5; } }
+        /// <summary>True se la nave può muoversi in diagonale</summary>
+        public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
         // CAMPI 
         private Giocatore _proprietario;
-        private bool _mossa, _special, _ingioco, _riconfigurata, _special5;
+        private bool _mossa, _special, _ingioco, _riconfigurata, _muoveinDiagonale;
 		private e_nave _tipo;
         
 
