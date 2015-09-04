@@ -16,15 +16,17 @@ namespace Quantum_Game.Interfaccia
             for (int i = 0; i < CAPACITA; i++)
                 _messaggi.Add(new MessaggioDiGioco("", Color.White));
         }
-
+        /// <summary>Aggiunge un messaggio colorato alla console</summary>
         public static void NuovoMessaggio(string messaggio, Color colore)
         {
             _messaggi[N] = new MessaggioDiGioco(messaggio, colore); N++;
         }
+        /// <summary>Aggiunge un messaggio bianco alla console </summary>
         public static void NuovoMessaggio(string messaggio)
         {
             NuovoMessaggio(messaggio, Color.White);
         }
+        /// <summary> Inutile</summary>
         public static void Aggiunta(string messaggio, Color colore)
         {
             string s = _messaggi[N].Messaggio;
@@ -32,8 +34,7 @@ namespace Quantum_Game.Interfaccia
             _messaggi[N] = new MessaggioDiGioco(s, colore);
         }
 
-
-
+        
         public override void Inizializzazione(GuiManager gui)
         {
             base.Inizializzazione(gui);
@@ -60,7 +61,7 @@ namespace Quantum_Game.Interfaccia
 
             }
         }
-
+        /// <summary> Funzione privata per wrappare gli indici fra 0...CAPACITA-1</summary>
         int wrap (int x)
         {
             if (x < 0) return CAPACITA + x;
@@ -84,7 +85,7 @@ namespace Quantum_Game.Interfaccia
         static int _contatore = 0;
         
         const int CAPACITA = 20;
-
+        /// <summary>Coppia string-color che rappresenta i messaggi </summary>
         private class MessaggioDiGioco
         {
             public string Messaggio { get; set; }
