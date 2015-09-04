@@ -124,7 +124,8 @@ namespace Quantum_Game
         /// </summary>
         public int[] PercorsoXCasella(Tile target)
         {
-            return PercorsoXCasella(target.ID);
+            if (target != null) return PercorsoXCasella(target.ID);
+            else return new int[0];
         }
         /// <summary>
         /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId

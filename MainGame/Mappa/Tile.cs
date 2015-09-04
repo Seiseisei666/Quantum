@@ -5,12 +5,7 @@ using System.Text;
 
 namespace Quantum_Game
 {
-    /// <summary>
-    /// QUESTO FILE CONTIENE:
-    /// QuantumTile e QuantumDirezioni, due enum relative alle caselle;
-    /// La classe astratta Tile, da cui ereditano tutte le caselle;
-    /// La classe Vuoto, che rappresenta un tile non esistente messo solo come segnaposto
-    /// </summary>
+
     public enum QuantumTile : sbyte
     {
         vuoto = -1,
@@ -21,10 +16,10 @@ namespace Quantum_Game
         Pianeta9,
         Pianeta10
     }
-
+    /// <summary> Classe astratta da cui ereditano tutti i tile. Contiene metodi statici per gestire le caselle </summary>
     public abstract class Tile
     {
-        public Tile() { ID = _id++; System.Diagnostics.Debug.WriteLine(ID); }
+        public Tile() { ID = _id++; }
 
         static List<Tile> _caselle;
         static int _colonne;

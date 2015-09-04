@@ -87,6 +87,8 @@ namespace Quantum_Game.Azioni
                 else
                 {
                     // TODO: qui bisogna abolire la special
+                    _naveTrasportata.Piazza(_casellaTarget);
+                    Cleanup();
                 }
             }
         }
@@ -99,6 +101,7 @@ namespace Quantum_Game.Azioni
             if (libera && circostante)
             {
                 _naveTrasportata.Piazza(casellaCliccata);
+                _naveMossa.UsaSpecial();
                 Cleanup();
             }
         }
@@ -107,7 +110,6 @@ namespace Quantum_Game.Azioni
         {
             gui.Tabellone.ResetSelezioneMouse();
             gui.Tabellone.SpegniCaselle();
-            _naveMossa.UsaSpecial();
             faseAttuale = null;
             AzioneSuccessiva = null;
         }
