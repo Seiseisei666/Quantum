@@ -51,20 +51,26 @@ namespace Quantum_Game.Azioni
             }
             else if (gui.BottonePremuto == bottone.UsaSpecial)
             {
-                bool esciDalLoop = false;
+                bool azioneSuccessivaNulla = false;
                 switch (naveUsata.Tipo)
                 {
+                    case e_nave.Battlestation:
+                        AzioneSuccessiva = new Special_Battlestation(game, _casellaPartenza);
+                        break;
                     case e_nave.Flagship:
                         AzioneSuccessiva = new Special_Flagship(game, _casellaPartenza);
                         break;
+                    case e_nave.Destroyer:
+                        AzioneSuccessiva = new Special_Warp(game,_casellaPartenza);
+                        break;
                     case e_nave.Interceptor:
                         naveUsata.UsaSpecial();
-                        esciDalLoop = true;
+                        azioneSuccessivaNulla = true;
                         break;
                     case e_nave.Scout:
                         naveUsata.Riconfigura(true);
                         naveUsata.UsaSpecial();
-                        esciDalLoop = true;
+                        azioneSuccessivaNulla = true;
                         break;
 
                     default:
@@ -73,7 +79,7 @@ namespace Quantum_Game.Azioni
                         break;
                 }
 
-                Cleanup(esciDalLoop);
+                Cleanup(azioneSuccessivaNulla);
             }
 
             // Se c'è stato un click e il blocco precedente di codice non è stato eseguito
@@ -98,7 +104,7 @@ namespace Quantum_Game.Azioni
 
 
 
-        // Controlla se la nave può usare la special
+/// <summary> Check sulla nave, per vedere se è in grado di effettuare la special.</summary>
         bool checkSpecial(Nave nave)
         {
             Casella casella;

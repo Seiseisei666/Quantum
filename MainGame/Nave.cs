@@ -96,10 +96,9 @@ namespace Quantum_Game
         /// </summary>
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
-        public bool Attacco(Nave target)
+        bool Attacco(Nave target)
         {
-            this._mossa = true;
-            if (this.Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1))
+            if (Pwr + util.Dadi(1) <= target.Pwr + util.Dadi(1))
             {
                 target.Distruggi();
                 this._proprietario.Dominio++;
@@ -110,10 +109,9 @@ namespace Quantum_Game
         }
         public bool Attacco (Casella casella)
         {
-            bool risultato = Attacco(casella.Occupante);
-            if (risultato)
-                casella.Occupante = null;
-            return risultato;
+            bool esito = Attacco(casella.Occupante);
+            if (esito) casella.Occupante = null;
+            return esito;
         }
         /// <summary>Usa la special. niente di sensazionale</summary>
         public void UsaSpecial()
@@ -126,7 +124,7 @@ namespace Quantum_Game
         /// </summary>
 		public void Distruggi() { this._tipo = e_nave.Rottame; }
 
-            // per vedere se la nave è del colore di un giocatore
+        /// <summary>True se la nave è del colore del giocatore argomento</summary>
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
         /// <summary>True se la nave può muoversi in diagonale</summary>
         public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
