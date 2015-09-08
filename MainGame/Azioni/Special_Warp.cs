@@ -39,7 +39,7 @@ namespace Quantum_Game.Azioni
             _naveWarp = _destinazioneWarp.Occupante;
             _naveMossa.Piazza(_destinazioneWarp);
             _naveWarp.Piazza(_partenza);
-            _naveWarp.UsaSpecial();
+            _naveMossa.UsaSpecial();
             Cleanup();
         }
 

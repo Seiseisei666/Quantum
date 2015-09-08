@@ -122,7 +122,7 @@ namespace Quantum_Game
         /// <summary>
         /// La nave viene distrutta
         /// </summary>
-		public void Distruggi() { this._tipo = e_nave.Rottame; }
+		public void Distruggi() { _ingioco = false; Riconfigura(true); }
 
         /// <summary>True se la nave è del colore del giocatore argomento</summary>
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }

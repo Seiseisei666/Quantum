@@ -52,7 +52,7 @@ namespace Quantum_Game
             // DA TOGLIERE
 
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
-            Services.AddService<ITurnazione>(gameSystem);
+            Services.AddService<GameSystem>(gameSystem);
 
             MouseInput mouseInput = new MouseInput(this);
             Components.Add(mouseInput);
@@ -60,7 +60,7 @@ namespace Quantum_Game
             Components.Add(gui);
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
-            Tabellone tab = new Tabellone(this, 3, 3, 70, 85);
+            Tabellone tab = new Tabellone(this, 3, 3, 80, 70);
             Components.Add(tab);
 
             base.Initialize();
@@ -79,9 +79,11 @@ namespace Quantum_Game
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(boh);
 
-            ConsoleMessaggi console = new ConsoleMessaggi(3, 88, 70, 22);
+            ConsoleMessaggi console = new ConsoleMessaggi(3, 83, 80, 18);
             gui.Iscrivi(console);
 
+            Cimitero cim = new Cimitero(3, 73, 80, 15);
+            gui.Iscrivi(cim);
 
 
             base.LoadContent();

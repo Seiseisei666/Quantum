@@ -24,7 +24,7 @@ namespace Quantum_Game
 
         public override void Initialize()
         {
-            turno = _game.Services.GetService<ITurnazione>();
+            turno = _game.Services.GetService<GameSystem>();
             gui = _game.Services.GetService<GuiManager>();
         }
 
@@ -73,7 +73,7 @@ namespace Quantum_Game
         private Game _game;
         private AzioneDiGioco _prossimaAzione;
         private GuiManager gui;
-        private ITurnazione turno;
+        private GameSystem turno;
        }
 }
 

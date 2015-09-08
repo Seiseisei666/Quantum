@@ -26,7 +26,7 @@ namespace Quantum_Game
     {
         // COSTRUTTORE
 
-        public PathFinder(Game game)
+        public PathFinder()
         {
             _numCaselle = Tile.Righe*Tile.Colonne;
             _colonne = Tile.Colonne;

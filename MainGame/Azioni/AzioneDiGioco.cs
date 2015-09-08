@@ -18,7 +18,7 @@ namespace Quantum_Game.Azioni
         {
             this.game = game;
 
-            gameSystem = game.Services.GetService<ITurnazione>();
+            gameSystem = game.Services.GetService<GameSystem>();
             gui = game.Services.GetService<GuiManager>();
             AzioneSuccessiva = this;
         }
@@ -44,7 +44,7 @@ namespace Quantum_Game.Azioni
 
         // Oggetti di gioco che ci portiamo dietro
         protected Game game;
-        protected ITurnazione gameSystem;    // per accedere al giocatore di turno
+        protected GameSystem gameSystem;    // per accedere al giocatore di turno
         protected GuiManager gui;      // per accedere alla grafica e ai click sul tabellone
     }
 }

@@ -25,6 +25,8 @@ namespace Quantum_Game.Interfaccia
         {
             // Qua ci prendiamo dai servizi del gioco quello che ci interessa
             _mouseInput = _game.Services.GetService<MouseInput>();
+
+
             base.Initialize();
         }
 
@@ -35,6 +37,8 @@ namespace Quantum_Game.Interfaccia
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
         public SpriteFont Font { get { return font; } }
         public Tabellone Tabellone { get { return _tabellone; } }
+        public Cimitero Cimitero { get { return _cimitero; } }
+
 
         /// <summary>Iscrive un RiquadroGui all'interfaccia </summary>
         public void Iscrivi(RiquadroGui elemento)
@@ -55,6 +59,12 @@ namespace Quantum_Game.Interfaccia
         {
             Iscrivi(tab as RiquadroGui);
             _tabellone = tab;
+        }
+        public void Iscrivi (Cimitero cim)
+        {
+            Iscrivi ((RiquadroGui)cim);
+            _cimitero = cim;
+
         }
         /// <summary>Iscrive un Menu a tendina all'interfaccia </summary>
         public void Iscrivi(MenuTendina menu)
@@ -142,6 +152,7 @@ namespace Quantum_Game.Interfaccia
 
         private Game _game;
         private Tabellone _tabellone;
+        Cimitero _cimitero;
         private MouseInput _mouseInput;
         private SpriteBatch _spriteBatch;
         private Texture2D _spriteSheet;

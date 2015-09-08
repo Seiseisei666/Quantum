@@ -24,7 +24,7 @@ namespace Quantum_Game.Azioni
             naveMossa = _casellaPartenza.Occupante;
             gui.Tabellone.ResetSelezioneMouse();
 
-            pathFinder = new PathFinder(game);
+            pathFinder = new PathFinder();
             pathFinder.Start(_casellaPartenza, naveMossa.MuoveInDiagonale);
             
             gui.Tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);

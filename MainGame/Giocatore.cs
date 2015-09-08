@@ -36,6 +36,9 @@ public class Giocatore {
         } 
         public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
 
+        /// <summary>Lista delle navi del giocatore non in gioco (cioè nel cimitero)</summary>
+        public List<Nave> Rottami { get { return _flotta.FindAll(n => !n.InGioco); } }
+
         public e_color Colore { get { return this._colore; } }
         public Color SpriteColor { get { return GameSystem.QuantumColor[_colore]; } }
 
