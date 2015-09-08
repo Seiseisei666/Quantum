@@ -33,4 +33,4 @@ una cosa tipo {get; private set; } già è molto meglio
 Se si scrivono cose strambe e/o lunghe è una buona idea scrivere 2 righe, così basta tenere il mouse sopra il nome dell'elemento e si visualizza il popup con le informazioni
 
 
-....e questo è tutto!
+....e questo è tutto! aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
