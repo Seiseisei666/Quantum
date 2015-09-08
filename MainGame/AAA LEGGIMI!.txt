@@ -31,3 +31,6 @@ una cosa tipo {get; private set; } già è molto meglio
 
 - scrivendo /// Visual studio introduce automaticamente il Summary, che è un commento che viene interpretato come metadata di una classe o membro di classe
 Se si scrivono cose strambe e/o lunghe è una buona idea scrivere 2 righe, così basta tenere il mouse sopra il nome dell'elemento e si visualizza il popup con le informazioni
+
+
+....e questo è tutto!
