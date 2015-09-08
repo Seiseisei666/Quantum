@@ -25,8 +25,8 @@ namespace Quantum_Game
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1366;  
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1024;  
+            graphics.PreferredBackBufferHeight = 600;
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
