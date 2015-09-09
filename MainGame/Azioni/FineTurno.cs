@@ -27,7 +27,7 @@ namespace Quantum_Game.Azioni
             AzioneSuccessiva = null;
             gameSystem.NextTurn();
             Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gameSystem.GiocatoreDiTurno.Colore, gameSystem.GiocatoreDiTurno.SpriteColor);
-            gui.Cimitero.InizioTurno(gameSystem.GiocatoreDiTurno);
+            gui.Cimitero.Aggiorna(gameSystem.GiocatoreDiTurno);
         }
     }
 }
