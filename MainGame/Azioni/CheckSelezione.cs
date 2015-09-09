@@ -27,24 +27,31 @@ namespace Quantum_Game.Azioni
                 return;
             }
 
-            Nave nave =
-               casellaCliccata?.Occupante;
+            Nave nave = casellaCliccata?.Occupante;
 
-            if (nave == null) return;
+            if (nave != null) { 
 
-            else if
+                if
                 (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
-            {
-                AzioneSuccessiva = new MovimentoAttacco(game);
-                System.Diagnostics.Debug.WriteLine("Click Sinistro");
+                {
+                    AzioneSuccessiva = new MovimentoAttacco(game);
+                    return;
+                }
+
+                else if
+                    (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) &&
+                    (!nave.SpecialUsata || !nave.Riconfigurata))
+                {
+                    AzioneSuccessiva = new SelezioneDestra(game);
+                    return;
+                }
             }
 
             else if
-                (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) &&
-                (!nave.SpecialUsata || !nave.Riconfigurata))
+                (gui.Cimitero.NaveSelezionata != null)
             {
-                AzioneSuccessiva = new SelezioneDestra(game);
-                System.Diagnostics.Debug.WriteLine("Click Destro");
+                AzioneSuccessiva = new GiocaDaRiserva(game, gui.Cimitero.NaveSelezionata);
+                return;
             }
         }
 

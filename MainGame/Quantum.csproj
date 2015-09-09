@@ -57,6 +57,7 @@
     <Compile Include="Azioni\AzioneDiGiocoComplessa.cs" />
     <Compile Include="Azioni\FineTurno.cs" />
     <Compile Include="Azioni\CheckSelezione.cs" />
+    <Compile Include="Azioni\GiocaDaRiserva.cs" />
     <Compile Include="Azioni\Movimento_Attacco.cs" />
     <Compile Include="Azioni\SelezioneDestra.cs" />
     <Compile Include="Azioni\SelezionePianeta.cs" />

@@ -141,9 +141,9 @@ namespace Quantum_Game
         }
 
         ///<summary> Restituisce il pianeta più vicino alla casella argomento</summary>
-        public Pianeta PianetaPiùVicino()
+        public Pianeta PianetaPiùVicino(bool compreseDiagonali)
         {
-            foreach (Tile t in this.TileAdiacenti(false, true))
+            foreach (Tile t in TileAdiacenti(false, compreseDiagonali))
 
             {
                 Pianeta pianeta = t as Pianeta;

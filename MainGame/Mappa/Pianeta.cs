@@ -31,6 +31,11 @@ namespace Quantum_Game
         {
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
+        /// <summary> Restituisce True se sul pianeta c'è una mentina del giocatore argomento</summary>
+        public bool PresenzaGiocatore (Giocatore player)
+        {
+            return _colonizzazioni.Any(c => c == player.Colore);
+        }
         /// <summary>Determina se il giocatore argomento può colonizzare il pianeta.</summary>
         public bool Colonizzabile(Giocatore player)
         {
