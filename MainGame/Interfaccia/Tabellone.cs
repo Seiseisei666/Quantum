@@ -91,6 +91,7 @@ namespace Quantum_Game
         {
             spriteBatch.Draw(pennello, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), Color.MidnightBlue);
             int x, y;
+            Random rnd = new Random();
             for (int Idx = 0; Idx < Tile.Righe*Tile.Colonne; Idx++)
             {
                 Tile tile = Tile.id2Tile(Idx); 
@@ -115,8 +116,8 @@ namespace Quantum_Game
                             _source.Y = 0;
                             break;
                         default:
-                            _source.X = 200;
-                            _source.Y = 0;
+                            _source.X = rnd.Next(3)*100;
+                            _source.Y = 100;
                             break;
                     }
 
