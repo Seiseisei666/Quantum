@@ -20,8 +20,7 @@ namespace Quantum_Game.Azioni
                 return;
             }
 
-            Pianeta p = gui.Tabellone.TileClick as Pianeta;
-            if (p!= null)
+            if (gui.Tabellone.TileClick as Pianeta != null)
             {
                 AzioneSuccessiva = new SelezionePianeta(game);
                 return;
@@ -31,16 +30,13 @@ namespace Quantum_Game.Azioni
 
             if (nave != null) { 
 
-                if
-                (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
+                if (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
                 {
                     AzioneSuccessiva = new MovimentoAttacco(game);
                     return;
                 }
 
-                else if
-                    (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) &&
-                    (!nave.SpecialUsata || !nave.Riconfigurata))
+                else if (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) && (!nave.SpecialUsata || !nave.Riconfigurata))
                 {
                     AzioneSuccessiva = new SelezioneDestra(game);
                     return;

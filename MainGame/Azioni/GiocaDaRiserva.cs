@@ -18,6 +18,7 @@ namespace Quantum_Game.Azioni
             });
             gui.Tabellone.IlluminaCaselle(_caselleDisponibili.Select(t => t.ID).ToArray());
             Interfaccia.ConsoleMessaggi.NuovoMessaggio("Scegli dove piazzare la nave");
+            gui.Tabellone.ResetSelezioneMouse();
         }
 
         public override void Esegui()
