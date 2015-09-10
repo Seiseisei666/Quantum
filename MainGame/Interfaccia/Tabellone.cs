@@ -116,8 +116,17 @@ namespace Quantum_Game
                             _source.Y = 0;
                             break;
                         case QuantumTile.Pianeta7:
+                            _source.X = 0;
+                            _source.Y = 100;
+                            break;
                         case QuantumTile.Pianeta8:
+                            _source.X = 100;
+                            _source.Y = 100;
+                            break;
                         case QuantumTile.Pianeta9:
+                            _source.X = 200;
+                            _source.Y = 100;
+                            break;
                         case QuantumTile.Pianeta10:
                             _source.X = 300;
                             _source.Y = 100;

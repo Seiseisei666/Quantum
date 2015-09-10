@@ -45,8 +45,10 @@ namespace Quantum_Game.Mappa
                 if (c.Equals('#')) _tabellone.Add(new Vuoto());
                 if (c.Equals('*')) _tabellone.Add(new Casella(QuantumTile.casella));
                 if (c.Equals('+')) _tabellone.Add(new Casella(QuantumTile.orbita));
-                if (c.Equals('7') || c.Equals('8') || c.Equals('9') || c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
-
+                if (c.Equals('7')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta7));
+                if (c.Equals('8')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta8));
+                if (c.Equals('9')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta9));
+                if (c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
             }
 
             return _tabellone;
