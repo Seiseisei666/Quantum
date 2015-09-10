@@ -71,53 +71,7 @@ namespace Quantum_Game
                 return;
             _matrice = null;
         }
-        /// <summary>Restituisce la lista degli ID delle caselle valide</summary>
-        public int[] IdCaselleValide
-        {
-            get
-            {
-                int c = 0;
-                int[] caselle = new int[0];
-                for (int id = 0; id < _numCaselle; id++)
-                {
-                    if (_matrice[id].Length > 0              // percorso esistente (almeno 1 casella)
-                        && _matrice[id].Length <= _nave.Pwr) // lunghezza percorso alla portata della nave
-                    {
-                        Array.Resize(ref caselle, c + 1);
-                        caselle[c++] = id;
-                    }
-                }
-                return caselle;
-            }
-        }
-        //TODO questo metodo non mi piace qui, non dovrebbe essere compito del pathfinder trovare caselle adiacenti
-        public int [] IdCaselleAdiacenti (Tile target, bool compreseDiagonali, bool compresoTarget)
-        {
-            int c = 0;
-            int[] caselle = new int[0];
-            Tile[] adiacenti = target.TileAdiacenti(compresoTarget, compreseDiagonali);
-            foreach (Tile t in adiacenti)
-            {
-                Casella cas = t as Casella;
-                if (cas != null && cas.Occupante == null)
-                {
-                    int id = cas.ID;
-                    int dist = DistanzaCasella(id);
-                    if (dist > 0 && dist < _nave.Pwr)
-                    {
-                        Array.Resize(ref caselle, c + 1);
-                        caselle[c++] = id;
-                    }
-                }
-            }
-            if (compresoTarget && target.EunaCasella)
-            {
-                Array.Resize(ref caselle, caselle.Length+1);
-                caselle[caselle.Length-1] = target.ID;
-            }
-            return caselle;
-
-        }
+       
 
         /// <summary>
         /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId
