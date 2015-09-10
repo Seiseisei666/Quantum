@@ -50,7 +50,9 @@ namespace Quantum_Game
             if (tile == null) return null;
             int id = tile.ID;
             switch (dir)
-            {   
+            {
+                case Direzioni.nessuna:
+                    break;
                 // ortogonali
                 case Direzioni.Sopra:
                     id -= _colonne; break;
@@ -101,13 +103,16 @@ namespace Quantum_Game
         /// <summary>Fornisce la lista dei tile adiacenti a questo tile.</summary>
         public Tile[] TileAdiacenti (bool compresoTarget, bool compreseDiagonali)
         {
-            Tile[] tiles = new Tile[8];
-            int max = compreseDiagonali ? (int)Direzioni.BassoADestra : (int)Direzioni.Destra;
-            for (int dir = 1; dir <= max; dir++)
-            {
-                tiles[dir - 1] = this + (Direzioni)dir;
-            }
+            Tile[] tiles = new Tile[9];
+            int dir = 1, max = (int)Direzioni.Destra;
 
+            if (compreseDiagonali) max = (int)Direzioni.BassoADestra;
+            if (compresoTarget) dir = 0; 
+            
+            while (dir <= max)
+            {
+                tiles[dir] = this + (Direzioni)(dir++);
+            }
             return tiles;
         }
 

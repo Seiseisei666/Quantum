@@ -26,8 +26,17 @@ namespace Quantum_Game.Azioni
 
             pathFinder = new PathFinder();
             pathFinder.Start(_casellaPartenza, naveMossa.MuoveInDiagonale);
-            
-            gui.Tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);
+
+            var caselleRaggiungibili = 
+                Tile.Tiles(t => 
+                {
+                    int d =  pathFinder.DistanzaCasella(t);
+                    return (d <= naveMossa.Pwr && d > 0);
+                }
+                ).Select(t => t.ID).ToArray();
+
+            //gui.Tabellone.IlluminaCaselle(pathFinder.IdCaselleValide);
+            gui.Tabellone.IlluminaCaselle(caselleRaggiungibili);
 
             faseAttuale = movimentoAttacco; // il puntatore faseAttuale viene chiamato dal metodo AzioneDiGiocoComplessa.Esegui()
         }
@@ -76,13 +85,31 @@ namespace Quantum_Game.Azioni
 
                 gui.Tabellone.ResetSelezioneMouse();
 
-                int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, naveMossa.MuoveInDiagonale, risultatoAttacco);
-                if (_casellaPartenza.Adiacente(_casellaTarget, naveMossa.MuoveInDiagonale))
-                {
-                    caselleAdiacentiTarget = caselleAdiacentiTarget.Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
-                }
+                //int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, naveMossa.MuoveInDiagonale, risultatoAttacco);
+                //if (_casellaPartenza.Adiacente(_casellaTarget, naveMossa.MuoveInDiagonale))
+                //{
+                //    caselleAdiacentiTarget = caselleAdiacentiTarget.Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
+                //}
+                var adiacenti = _casellaTarget.TileAdiacenti(true, naveMossa.MuoveInDiagonale);
 
-                gui.Tabellone.IlluminaCaselle (caselleAdiacentiTarget);
+                var disponibili = adiacenti.Where(t =>
+               {
+                   Casella c;
+                   if (t?.EunaCasella == true) c = (Casella)t; else return false;
+
+                   int d = pathFinder.DistanzaCasella(c);
+                   return
+                   (
+                    c.Occupante == null
+                    && (d < naveMossa.Pwr || c.Equals(_casellaTarget) == true)
+                    && (d > 0 || c.Equals(_casellaPartenza) == true)
+                   );
+
+               }).Select(t => t.ID).ToArray();
+                
+
+
+                gui.Tabellone.IlluminaCaselle (disponibili);
 
                 faseAttuale = indietreggia;     // nuova fase
             }
