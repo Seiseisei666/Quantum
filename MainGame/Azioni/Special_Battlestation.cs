@@ -39,7 +39,7 @@ namespace Quantum_Game.Azioni
 
         void completaAzione()
         {
-            _nave.Attacco(casellaCliccata);
+            _nave.Attacco(casellaCliccata, false);
             _nave.UsaSpecial();
             Cleanup();
         }

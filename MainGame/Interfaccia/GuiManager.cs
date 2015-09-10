@@ -26,7 +26,6 @@ namespace Quantum_Game.Interfaccia
             // Qua ci prendiamo dai servizi del gioco quello che ci interessa
             _mouseInput = _game.Services.GetService<MouseInput>();
 
-
             base.Initialize();
         }
 
@@ -94,8 +93,8 @@ namespace Quantum_Game.Interfaccia
 
             _texture = new Texture2D(GraphicsDevice, 1, 1);
             _texture.SetData(new[] { (Color.White) });
-
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _game.Services.AddService(_spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
@@ -115,14 +114,12 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin();
 
             foreach (RiquadroGui elemento in elementi)
             {
                 elemento.Draw(_spriteBatch);
             }
 
-            _spriteBatch.End();
         }
         #endregion Override di Game Component
 

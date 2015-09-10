@@ -56,7 +56,7 @@ namespace Quantum_Game.Azioni
 
                 Interfaccia.ConsoleMessaggi.NuovoMessaggio("Una nave" + naveMossa.Tipo + " di colore" + naveMossa.Colore + " ha attaccato una nave" + naveTarget.Tipo + " di colore" + naveTarget.Colore + ".", giocatoreDiTurno.SpriteColor);
 
-                risultatoAttacco = naveMossa.Attacco(_casellaTarget);
+                risultatoAttacco = naveMossa.Attacco(_casellaTarget, true);
 
 
 

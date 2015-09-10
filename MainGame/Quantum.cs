@@ -18,7 +18,10 @@ namespace Quantum_Game
     public class Quantum : Game
     {
         private GraphicsDeviceManager graphics;
-        
+        private SpriteBatch spriteBatch;
+
+        private Sfondo sfondo;
+
         private FlussoDiGioco flussoGioco;
 
         public Quantum()
@@ -62,12 +65,16 @@ namespace Quantum_Game
             Components.Add(flussoGioco);
             Tabellone tab = new Tabellone(this, 3, 3, 80, 70);
             Components.Add(tab);
+            sfondo = new Sfondo(this);
+            Components.Add(sfondo);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            spriteBatch = Services.GetService<SpriteBatch>();
+
             var gui = Services.GetService<GuiManager>();
 
             /*
@@ -113,8 +120,13 @@ namespace Quantum_Game
         {
             GraphicsDevice.Clear(Color.Black);
 
+            spriteBatch.Begin();
+
+            sfondo.Draw();
 
             base.Draw(gameTime);
+
+            spriteBatch.End();
         }
 
         /*  Qua cominciano altre cose nostre */

@@ -107,10 +107,11 @@ namespace Quantum_Game
             }
             return false;
         }
-        public bool Attacco (Casella casella)
+        public bool Attacco (Casella casella, bool consumaMovimento)
         {
             bool esito = Attacco(casella.Occupante);
             if (esito) casella.Occupante = null;
+            if (consumaMovimento) this._mossa = true;
             return esito;
         }
         /// <summary>Usa la special. niente di sensazionale</summary>

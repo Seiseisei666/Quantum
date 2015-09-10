@@ -16,9 +16,19 @@ namespace Quantum_Game.Azioni
             Casella c = t as Casella;
             return t.PianetaPiùVicino(false)?.PresenzaGiocatore(giocatoreDiTurno) == true && c?.Occupante == null;
             });
-            gui.Tabellone.IlluminaCaselle(_caselleDisponibili.Select(t => t.ID).ToArray());
-            Interfaccia.ConsoleMessaggi.NuovoMessaggio("Scegli dove piazzare la nave");
-            gui.Tabellone.ResetSelezioneMouse();
+
+            if (_caselleDisponibili.Any())
+            {
+                gui.Tabellone.IlluminaCaselle(_caselleDisponibili.Select(t => t.ID).ToArray());
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Scegli dove piazzare la nave");
+                gui.Tabellone.ResetSelezioneMouse();
+            }
+            else
+            {
+                // abortiamo l'azione immediatamente, perché non ci sono caselle su cui piazzare la nave
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Impossibile piazzare la nave!", Color.Salmon);
+                Cleanup();
+            }
         }
 
         public override void Esegui()
@@ -43,6 +53,7 @@ namespace Quantum_Game.Azioni
         {
             gui.Tabellone.SpegniCaselle();
             gui.Tabellone.ResetSelezioneMouse();
+            gui.Cimitero.Aggiorna(giocatoreDiTurno); // Aggiornare il cimitero ne annulla la selezione e evita che si inneschi un loop infinito
             AzioneSuccessiva = null;
         }
 

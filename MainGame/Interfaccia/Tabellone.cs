@@ -89,9 +89,8 @@ namespace Quantum_Game
         // disegna il tabellone e le navi
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pennello, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), Color.MidnightBlue);
+
             int x, y;
-            Random rnd = new Random();
             for (int Idx = 0; Idx < Tile.Righe*Tile.Colonne; Idx++)
             {
                 Tile tile = Tile.id2Tile(Idx); 
@@ -104,6 +103,7 @@ namespace Quantum_Game
                     _target.Y = y * _latoCasella + Posizione.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
+                    // TODO: qua è ancora tutto provvisorio
                     switch (tile.Tipo)
                     {
 
@@ -115,8 +115,11 @@ namespace Quantum_Game
                             _source.X = 100;
                             _source.Y = 0;
                             break;
-                        default:
-                            _source.X = rnd.Next(3)*100;
+                        case QuantumTile.Pianeta7:
+                        case QuantumTile.Pianeta8:
+                        case QuantumTile.Pianeta9:
+                        case QuantumTile.Pianeta10:
+                            _source.X = 300;
                             _source.Y = 100;
                             break;
                     }
