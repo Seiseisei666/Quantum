@@ -41,9 +41,9 @@ namespace Quantum_Game
             //o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
             string file = @"Content\Mappe\mappa_prova1.txt";
             MapGenerator generatore = new MapGenerator(file);
-            Tile.CreaMappa(generatore.GeneraMappa(generatore.Righe,generatore.Colonne,file), generatore.Righe*3, generatore.Colonne*3);
+            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
-            // Crea il gamesystem con 4 giocatori
+            // Crea il gamesystem con 2 giocatori
             GameSystem gameSystem = new GameSystem();
             gameSystem.AggiungiGiocatori(2);
             
