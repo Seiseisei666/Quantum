@@ -36,10 +36,12 @@ namespace Quantum_Game
 
         protected override void Initialize()
         {
-            //Crea la mappa
-            // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
-            MapGenerator generatore = new MapGenerator(9,15); // <- da sistemare perché i 9 non possono rimanere fissi
-            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+            //Crea la mappa.
+            //Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
+            //o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
+            string file = @"Content\Mappe\mappa_prova1.txt";
+            MapGenerator generatore = new MapGenerator(file);
+            Tile.CreaMappa(generatore.GeneraMappa(generatore.Righe,generatore.Colonne,file), generatore.Righe*3, generatore.Colonne*3);
 
             // Crea il gamesystem con 4 giocatori
             GameSystem gameSystem = new GameSystem();

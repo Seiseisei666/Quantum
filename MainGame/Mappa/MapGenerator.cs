@@ -14,33 +14,28 @@ namespace Quantum_Game.Mappa
         public int Colonne { get { return _colonne; } }
 
         //Costruttore
-        public MapGenerator(int righe, int colonne)
+        public MapGenerator(string filemappa)
         {
-            _righe = righe; _colonne = colonne;
+            _righe = File.ReadAllLines(filemappa).Length;
+            _colonne = File.ReadAllLines(filemappa)[0].Length;
             _tabellone = new List<Tile>();
-            _tabellone.Capacity = righe * colonne;
+            _tabellone.Capacity = File.ReadAllLines(filemappa).Length * File.ReadAllLines(filemappa)[0].Length;
         }
 
         //Funzione principale per generare la lista di caselle
-        public List<Tile> GeneraMappa()
+        public List<Tile> GeneraMappa(int righemax, int colonnemax, string filemappa)
         {
-            //legge tutte le righe del file
-            string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova1.txt");
-            int colonnemax = mapData[0].Length;
-            int righemax = mapData.Length;
+            //legge tutte le righe del file in un array di stringhe
+            string[] mapData = File.ReadAllLines(filemappa);
 
-            //concateno ad una stringa vuota le varie righe, ripulite dagli spazi (vedi metodo in fondo, forse da spostare)
+            //concateno ad una stringa vuota le varie righe
             string tileData = String.Empty;
             for (int j = 0; j < righemax; j++)
-            {
-                tileData = tileData + ExceptBlanks(mapData[j]);
-            }
-            
-            //nuovo algoritmo per generare la mappa da txt con solo pianeti! sfrutto divisione intera per 3 (int/3=int),
-            // resto modulo 3 (8%3=2) e le simmetrie che ci sono nella mappa sulle colonne/righe senza pianeti.
-            System.Diagnostics.Debug.WriteLine("colonnemax= {0}", colonnemax);
-            System.Diagnostics.Debug.WriteLine("righemax= {0}", righemax);
-            System.Diagnostics.Debug.WriteLine("tileData=", tileData);
+                tileData = tileData + mapData[j];
+
+            //nuovo algoritmo per generare la mappa da txt con solo pianeti!
+            //sfrutto divisione intera per 3 (int/3=int) e resto modulo 3 (8%3=2)
+            // è snello grazie alle simmetrie che ci sono nella mappa sulle colonne/righe senza pianeti!
             for (int x = 0; x < righemax * 3; x++)
                 for (int y = 0; y < colonnemax * 3; y++)
                 {
