@@ -25,34 +25,81 @@ namespace Quantum_Game.Mappa
         public List<Tile> GeneraMappa()
         {
             //legge tutte le righe del file
-            string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova3.txt");
-
-            //var width = mapData[0].Length;
-            var height = mapData.Length;
+            string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova1.txt");
+            int colonnemax = mapData[0].Length;
+            int righemax = mapData.Length;
 
             //concateno ad una stringa vuota le varie righe, ripulite dagli spazi (vedi metodo in fondo, forse da spostare)
             string tileData = String.Empty;
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < righemax; j++)
             {
                 tileData = tileData + ExceptBlanks(mapData[j]);
             }
-
-            // ad ogni carattere dello stringone associo l'oggetto Casella appropriato
-            StringBuilder sb = new StringBuilder(tileData.Length);
-            for (int i = 0; i < tileData.Length; i++)
-            {
-                char c = tileData[i];
-                if (c.Equals('#')) _tabellone.Add(new Vuoto());
-                if (c.Equals('*')) _tabellone.Add(new Casella(QuantumTile.casella));
-                if (c.Equals('+')) _tabellone.Add(new Casella(QuantumTile.orbita));
-                if (c.Equals('7')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta7));
-                if (c.Equals('8')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta8));
-                if (c.Equals('9')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta9));
-                if (c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
-            }
+            
+            //nuovo algoritmo per generare la mappa da txt con solo pianeti! sfrutto divisione intera per 3 (int/3=int),
+            // resto modulo 3 (8%3=2) e le simmetrie che ci sono nella mappa sulle colonne/righe senza pianeti.
+            System.Diagnostics.Debug.WriteLine("colonnemax= {0}", colonnemax);
+            System.Diagnostics.Debug.WriteLine("righemax= {0}", righemax);
+            System.Diagnostics.Debug.WriteLine("tileData=", tileData);
+            for (int x = 0; x < righemax * 3; x++)
+                for (int y = 0; y < colonnemax * 3; y++)
+                {
+                    char c = tileData[y / 3 + x / 3 * colonnemax];
+                    if (c.Equals('*')) _tabellone.Add(new Vuoto());
+                    else if (y % 3 == 1)
+                    {
+                        if (x % 3 == 1)
+                        {
+                            if (c.Equals('7')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta7));
+                            if (c.Equals('8')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta8));
+                            if (c.Equals('9')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta9));
+                            if (c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
+                        }
+                        else _tabellone.Add(new Casella(QuantumTile.orbita));
+                    }
+                    else
+                    {
+                        if (x % 3 == 1) _tabellone.Add(new Casella(QuantumTile.orbita));
+                        else _tabellone.Add(new Casella(QuantumTile.casella));
+                    }
+                }
 
             return _tabellone;
         }
+
+        ////Vecchio generatore di map da txt, per usarlo in caso di bug
+        //public List<Tile> GeneraMappa()
+        //{
+        //    //legge tutte le righe del file
+        //    string[] mapData = File.ReadAllLines(@"Content\Mappe\mappa_prova3.txt");
+
+        //    //var width = mapData[0].Length;
+        //    var height = mapData.Length;
+
+        //    //concateno ad una stringa vuota le varie righe, ripulite dagli spazi (vedi metodo in fondo, forse da spostare)
+        //    string tileData = String.Empty;
+        //    for (int j = 0; j < height; j++)
+        //    {
+        //        tileData = tileData + ExceptBlanks(mapData[j]);
+        //    }
+
+        //    // ad ogni carattere dello stringone associo l'oggetto Casella appropriato
+        //    StringBuilder sb = new StringBuilder(tileData.Length);
+        //    for (int i = 0; i < tileData.Length; i++)
+        //    {
+        //        char c = tileData[i];
+        //        if (c.Equals('#')) _tabellone.Add(new Vuoto());
+        //        if (c.Equals('*')) _tabellone.Add(new Casella(QuantumTile.casella));
+        //        if (c.Equals('+')) _tabellone.Add(new Casella(QuantumTile.orbita));
+        //        if (c.Equals('7')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta7));
+        //        if (c.Equals('8')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta8));
+        //        if (c.Equals('9')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta9));
+        //        if (c.Equals('0')) _tabellone.Add(new Pianeta(QuantumTile.Pianeta10));
+        //    }
+
+        //    return _tabellone;
+        //}
+
 
         /* Vecchio metodo di prova randomico, per eventuali referenze future
         private List<Tile> Test ()

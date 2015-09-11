@@ -38,7 +38,7 @@ namespace Quantum_Game
         {
             //Crea la mappa
             // il map generator farà le sue cose e poi stabilirùà da solo le dimensioni della mappa
-            MapGenerator generatore = new MapGenerator(9,9); // <- da sistemare perché i 9 non possono rimanere fissi
+            MapGenerator generatore = new MapGenerator(9,15); // <- da sistemare perché i 9 non possono rimanere fissi
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             // Crea il gamesystem con 4 giocatori
