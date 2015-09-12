@@ -21,6 +21,7 @@
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TileSet_prova1.png
 
@@ -30,13 +31,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Font/Font.spritefont
 
-#begin mappa_prova1.txt
+#begin Mappe/mappa_prova1.txt
 /copy:Mappe/mappa_prova1.txt
 
-#begin mappa_prova2.txt
+#begin Mappe/mappa_prova2.txt
 /copy:Mappe/mappa_prova2.txt
 
-#begin mappaeasy.txt
+#begin Mappe/mappaeasy.txt
 /copy:Mappe/mappaeasy.txt
 
 #begin Graphica/TileSet_prova2.png
@@ -47,6 +48,19 @@
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
 /processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Graphica/TileSet_prova2.png
+
+#begin Graphica/TileSet_prova3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Graphica/TileSet_prova3.png
 

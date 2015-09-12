@@ -106,6 +106,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Graphica\TileSet_prova2.png" />
+    <Content Include="Content\Graphica\TileSet_prova3.png" />
     <Content Include="Content\Mappe\mappa_prova1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
