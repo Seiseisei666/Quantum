@@ -13,13 +13,9 @@ namespace Quantum_Game.Azioni
         public SelezioneDestra (Game game) : base (game)
         {
             _casellaPartenza = casellaCliccata;
-            Inizializzazione();
-        }
-
-        void Inizializzazione()
-        {
             gui.Tabellone.ResetSelezioneMouse();
 
+            // TODO: Questa è una pecionata! serve un sistema più uniforme e ragionevole per gestire dinamicamente 2 bottoni del cazzo
             bool special, riconfig;
             riconfig = !naveUsata.Riconfigurata;
             special = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
@@ -28,69 +24,33 @@ namespace Quantum_Game.Azioni
             bottoni[0] = bottone.Riconfigura;
             bottoni[1] = bottone.UsaSpecial;
 
-            MenuTendina menu = new MenuTendina (gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
+            menu = new MenuTendina(gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
 
             menu.Elementi[0].Enabled = riconfig;
             menu.Elementi[1].Enabled = special;
-            gui.Iscrivi (menu);
+            gui.Iscrivi(menu);
+            menu.Elementi[0].Click += BottonePremuto;
+            menu.Elementi[1].Click += BottonePremuto;
         }
 
+        #region Implementazione di AzioneDiGioco
         public override void Esegui ()
         {
-            if (gui.BottonePremuto == bottone.Riconfigura)
+            // Chiude i menù con il click destro
+            if (ultimoClick == TipoEventoMouse.ClkDx)
             {
-                e_nave t1 = naveUsata.Tipo;
-                naveUsata.Riconfigura();
-                giocatoreDiTurno.Azione();
-                e_nave t2 = naveUsata.Tipo;
-
-                System.Diagnostics.Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
-                AzioneSuccessiva = null;
-
-                Cleanup();
+                Cleanup(true);
             }
-            else if (gui.BottonePremuto == bottone.UsaSpecial)
-            {
-                bool azioneSuccessivaNulla = false;
-                switch (naveUsata.Tipo)
-                {
-                    case e_nave.Battlestation:
-                        AzioneSuccessiva = new Special_Battlestation(game, _casellaPartenza);
-                        break;
-                    case e_nave.Flagship:
-                        AzioneSuccessiva = new Special_Flagship(game, _casellaPartenza);
-                        break;
-                    case e_nave.Destroyer:
-                        AzioneSuccessiva = new Special_Warp(game,_casellaPartenza);
-                        break;
-                    case e_nave.Interceptor:
-                        naveUsata.UsaSpecial();
-                        azioneSuccessivaNulla = true;
-                        break;
-                    case e_nave.Scout:
-                        naveUsata.Riconfigura(true);
-                        naveUsata.UsaSpecial();
-                        azioneSuccessivaNulla = true;
-                        break;
-
-                    default:
-                        System.Diagnostics.Debug.WriteLine("Special non ancora implementata");
-                        AzioneSuccessiva = null;
-                        break;
-                }
-
-                Cleanup(azioneSuccessivaNulla);
-            }
-
-            // Se c'è stato un click e il blocco precedente di codice non è stato eseguito
-            // annulla tutto
-            if (ultimoClick != TipoEventoMouse.nessuno)
-            {
-                AzioneSuccessiva = null;
-                Cleanup();
-            }
+            // per il resto questo blocco non fa niente - stiamo solo in attesa di Eventi
         }
 
+        public override bool Abort()
+        {
+            Cleanup(true);
+            return true;
+        }
+
+        /// <param name="esciDalLoop">true se non si intende chiamare un'altra azione dopo, ma si sta tornando al ciclo idle</param>
         void Cleanup(bool esciDalLoop)
         {
             if (esciDalLoop) AzioneSuccessiva = null;
@@ -98,13 +58,66 @@ namespace Quantum_Game.Azioni
         }
         protected override void Cleanup()
         {
+            menu.Elementi[0].Click -= BottonePremuto;
+            menu.Elementi[1].Click -= BottonePremuto;
             gui.Rimuovi(this);
             gui.Tabellone.ResetSelezioneMouse();
         }
+        #endregion
 
+        #region Gestione Bottoni Speciali
+        void BottonePremuto (object bott, EventArgs e)
+        {
+            var b = (Bottone)bott;
+            if (b.TipoBottone == bottone.Riconfigura) riconfigura();
+            else if (b.TipoBottone == bottone.UsaSpecial) usaSpecial();
+        }
+        void riconfigura()
+        {
+            e_nave t1 = naveUsata.Tipo;
+            naveUsata.Riconfigura();
+            giocatoreDiTurno.Azione();
+            e_nave t2 = naveUsata.Tipo;
 
+            System.Diagnostics.Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
+            Cleanup(true);
+        }
+        void usaSpecial()
+        {
+            bool azioneSuccessivaNulla = false;
+            switch (naveUsata.Tipo)
+            {
+                case e_nave.Battlestation:
+                    AzioneSuccessiva = new Special_Battlestation(game, _casellaPartenza);
+                    break;
+                case e_nave.Flagship:
+                    AzioneSuccessiva = new Special_Flagship(game, _casellaPartenza);
+                    break;
+                case e_nave.Destroyer:
+                    AzioneSuccessiva = new Special_Warp(game, _casellaPartenza);
+                    break;
+                case e_nave.Interceptor:
+                    naveUsata.UsaSpecial();
+                    azioneSuccessivaNulla = true;
+                    break;
+                case e_nave.Scout:
+                    naveUsata.Riconfigura(true);
+                    naveUsata.UsaSpecial();
+                    azioneSuccessivaNulla = true;
+                    break;
 
-/// <summary> Check sulla nave, per vedere se è in grado di effettuare la special.</summary>
+                default:
+                    System.Diagnostics.Debug.WriteLine("Special non ancora implementata");
+                    AzioneSuccessiva = null;
+                    break;
+            }
+
+            Cleanup(azioneSuccessivaNulla);
+        }
+        #endregion
+
+        #region cose private
+        /// <summary> Check sulla nave, per vedere se è in grado di effettuare la special.</summary>
         bool checkSpecial(Nave nave)
         {
             Casella casella;
@@ -148,6 +161,8 @@ namespace Quantum_Game.Azioni
 
         private readonly Casella _casellaPartenza;
         private Nave naveUsata { get { return _casellaPartenza.Occupante; } }
-
+        private MenuTendina menu;
+        #endregion
     }
+
 }

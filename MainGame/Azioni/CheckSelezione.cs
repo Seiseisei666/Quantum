@@ -14,7 +14,7 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
-            if ((!giocatoreDiTurno.PuòAgire || gui.BottonePremuto == bottone.Passa))
+            if (!giocatoreDiTurno.PuòAgire)
             {
                 AzioneSuccessiva = new FineTurno(game);
                 return;
@@ -50,6 +50,9 @@ namespace Quantum_Game.Azioni
                 return;
             }
         }
+
+        public override bool Abort() { Cleanup();  return true; }
+        protected override void Cleanup() { gui.Tabellone.ResetSelezioneMouse(); }
 
     }
 }

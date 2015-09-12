@@ -19,7 +19,7 @@ namespace Quantum_Game.Azioni
         /// <summary>Nelle azioni di gioco coplesse il metodo Esegui chiama un puntatore ad un altro metodo proprio dell'azione in corso</summary>
         public override void Esegui()
         {
-            faseAttuale();
+            faseAttuale?.Invoke();
         }
 
         protected delegate void Fase();
