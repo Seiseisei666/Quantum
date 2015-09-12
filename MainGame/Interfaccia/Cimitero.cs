@@ -67,7 +67,7 @@ namespace Quantum_Game.Interfaccia
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-            // TODO: fare qualcosa di utile qui
+
             if (_selezione >= 0)
             {
                 ConsoleMessaggi.NuovoMessaggio(_rottami[_selezione].Tipo.ToString());

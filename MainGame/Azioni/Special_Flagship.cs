@@ -86,7 +86,7 @@ namespace Quantum_Game.Azioni
 
                 else
                 {
-                    // TODO: qui bisogna abolire la special
+                    // L'azione di movimento è stata abortita. Quindi annulliamo pure la special e rimettiamo tutto a posto
                     _naveTrasportata.Piazza(_casellaTarget);
                     Cleanup();
                 }

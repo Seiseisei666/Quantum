@@ -31,7 +31,6 @@ namespace Quantum_Game.Interfaccia
 
         public bottone BottonePremuto { get; private set; }
 
-
         public Texture2D Pennello { get { return _texture; } }
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
         public SpriteFont Font { get { return font; } }
@@ -96,9 +95,18 @@ namespace Quantum_Game.Interfaccia
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _game.Services.AddService(_spriteBatch);
         }
-
+        /// <summary>Controlla ad ogni frame se è stato premuto un bottone. </summary>
         public override void Update(GameTime gameTime)
         {
+            /* TODO:
+
+Il sistema di bottoni attuale è molto basic: in pratica, se in un certo frame è stato premuto un bottone, la proprietà GuiManager.BottonePremuto verrà settata sul tipo di bottone.
+Problema: se in un pezzo di codice non controlliamo esplicitamente un dato bottone, questo, anche se viene premuto, non produce risultati.
+Ad esempio, se durante un'azione di movimento premo "passa turno" non succede niente, perché quel bottone viene osservato solo durante la fase di attesa della selezione.
+
+L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno ad eventi... (work in progress)
+
+            */
             foreach (var elemento in elementi)
             {
                 Bottone bott = elemento as Bottone;
@@ -130,6 +138,7 @@ namespace Quantum_Game.Interfaccia
             elementi.Clear();
         }
 
+        /// <summary>Libera le risorse dell'oggetto </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

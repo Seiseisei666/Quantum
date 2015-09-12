@@ -71,8 +71,9 @@ namespace Quantum_Game
         }
 
         // PROPRIETA' PUBBLICHE
-
+        /// <summary>Restituisce l'ultimo tile su cui si è cliccato, o null se il click non era valido o la selezione è stata resettata</summary>
         public Tile TileClick { get { return (_IdSelezione >= 0) ? Tile.id2Tile(_IdSelezione) : null; } }
+        /// <summary>Restituisce l'ultimo evento del mouse: click sinistro, click destro o nessuno (se la selezione è stata resettata)</summary>
         public TipoEventoMouse UltimoClick { get; private set; }
 
         // METODI PUBBLICI
@@ -191,7 +192,7 @@ namespace Quantum_Game
                         _coordIlluminazione[c++] = id2Pixel(id);
                 }
         }
-        
+        /// <summary>Spegne l'illuminazione delle caselle.</summary>
         public void SpegniCaselle()
         {
             _coordIlluminazione = new Point[0];

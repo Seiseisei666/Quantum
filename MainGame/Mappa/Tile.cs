@@ -32,7 +32,7 @@ namespace Quantum_Game
         {
             _caselle = Lista; _righe = r; _colonne = c;
         }
-
+        /// <summary> Codice numerico del tile</summary>
         public int ID { get; private set; }
 
         protected QuantumTile _tipo;
@@ -129,7 +129,7 @@ namespace Quantum_Game
             }
             return risultato;
         }
-        // USATO SOLO DA IdTiles ^^^
+
         /// <summary> Filtra le caselle della mappa in base ad una data condizione </summary>
         public static Tile[] Tiles (Func<Tile,bool> filtro)
         {
