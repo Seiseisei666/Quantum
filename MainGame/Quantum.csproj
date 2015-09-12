@@ -65,6 +65,8 @@
     <Compile Include="Azioni\Special_Flagship.cs" />
     <Compile Include="Azioni\Special_Warp.cs" />
     <Compile Include="Interfaccia\Cimitero.cs" />
+    <Compile Include="Interfaccia\Dummy.cs" />
+    <Compile Include="Interfaccia\Riquadro.cs" />
     <Compile Include="Interfaccia\Sfondo.cs" />
     <Compile Include="Mappa\Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
