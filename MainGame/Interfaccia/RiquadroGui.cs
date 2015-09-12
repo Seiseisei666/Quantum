@@ -44,6 +44,12 @@ namespace Quantum_Game.Interfaccia
             _superficieRel = new Rectangle(x, y, w, h);
         }
 
+        protected RiquadroGui (Riquadro r)
+        {
+            // COSDTRUTTORE NUOVO SERATA MALGIOGLIO
+            superficie = new Rectangle(r.Xabs, r.Yabs, r.Largh, r.Alt);
+        }
+
 
         protected RiquadroGui (RiquadroGui vicino, Allineamento allineamento, int larghRel, int altRel)
         {
@@ -74,7 +80,7 @@ namespace Quantum_Game.Interfaccia
             w = (int)(_superficieRel.Width * fx);
             h = (int)(_superficieRel.Height *fy);
 
-            superficie = new Rectangle(x, y, w,h );
+            //superficie = new Rectangle(x, y, w,h );
         }
         
         public void AssociaEventiMouse(MouseInput m)

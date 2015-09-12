@@ -32,7 +32,8 @@ namespace Quantum_Game
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1024;  
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferHeight = 576;
+            graphics.IsFullScreen = false;
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
@@ -69,8 +70,7 @@ namespace Quantum_Game
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
             //parametri: origine x-y; larghezza; altezza;
-            Tabellone tab = new Tabellone(this, 0, 5, 70, 100);
-            Components.Add(tab);
+
             sfondo = new Sfondo(this);
             Components.Add(sfondo);
 
@@ -95,13 +95,13 @@ namespace Quantum_Game
             gui.Iscrivi(boh);
 
             var tab = gui.Tabellone;
-            ConsoleMessaggi console = new ConsoleMessaggi(tab, 100, 20);
-            gui.Iscrivi(console);
+            //ConsoleMessaggi console = new ConsoleMessaggi(tab, 100, 20);
+            //gui.Iscrivi(console);
 
             Cimitero cim = new Cimitero(3, 73, 80, 15);
             gui.Iscrivi(cim);
 
-
+            // PARTE BRUTTA
             var schermo = new Riquadro(null, 0, 0, 100, 100);
 
             var barra = new Riquadro(schermo, 0, 0, 100, 10);
@@ -116,6 +116,11 @@ namespace Quantum_Game
 
             texture = new Texture2D(GraphicsDevice, 1, 1);
             texture.SetData(new[] { (Color.White) });
+
+            Tabellone tab2 = new Tabellone(this, tabellone);
+            Components.Add(tab);
+            gui.Iscrivi(tab2);
+            // FINE PARTE BRUTTA
 
             base.LoadContent();
         } 

@@ -36,17 +36,12 @@ namespace Quantum_Game.Interfaccia
             }
             else
             {
-                Xabs = (int)(Xrel/100 * _parent.Xabs);
-                Yabs = (int)(Yrel/100 * _parent.Yabs);
-                Largh = (int)(LarghRel/100 * _parent.Largh);
-                Alt = (int)(AltRel/100 * _parent.Alt);
+                Xabs = (int)(_parent.Xabs + (Xrel * _parent.Largh / 100f)); //OK
+                Yabs = (int)(_parent.Yabs + (Yrel * _parent.Alt / 100f));
+                Largh = (int)(LarghRel * _parent.Largh / 100f);
+                Alt = (int)(AltRel * _parent.Alt / 100f);
             }
         }
-
-
-
-
-
 
         Riquadro _parent;
        
