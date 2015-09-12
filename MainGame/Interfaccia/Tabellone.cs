@@ -42,6 +42,15 @@ namespace Quantum_Game
             _coordIlluminazione = new Point[0];
         }
 
+        public Tabellone (Game game, Riquadro riquadro): base (riquadro)
+        {
+            _game = game;
+            _IdSelezione = -1;
+            _idMouseOver = -1;
+            _coordIlluminazione = new Point[0];
+
+        }
+
         public void Initialize()
         {
             // Iscrizione al Gui
