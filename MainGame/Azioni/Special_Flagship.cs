@@ -16,7 +16,7 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
-            faseAttuale();
+            faseAttuale?.Invoke();
         }
 
         /// <summary> Per default, nelle Azioni di Gioco Complesse, l'inizializzazione è la prima fase </summary>
@@ -87,8 +87,7 @@ namespace Quantum_Game.Azioni
                 else
                 {
                     // L'azione di movimento è stata abortita. Quindi annulliamo pure la special e rimettiamo tutto a posto
-                    _naveTrasportata.Piazza(_casellaTarget);
-                    Cleanup();
+                    Abort();
                 }
             }
         }
@@ -104,6 +103,22 @@ namespace Quantum_Game.Azioni
                 _naveMossa.UsaSpecial();
                 Cleanup();
             }
+        }
+
+        public override bool Abort()
+        {
+            if (faseAttuale != piazzaAlleato)
+            {
+                _naveTrasportata.Piazza(_casellaTarget);
+                Cleanup();
+                return true;
+            }
+            else
+            {
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Impossibile annullare l'azione!!!", Color.Salmon);
+                return false;
+            }
+
         }
 
         protected override void Cleanup()

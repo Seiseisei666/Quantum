@@ -129,7 +129,8 @@ namespace Quantum_Game.Interfaccia
             {
                 _cliccato = true;
                 _contatoreIllumin = FRAME_ILLUMINATO;
-                return;
+                Click?.Invoke(this, EventArgs.Empty);
+                //return;
             }
         }
 
@@ -142,6 +143,7 @@ namespace Quantum_Game.Interfaccia
         #endregion
 
 
+        public event EventHandler Click;
 
         #region Campi
         Vector2 posScritta;

@@ -42,7 +42,7 @@ namespace Quantum_Game.Azioni
             _naveMossa.UsaSpecial();
             Cleanup();
         }
-
+        public override bool Abort() { Cleanup(); return true; }
         protected override void Cleanup()
         {
             gui.Tabellone.ResetSelezioneMouse();

@@ -64,7 +64,6 @@
     <Compile Include="Azioni\Special_Battlestation.cs" />
     <Compile Include="Azioni\Special_Flagship.cs" />
     <Compile Include="Azioni\Special_Warp.cs" />
-    <Compile Include="Azioni\TemplateAzione.cs" />
     <Compile Include="Interfaccia\Cimitero.cs" />
     <Compile Include="Interfaccia\Sfondo.cs" />
     <Compile Include="Mappa\Casella.cs" />

@@ -93,6 +93,13 @@ public class Giocatore {
             if (colonizzazione)
                 _azioni--;
         }
+
+        public void Ricerca ()
+        {
+            _ricerca++;
+            System.Diagnostics.Debug.WriteLine(_ricerca);
+        }
+
         public void Cleanup()   // Fine turno
         {
             if (_dominio >= 5)

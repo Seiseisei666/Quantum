@@ -22,16 +22,16 @@ namespace Quantum_Game.Azioni
             gui = game.Services.GetService<GuiManager>();
             AzioneSuccessiva = this;
         }
-
-        /// <summary>Il corpo dell'azione. E' astratto, per cui è obbligatorio implementarlo.
-        /// questa è l'unico metodo pubblico delle azioni</summary>
+        #region Metodi Astratti
+        /// <summary>Il corpo dell'azione. E' astratto, per cui è obbligatorio implementarlo.</summary>
         public abstract void Esegui();
 
+        /// <summary>Interruzione improvvisa dell'azione. Restituisce True se l'azione può essere annullata. </summary>
+        public abstract bool Abort();
+
         /// <summary>Da chiamare quando l'azione è finita, per definire l'Azione Successiva e eventualmente per liberare eventuali risorse utilizzate</summary>
-        protected virtual void Cleanup()
-        {
-            AzioneSuccessiva = null;
-        }
+        protected abstract void Cleanup();
+        #endregion
 
         /// <summary>Ogni azione di gioco deve definire, alla fine del suo flusso, quale sarà l'azione successiva.
         /// Se null, l'azione successiva sarà un CheckSelezione </summary>

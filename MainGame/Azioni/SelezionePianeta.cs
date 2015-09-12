@@ -11,11 +11,6 @@ namespace Quantum_Game.Azioni
         public SelezionePianeta (Game game): base (game)
         {
             ConsoleMessaggi.NuovoMessaggio("Selezionato Pianeta");
-            inizializzazione();
-        }
-
-        void inizializzazione ()
-        {
             _pianeta = gui.Tabellone.TileClick as Pianeta;
             if (ultimoClick == TipoEventoMouse.ClkDx)
             {
@@ -23,15 +18,19 @@ namespace Quantum_Game.Azioni
                 menu.Elementi[0].Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
                 gui.Iscrivi(menu);
             }
-            else { 
-            Bottone colonizza = Bottone.Standard(bottone.Colonizza, 82, 45, this);
-            colonizza.Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
-            gui.Iscrivi(colonizza);
+            else
+            {
+                Bottone colonizza = Bottone.Standard(bottone.Colonizza, 82, 45, this);
+                colonizza.Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
+                gui.Iscrivi(colonizza);
             }
 
             gui.Tabellone.ResetSelezioneMouse();
         }
-
+        public override bool Abort()
+        {
+            throw new NotImplementedException();
+        }
         public override void Esegui()
         {
             if (gui.BottonePremuto == bottone.Colonizza)
@@ -55,7 +54,7 @@ namespace Quantum_Game.Azioni
 
             gui.Rimuovi(this);
             gui.Tabellone.ResetSelezioneMouse();
-            base.Cleanup();
+            AzioneSuccessiva = null;
         }
 
         Pianeta _pianeta;

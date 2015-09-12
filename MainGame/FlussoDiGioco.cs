@@ -26,10 +26,17 @@ namespace Quantum_Game
         {
             turno = _game.Services.GetService<GameSystem>();
             gui = _game.Services.GetService<GuiManager>();
+            turno.InizioPartita += inizioPartita;
         }
 
         // METODI PUBBLICI
-
+        void inizioPartita (object sender, EventArgs e)
+        {
+            foreach (Bottone b in gui.Bottoni)
+            {
+                b.Click += bottoneCliccato;
+            }
+        }
         public void Update() // loop principale
         {
             if (turno.FasePartita == FasiDiGioco.PartitaInCorso)
@@ -67,6 +74,26 @@ namespace Quantum_Game
             else
                 turno.NextTurn();
         }
+
+        /// <summary>EventHandler per gestire il click dei bottoni</summary>
+        void bottoneCliccato(object bott, EventArgs a)
+        {
+            var b = (Bottone)bott;
+            switch (b.TipoBottone)
+            {
+                case bottone.Passa:
+                    if (_prossimaAzione.Abort()) _prossimaAzione = new FineTurno(_game);
+                    break;
+                case bottone.Ricerca:
+                    if (_prossimaAzione.Abort())
+                    {
+                        turno.GiocatoreDiTurno.Ricerca();
+                        turno.GiocatoreDiTurno.Azione();
+                    }
+                    break;
+            }
+        }
+
 
         // CAMPI
         // oggetti di gioco a cui dobbiamo avere accesso
