@@ -39,7 +39,7 @@ namespace Quantum_Game
             //Crea la mappa.
             //Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
             //o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
-            string file = @"Content\Mappe\mappa_prova1.txt";
+            string file = @"Content\Mappe\mappaeasy.txt";
             MapGenerator generatore = new MapGenerator(file);
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 

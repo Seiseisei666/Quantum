@@ -36,6 +36,9 @@
 #begin mappa_prova2.txt
 /copy:Mappe/mappa_prova2.txt
 
+#begin mappaeasy.txt
+/copy:Mappe/mappaeasy.txt
+
 #begin Graphica/TileSet_prova2.png
 /importer:TextureImporter
 /processor:TextureProcessor

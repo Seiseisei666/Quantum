@@ -11,6 +11,7 @@ namespace Quantum_Game.Mappa
         // dimensioni in Settori
         private int _righe = 0, _colonne = 0;  
         private string _filemappa;
+        private bool _dagirare;
         //private List<Tile> _tabellone; //Non dovrebbe servire
         // restituisce il numero di caselle
         public int Righe { get { return _righe*3; } } 
@@ -19,13 +20,22 @@ namespace Quantum_Game.Mappa
         //Costruttore
         public MapGenerator(string filemappa)
         {
-            _filemappa = filemappa;
             var dimensioni = File.ReadAllLines(filemappa);
-            _righe = dimensioni.Length;
-            _colonne = dimensioni[0].Length;
 
-            // TODO: dobbiamo fare in modo di assegnare sempre alle colonne la dimensione più grande
-            // per evitare di generare mappe lunghe e strette che sfanculano lo schermo
+            if (dimensioni.Length <= dimensioni[0].Length)
+            {
+                _righe = dimensioni.Length;
+                _colonne = dimensioni[0].Length;
+                _dagirare = false;
+            }
+            else
+            {
+                _righe = dimensioni[0].Length; 
+                _colonne = dimensioni.Length;
+                _dagirare = true;
+
+            }
+            _filemappa = filemappa;
         }
 
         //Funzione principale per generare la lista di caselle
@@ -36,10 +46,19 @@ namespace Quantum_Game.Mappa
             //legge tutte le righe del file in un array di stringhe
             string[] mapData = File.ReadAllLines(_filemappa);
 
-            //concateno ad una stringa vuota le varie righe
+            //crea la stringa con le caselle, eventualmente trasponendo la matrice
             string tileData = String.Empty;
-            for (int j = 0; j < _righe; j++)
-                tileData = tileData + mapData[j];
+            if (!_dagirare)
+            {
+                for (int j = 0; j < _righe; j++)
+                    tileData = tileData + mapData[j];
+            }
+            else
+            {
+                for (int x = 0; x < _righe; x++)
+                    for (int y = 0; y < _colonne; y++)
+                        tileData = tileData + mapData[y][x];
+            }
 
             //nuovo algoritmo per generare la mappa da txt con solo pianeti!
             //sfrutto divisione intera per 3 (int/3=int) e resto modulo 3 (8%3=2)
