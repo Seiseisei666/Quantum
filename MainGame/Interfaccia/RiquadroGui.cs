@@ -7,6 +7,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game.Interfaccia
 {
+    public enum Allineamento
+    {
+        BassoDx,
+        BassoSx,
+        AltoDx,
+        AltoSx
+    }
+
     public class RiquadroGui
     {
 
@@ -35,6 +43,18 @@ namespace Quantum_Game.Interfaccia
             h = MathHelper.Clamp(altRel, 1, 100 - y);
             _superficieRel = new Rectangle(x, y, w, h);
         }
+
+
+        protected RiquadroGui (RiquadroGui vicino, Allineamento allineamento, int larghRel, int altRel)
+        {
+            int x, y, w, h;
+            
+            x = MathHelper.Clamp(vicino._superficieRel.X + vicino._superficieRel.Width, 1, 100);
+            y = MathHelper.Clamp((vicino._superficieRel.Y + vicino._superficieRel.Height) -altRel, 1, 100);
+            w = MathHelper.Clamp(larghRel,1,100);
+            h = MathHelper.Clamp(altRel,1,100);
+            _superficieRel = new Rectangle(x,y,w,h);
+        }
         #endregion Costruzione
 
         /// <summary>Questo metodo va chiamato dal GuiManager; calcola la misura in pixel del componente grafico in base alle sue dimensioni relative in centesimi</summary>
@@ -42,14 +62,19 @@ namespace Quantum_Game.Interfaccia
         {
             int larghSchermo = gui.GraphicsDevice.Viewport.Width;
             int altSchermo = gui.GraphicsDevice.Viewport.Height;
-            float fx = larghSchermo / 100f;
-            float fy = altSchermo / 100f;
+
+            float rapporto = 1;// (float)larghSchermo / altSchermo ;
+
+            float fx = larghSchermo / (100f * rapporto);
+            //fx /= rapporto;
+            float fy = altSchermo / (100f );
             int x, y, w, h;
             x = (int)(_superficieRel.X * fx);
             y = (int)(_superficieRel.Y * fy);
             w = (int)(_superficieRel.Width * fx);
-            h = (int)(_superficieRel.Height * fy);
-            superficie = new Rectangle(x, y, w, h);
+            h = (int)(_superficieRel.Height *fy);
+
+            superficie = new Rectangle(x, y, w,h );
         }
         
         public void AssociaEventiMouse(MouseInput m)
@@ -92,7 +117,7 @@ namespace Quantum_Game.Interfaccia
 
         #region campiPrivati
         private Rectangle superficie;       //Dimensioni 
-        private Rectangle _superficieRel;
+        protected Rectangle _superficieRel;
         protected object _parent;
         #endregion campiPrivati
     }
