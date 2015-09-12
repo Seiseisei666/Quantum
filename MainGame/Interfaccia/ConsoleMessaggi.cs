@@ -10,6 +10,14 @@ namespace Quantum_Game.Interfaccia
     
     public class ConsoleMessaggi : RiquadroGui
     {
+        public ConsoleMessaggi (RiquadroGui vicino, int l, int alt): base (vicino, Allineamento.AltoDx, l, alt)
+        {
+            _messaggi = new List<MessaggioDiGioco>(CAPACITA);
+            for (int i = 0; i < CAPACITA; i++)
+                _messaggi.Add(new MessaggioDiGioco("", Color.White));
+        }
+
+
         public ConsoleMessaggi(int x, int y, int larg, int alt) : base(x, y, larg, alt)
         {
             _messaggi = new List<MessaggioDiGioco>(CAPACITA);

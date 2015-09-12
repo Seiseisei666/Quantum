@@ -68,7 +68,7 @@ namespace Quantum_Game.Interfaccia
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
 
-            if (_selezione >= 0)
+            if (_selezione >= 0 && _rottami != null)
             {
                 ConsoleMessaggi.NuovoMessaggio(_rottami[_selezione].Tipo.ToString());
                 _naveSelezionata = _rottami[_selezione];
