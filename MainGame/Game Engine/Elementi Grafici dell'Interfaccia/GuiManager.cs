@@ -30,14 +30,31 @@ namespace Quantum_Game.Interfaccia
         }
 
         public bottone BottonePremuto { get; private set; }
+        //public event EventHandler<EventArgs> BottonePassa;
+        //public event EventHandler<EventArgs> BottoneRicerca;
+        //public event EventHandler<EventArgs> BottoneColonizza;
+        //public event EventHandler<EventArgs> BottoneRiconfigura;
+        //public event EventHandler<EventArgs> BottoneUsaSpecial;
 
         public Texture2D Pennello { get { return _texture; } }
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
         public SpriteFont Font { get { return font; } }
         public Tabellone Tabellone { get { return _tabellone; } }
         public Cimitero Cimitero { get { return _cimitero; } }
+        /// <summary>Lista dei Bottoni iscritti alla GUI</summary>
+        public Bottone[] Bottoni { get
+            {
+                Bottone[] bott = new Bottone[0];
+                foreach (var e in elementi)
+                {
+                    var b = e as Bottone;
+                    if (b != null)
+                        bott = bott.Concat(Enumerable.Repeat(b, 1)).ToArray();
+                }
+                return bott;
+            }
 
-
+        }
         /// <summary>Iscrive un RiquadroGui all'interfaccia </summary>
         public void Iscrivi(RiquadroGui elemento)
         {
@@ -114,11 +131,13 @@ L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno
                 {
                     bott.Reset();
                     BottonePremuto = bott.TipoBottone;
+
                     return;
                 }
                 BottonePremuto = bottone.nessuno;
             }
         }
+
 
         public override void Draw(GameTime gameTime)
         {

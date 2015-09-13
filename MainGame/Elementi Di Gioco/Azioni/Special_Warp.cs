@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Microsoft.Xna.Framework;
 using Quantum_Game.Interfaccia;
 
@@ -42,7 +39,7 @@ namespace Quantum_Game.Azioni
             _naveMossa.UsaSpecial();
             Cleanup();
         }
-
+        public override bool Abort() { Cleanup(); return true; }
         protected override void Cleanup()
         {
             gui.Tabellone.ResetSelezioneMouse();

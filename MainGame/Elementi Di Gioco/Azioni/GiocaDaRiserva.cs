@@ -48,7 +48,11 @@ namespace Quantum_Game.Azioni
             giocatoreDiTurno.Azione();
             Cleanup();
         }
-
+        public override bool Abort()
+        {
+            Cleanup();
+            return true;
+        }
         protected override void Cleanup()
         {
             gui.Tabellone.SpegniCaselle();

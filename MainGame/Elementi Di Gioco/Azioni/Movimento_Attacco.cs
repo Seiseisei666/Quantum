@@ -139,6 +139,19 @@ namespace Quantum_Game.Azioni
             }
         }
 
+        public override bool Abort()
+        {
+            if (faseAttuale == indietreggia)
+            {
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Impossibile annullare l'azione!", Color.Salmon);
+                return false;
+            }
+            else
+            {
+                Cleanup();
+                return true;
+            }
+        }
         protected override void Cleanup()
         {
             pathFinder.Clear();

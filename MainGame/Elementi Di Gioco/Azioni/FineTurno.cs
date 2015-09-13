@@ -21,7 +21,7 @@ namespace Quantum_Game.Azioni
         {
             Cleanup();
         }
-
+        public override bool Abort() { return false; }
         protected override void Cleanup()
         {
             AzioneSuccessiva = null;
@@ -29,5 +29,6 @@ namespace Quantum_Game.Azioni
             Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gameSystem.GiocatoreDiTurno.Colore, gameSystem.GiocatoreDiTurno.SpriteColor);
             gui.Cimitero.Aggiorna(gameSystem.GiocatoreDiTurno);
         }
+
     }
 }
