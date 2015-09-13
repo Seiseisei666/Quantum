@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Planet_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Azioni\AzioneDiGioco.cs" />
@@ -121,6 +121,7 @@
     </Content>
     <Content Include="Icon.ico" />
     <Content Include="AAA LEGGIMI!.txt" />
+    <Content Include="Planet_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
