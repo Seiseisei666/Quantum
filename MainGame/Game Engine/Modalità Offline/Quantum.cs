@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System;
 using Quantum_Game.Interfaccia;
 using Quantum_Game.Mappa;
@@ -12,9 +10,7 @@ using Quantum_Game.Mappa;
 
 namespace Quantum_Game
 {
-    /// <summary>
-    /// Il gioco vero e proprio
-    /// </summary>
+    // Modalità OffLine ("Single"Player)
     public class Quantum : Game
     {
         private GraphicsDeviceManager graphics;
@@ -22,6 +18,10 @@ namespace Quantum_Game
 
         private Sfondo sfondo;
 
+
+        /*Contiene le informazioni sullo stato della partita
+        che vengono poi stampate a video dal metodo draw
+        */
         private FlussoDiGioco flussoGioco;
 
         Dummy caselle, bottonilaterali, barraindentata;
@@ -58,7 +58,7 @@ namespace Quantum_Game
 
             // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
             gameSystem.IniziaSetupPartita();
-            // DA TOGLIERE
+            //TODO: DA TOGLIERE
 
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
             Services.AddService<GameSystem>(gameSystem);
@@ -77,6 +77,7 @@ namespace Quantum_Game
             base.Initialize();
         }
 
+        //crea l'interfaccia grafica con le sue componenti
         protected override void LoadContent()
         {
             Riquadro.LarghezzaSchermo = GraphicsDevice.Viewport.Width;
@@ -85,11 +86,7 @@ namespace Quantum_Game
 
             var gui = Services.GetService<GuiManager>();
 
-            /*
-            QUI POSSIAMO CARICARE L'INTERFACCIA
-            */
-
-            Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
+               Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
             Bottone boh = Bottone.Standard(bottone.Ricerca, 82, 75);
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(boh);
@@ -166,7 +163,7 @@ namespace Quantum_Game
             spriteBatch.End();
         }
 
-        /*  Qua cominciano altre cose nostre */
+        //trigger che si attiva ad inizio partita (?)
 
         private void InizioPartita(object sender, EventArgs args)
         {
