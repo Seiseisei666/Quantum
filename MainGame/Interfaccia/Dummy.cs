@@ -23,8 +23,9 @@ namespace Quantum_Game.Interfaccia
 
         public void Draw(SpriteBatch spriteBatch, Texture2D texture)
         {
-            spriteBatch.Draw(texture, new Rectangle(_contenitore.Xabs, (int)_contenitore.Yabs, (int)_contenitore.Largh, (int)_contenitore.Alt), colore*0f);
-            spriteBatch.Draw(texture, new Rectangle(_contenitore.Xabs + 5, (int)_contenitore.Yabs + 5, (int)_contenitore.Largh-10, (int)_contenitore.Alt-10), colore);
+            spriteBatch.Draw(texture, _contenitore.Superficie, colore*0f);
+            _contenitore.Superficie.Inflate(-5, -5);
+            spriteBatch.Draw(texture,_contenitore.Superficie, colore);
         }
             Riquadro _contenitore;
         Color colore;

@@ -80,8 +80,7 @@ namespace Quantum_Game
         //crea l'interfaccia grafica con le sue componenti
         protected override void LoadContent()
         {
-            Riquadro.LarghezzaSchermo = GraphicsDevice.Viewport.Width;
-            Riquadro.AltezzaSchermo = GraphicsDevice.Viewport.Height;
+
             spriteBatch = Services.GetService<SpriteBatch>();
 
             var gui = Services.GetService<GuiManager>();
@@ -99,11 +98,11 @@ namespace Quantum_Game
             gui.Iscrivi(cim);
 
             // PARTE BRUTTA
-            var schermo = new Riquadro(null, 0, 0, 100, 100);
+            var schermo = new Schermo(Window);
 
             var barra = new Riquadro(schermo, 0, 0, 100, 10);
-            var tabellone = new Riquadro(schermo, 0, barra.AltRel, 70, 100 - barra.AltRel);
-            var latodestro = new Riquadro(schermo, tabellone.LarghRel, barra.AltRel, 100 - tabellone.LarghRel, 100 - barra.AltRel);
+            var tabellone = new Riquadro(schermo, 0, barra.AltRelativa, 70, 100 - barra.AltRelativa);
+            var latodestro = new Riquadro(schermo, tabellone.LarghRelativa, barra.AltRelativa, 100 - tabellone.LarghRelativa, 100 - barra.AltRelativa);
 
 
             caselle = new Dummy(tabellone,0);
