@@ -67,7 +67,7 @@
     <Compile Include="Azioni\TemplateAzione.cs" />
     <Compile Include="Interfaccia\Cimitero.cs" />
     <Compile Include="Interfaccia\Dummy.cs" />
-    <Compile Include="Interfaccia\Riquadro.cs" />
+    <Compile Include="Schermate\Riquadro.cs" />
     <Compile Include="Interfaccia\Sfondo.cs" />
     <Compile Include="Mappa\Casella.cs" />
     <Compile Include="FlussoDiGioco.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Mappa\Tile.cs" />
+    <Compile Include="Schermate\Schermata.cs" />
     <Compile Include="util.cs" />
   </ItemGroup>
   <ItemGroup>

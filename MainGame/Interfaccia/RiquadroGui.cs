@@ -47,7 +47,7 @@ namespace Quantum_Game.Interfaccia
         protected RiquadroGui (Riquadro r)
         {
             // COSDTRUTTORE NUOVO SERATA MALGIOGLIO
-            superficie = new Rectangle(r.Xabs, r.Yabs, r.Largh, r.Alt);
+            superficie = r.Superficie;
         }
 
 
