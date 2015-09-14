@@ -16,7 +16,7 @@ namespace Quantum_Game.Interfaccia
         public GuiManager (Game game) : base(game)
         {
             _game = game;
-            elementi = new List<RiquadroGui> (MAX_ELEMENTI);
+            elementi = new List<ElementoGrafico> (MAX_ELEMENTI);
             // Iscrivo il managerGui ai servizi del gioco
             _game.Services.AddService(this);
         }
@@ -30,11 +30,6 @@ namespace Quantum_Game.Interfaccia
         }
 
         public bottone BottonePremuto { get; private set; }
-        //public event EventHandler<EventArgs> BottonePassa;
-        //public event EventHandler<EventArgs> BottoneRicerca;
-        //public event EventHandler<EventArgs> BottoneColonizza;
-        //public event EventHandler<EventArgs> BottoneRiconfigura;
-        //public event EventHandler<EventArgs> BottoneUsaSpecial;
 
         public Texture2D Pennello { get { return _texture; } }
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
@@ -56,50 +51,29 @@ namespace Quantum_Game.Interfaccia
 
         }
         /// <summary>Iscrive un RiquadroGui all'interfaccia </summary>
-        public void Iscrivi(RiquadroGui elemento)
+        public void Iscrivi(ElementoGrafico elemento)
         {
-            elemento.Inizializzazione(this);
-            elemento.AssociaEventiMouse(_mouseInput);
+            elemento.CaricaContenuti(this);
             elementi.Add(elemento);
         }
         /// <summary>Rimuove un RiquadroGui dall'interfaccia </summary>
-        public void Rimuovi(RiquadroGui elemento)
+        public void Rimuovi(ElementoGrafico elemento)
         {
-            elemento.DissociaEventiMouse(_mouseInput);
             elementi.Remove(elemento);
         }
 
         /// <summary> Iscrizione del tabellone al GUI</summary>
         public void Iscrivi(Tabellone tab)
         {
-            Iscrivi(tab as RiquadroGui);
+            Iscrivi(tab as ElementoGrafico);
             _tabellone = tab;
         }
         public void Iscrivi (Cimitero cim)
         {
-            Iscrivi ((RiquadroGui)cim);
+            Iscrivi ((ElementoGrafico)cim);
             _cimitero = cim;
 
         }
-        /// <summary>Iscrive un Menu a tendina all'interfaccia </summary>
-        public void Iscrivi(MenuTendina menu)
-        {
-            foreach (var voce in menu.Elementi)
-            {
-                Iscrivi(voce as RiquadroGui);
-                voce.Riposiziona(menu.Posizione);
-            }
-        }
-        /// <summary>Rimuove dall'interfaccia tutti i "figli" dell'oggetto argomento </summary>
-        public void Rimuovi(object parent)
-        {
-            var lista = elementi.FindAll(x => x.Parent?.Equals(parent) == true);
-            foreach (var e in lista)
-                if (e!= null)
-                    Rimuovi(e as RiquadroGui);
-        }
-
-
 
         #region Override di Game Component
         protected override void LoadContent()
@@ -124,25 +98,25 @@ Ad esempio, se durante un'azione di movimento premo "passa turno" non succede ni
 L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno ad eventi... (work in progress)
 
             */
-            foreach (var elemento in elementi)
-            {
-                Bottone bott = elemento as Bottone;
-                if (bott?.Cliccato == true)
-                {
-                    bott.Reset();
-                    BottonePremuto = bott.TipoBottone;
+            //foreach (var elemento in elementi)
+            //{
+            //    Bottone bott = elemento as Bottone;
+            //    if (bott?.Cliccato == true)
+            //    {
+            //        bott.Reset();
+            //        BottonePremuto = bott.TipoBottone;
 
-                    return;
-                }
-                BottonePremuto = bottone.nessuno;
-            }
+            //        return;
+            //    }
+            //    BottonePremuto = bottone.nessuno;
+            //}
         }
 
 
         public override void Draw(GameTime gameTime)
         {
 
-            foreach (RiquadroGui elemento in elementi)
+            foreach (ElementoGrafico elemento in elementi)
             {
                 elemento.Draw(_spriteBatch);
             }
@@ -164,7 +138,6 @@ L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno
             {
                 foreach (var elemento in elementi)
                 {
-                    elemento.DissociaEventiMouse(_mouseInput);
                     var d = elemento as IDisposable;
                     d?.Dispose();
                 }
@@ -173,11 +146,11 @@ L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno
         }
 
         // Campi privati
-        private List<RiquadroGui> elementi;
+        private List<ElementoGrafico> elementi;
 
         private Game _game;
         private Tabellone _tabellone;
-        Cimitero _cimitero;
+        private Cimitero _cimitero;
         private MouseInput _mouseInput;
         private SpriteBatch _spriteBatch;
         private Texture2D _spriteSheet;
@@ -185,5 +158,6 @@ L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno
         private SpriteFont font;
 
     }
+
 
 }

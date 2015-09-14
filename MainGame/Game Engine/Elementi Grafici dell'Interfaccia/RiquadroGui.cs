@@ -7,13 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game.Interfaccia
 {
-    public enum Allineamento
-    {
-        BassoDx,
-        BassoSx,
-        AltoDx,
-        AltoSx
-    }
+
 
     public class RiquadroGui
     {
@@ -47,7 +41,7 @@ namespace Quantum_Game.Interfaccia
         protected RiquadroGui (Riquadro r)
         {
             // COSDTRUTTORE NUOVO SERATA MALGIOGLIO
-            superficie = new Rectangle(r.Xabs, r.Yabs, r.Largh, r.Alt);
+            superficie = r.Superficie;
         }
 
 

@@ -28,37 +28,18 @@ using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game
 {   
-    public class Tabellone : RiquadroGui, IGameComponent
+    public class Tabellone: ElementoGrafico
     {
-        /// <summary>
-        /// Costruttore dell'oggetto Tabellone, con impostazioni del riquadro grafico
-        /// </summary>
-        public Tabellone(Game game, int xRel, int yRel, int larghRel, int altRel) : 
-            base(xRel, yRel, larghRel, altRel, game)
+
+
+        public Tabellone (Game game, Riquadro contenitore): base (contenitore)
         {
-            _game = game;
             _IdSelezione = -1;
             _idMouseOver = -1;
             _coordIlluminazione = new Point[0];
         }
 
-        public Tabellone (Game game, Riquadro riquadro): base (riquadro)
-        {
-            _game = game;
-            _IdSelezione = -1;
-            _idMouseOver = -1;
-            _coordIlluminazione = new Point[0];
-
-        }
-
-        public void Initialize()
-        {
-            // Iscrizione al Gui
-            GuiManager gui = _game.Services.GetService<GuiManager>();
-            gui.Iscrivi(this);
-        }
-
-        public override void Inizializzazione(GuiManager gui)
+        public override void CaricaContenuti(GuiManager gui)
         {
             // Questa inizializzazione è chiamata dal gui;
             // serve per regolare le misure del riquadro rispetto alle dimensioni dello schermo
@@ -67,16 +48,14 @@ namespace Quantum_Game
             pennello = gui.Pennello;
             font = gui.Font;
 
-            base.Inizializzazione(gui);
-
 
             //Calcolo il lato delle caselle:
-            float h = Altezza / (float)Tile.Righe; float w = Larghezza / (float)Tile.Colonne;
+            float h = contenitore.Superficie.Height / (float)Tile.Righe; float w = contenitore.Superficie.Width / (float)Tile.Colonne;
             _latoCasella = (w <= h) ? (int)w : (int)h;
 
             offset = new Point(
-                (Larghezza - (_latoCasella * Tile.Colonne)) / 2,
-                (Altezza - (_latoCasella * Tile.Righe) ) / 2
+                (contenitore.Superficie.Width - (_latoCasella * Tile.Colonne)) / 2,
+                (contenitore.Superficie.Height - (_latoCasella * Tile.Righe) ) / 2
                 );
 
             //rettangoli per lo spritebatch:
@@ -114,8 +93,8 @@ namespace Quantum_Game
 
                     //calcolo delle coordinate su cui disegnare:
                     id2nm(Idx, out x, out y);
-                    _target.X = x * _latoCasella + Posizione.X + offset.X;
-                    _target.Y = y * _latoCasella + Posizione.Y + offset.Y;
+                    _target.X = x * _latoCasella + contenitore.Superficie.Location.X + offset.X;
+                    _target.Y = y * _latoCasella + contenitore.Superficie.Location.Y + offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     // TODO: qua è ancora tutto provvisorio
@@ -221,7 +200,7 @@ namespace Quantum_Game
         private bool coordinatePixel2Casella(ref int x, ref int y)
         {
             float tempX = x; float tempY = y;
-            tempX -= (Posizione.X+offset.X); tempY -= (Posizione.Y + offset.Y);
+            tempX -= (contenitore.Superficie.Location.X+offset.X); tempY -= (contenitore.Superficie.Location.Y + offset.Y);
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
             if (x < 0 || x > Tile.Colonne - 1 || y < 0 || y > Tile.Righe - 1)
@@ -233,7 +212,7 @@ namespace Quantum_Game
             int n, m;
             id2nm(id, out n, out m);
             return new Point
-                (n * _latoCasella + Posizione.X + offset.X, m * _latoCasella + Posizione.Y + offset.Y);
+                (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
         public Point Tile2Pixel(Tile tile)
         {
@@ -246,7 +225,7 @@ namespace Quantum_Game
         // calcola il tile su cui sta il mouse
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            if (Compreso(args.Posizione.X, args.Posizione.Y))
+            if (contenitore.Superficie.Contains(args.Posizione.X, args.Posizione.Y))
             {
                 int X = args.Posizione.X;
                 int Y = args.Posizione.Y;
@@ -255,7 +234,7 @@ namespace Quantum_Game
                     Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
                 {
                     id2nm(_idMouseOver, out X, out Y);
-                    _SelezPixCoord.X = X*_latoCasella + Posizione.X + offset.X; _SelezPixCoord.Y = Y*_latoCasella + Posizione.Y + offset.Y;
+                    _SelezPixCoord.X = X*_latoCasella + contenitore.Superficie.Location.X + offset.X; _SelezPixCoord.Y = Y*_latoCasella + contenitore.Superficie.Location.Y + offset.Y;
                     return;
                 }
             }
@@ -263,7 +242,7 @@ namespace Quantum_Game
 
         }
 
-        
+
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
             UltimoClick = TipoEventoMouse.ClkSin;
@@ -296,7 +275,6 @@ namespace Quantum_Game
             m = idCasella / Tile.Colonne;
         }
 
-        private Game _game;
         Point offset;
 
 
