@@ -21,6 +21,11 @@ namespace Quantum_Game
             using (var game = new QuantumMultiplayer())
                 game.Run();
             */
+
+            //settings:
+            /*
+               salvare le impostazioni nel file settings.config
+            */
         }
     }
 #endif

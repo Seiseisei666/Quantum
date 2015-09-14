@@ -1,42 +1,40 @@
-﻿using Quantum_Game;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.Linq;
 
 namespace Quantum_Game {
 
 
-public class Giocatore {
+public class Giocatore
+    {
 
-        // COSTRUTTORE
+        // COSTRUTTORI
+        //Costruttore di default
         public Giocatore()
         {
-            this._colore = (e_color)(++_count); //assegna il colore
-            _ricerca = _dominio = _punti = 0;
-            _flotta = new List<Nave>();
+            //assegna il colore
+            this._colore = (e_color)(++_count); 
         }
-        public Giocatore (e_color colore)   // Overload del costruttore in caso volessimo fare giocatori di colori particolari
+        // Costruttore per fare giocatori di colori particolari
+        public Giocatore (e_color colore)   
         {
             _colore = colore;
-            _ricerca = _dominio = _punti = 0;
-            _flotta = new List<Nave>();
         }
 
         // PROPRIETA' PUBBLICHE
         public int AzioniDisponibili { get { return _azioni; } }
 
-        /// <summary>Numero di navi in gioco</summary>
+        // Numero di navi in gioco del giocatore
         public int NumeroNaviInGioco
         { get
             {
                 var vive = _flotta.FindAll(nave => nave.Viva);
                 return vive.Count;
             }
-        } 
-        public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
+        }
+        // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
+        public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } 
 
-        /// <summary>Lista delle navi del giocatore non in gioco (cioè nel cimitero)</summary>
+        /// Lista delle navi del giocator nel cimitero
         public List<Nave> Rottami { get { return _flotta.FindAll(n => !n.InGioco); } }
 
         public e_color Colore { get { return this._colore; } }
@@ -58,13 +56,13 @@ public class Giocatore {
         }
 
         //METODI PUBBLICI 
-        public void GlobalInit() // inizializzazione globale
+        // inizializzazione globale
+        public void GlobalInit() 
         {
             inizializzaFlotta();
         }
-        /// <summary>
+
         /// metodo generale per mettere in gioco e riconfigurare nuove navi
-        /// </summary>
         public void NuoveNavi(int numeroNuoveNavi = 1)
         {
             for (int i = 0; i < numeroNuoveNavi; i++)
@@ -74,18 +72,16 @@ public class Giocatore {
                 n.Riconfigura();
             }
         }
-        /// <summary>
+
         /// Inizio Turno
-        /// </summary>
         public void Init()
         {
             foreach (var n in _flotta)
                 n.InizioTurno(); 
             _azioni = NUM_AZIONI;
         }
-        /// <summary>
+
         /// diminuisce il contatore delle azioni di uno, o di due se è un'azione colonizza
-        /// </summary>
         /// <param name="colonizzazione">Se l'azione da fare è una colonizzazione passare True come parametro</param>
         public void Azione(bool colonizzazione = false)
         {
@@ -100,12 +96,14 @@ public class Giocatore {
             System.Diagnostics.Debug.WriteLine(_ricerca);
         }
 
-        public void Cleanup()   // Fine turno
+        // Fine turno
+        public void Cleanup()  
         {
             if (_dominio >= 5)
             {
-                _dominio -= 5; //reset dominio
-                // Piazzare la mentina
+                //reset dominio
+                _dominio -= 5; 
+                // TODO: Piazzare la mentina
             }
         }
         // METODI PRIVATI
@@ -116,8 +114,8 @@ public class Giocatore {
         }
 
         // CAMPI PRIVATI
-		private int _ricerca, _dominio, _punti;
-        private List<Nave> _flotta;
+		private int _ricerca, _dominio, _punti=0;
+        private List<Nave> _flotta = new List<Nave>();
         private e_color _colore;
 
         // contatori statici

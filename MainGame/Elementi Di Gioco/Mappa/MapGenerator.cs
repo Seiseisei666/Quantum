@@ -12,7 +12,6 @@ namespace Quantum_Game.Mappa
         private int _righe = 0, _colonne = 0;  
         private string _filemappa;
         private bool _dagirare;
-        //private List<Tile> _tabellone; //Non dovrebbe servire
         // restituisce il numero di caselle
         public int Righe { get { return _righe*3; } } 
         public int Colonne { get { return _colonne*3; } }
@@ -35,7 +34,7 @@ namespace Quantum_Game.Mappa
                 _dagirare = true;
 
             }
-            _filemappa = filemappa;
+            this._filemappa = filemappa;
         }
 
         //Funzione principale per generare la lista di caselle

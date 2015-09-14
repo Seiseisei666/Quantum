@@ -1,10 +1,9 @@
 ﻿using System;
 namespace Quantum_Game
 {
-	/// <summary>
     /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
-    /// </summary>
-	public enum e_color: byte {
+	public enum e_color: byte
+    {
 		incolore,
 		Blu,
 		Rosso,
@@ -13,9 +12,7 @@ namespace Quantum_Game
 		
 	}
 	
-    /// <summary>
     /// Tipi di nave. Rottame == 0 == nave nel cimitero (o non ancora giocata)
-    /// </summary>
 	public enum e_nave: byte {
 		Rottame,
 		Battlestation,
@@ -51,16 +48,13 @@ namespace Quantum_Game
         public Microsoft.Xna.Framework.Color SpriteColor { get { return _proprietario.SpriteColor; } }
 
         // METODI PUBBLICI
-        /// <summary>
         /// inizializzazione, da chiamare ogni inizio turno per tutte le navi di una flotta
-        /// </summary>
         public void InizioTurno()
         {
             _riconfigurata = _mossa = _special = _muoveinDiagonale = false;
         }
-        /// <summary>
+
         /// riconfigurazione della nave (o primo roll)
-        /// </summary>
         public void Riconfigura(bool specialScout = false)
         {
             int risultato = 0;
@@ -75,25 +69,21 @@ namespace Quantum_Game
             // Mi assicuro che, se uso la special della 5 e poi riconfiguro, la nave che ottengo non si possa muovere in diagonale
             _muoveinDiagonale = false;      
         }
-        /// <summary>
         /// Metodo per piazzare per la prima volta una nave
         /// E' anche l'unico modo con cui una nave può essere dichiarata IN GIOCO
-        /// </summary>
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
             _ingioco = true;
         }
-        /// <summary>Muove la nave da una casella a un'altra.</summary>
+        /// Muove la nave da una casella a un'altra.
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
         {
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
             this._mossa = true;
         }
-        /// <summary>
         /// Metodo per attaccare una nave target
-        /// </summary>
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
         bool Attacco(Nave target)
@@ -114,20 +104,18 @@ namespace Quantum_Game
             if (consumaMovimento) this._mossa = true;
             return esito;
         }
-        /// <summary>Usa la special. niente di sensazionale</summary>
+        ///Usa la special. niente di sensazionale
         public void UsaSpecial()
         {
             this._special = true;
             if (_tipo == e_nave.Interceptor) _muoveinDiagonale = true;
         }
-        /// <summary>
         /// La nave viene distrutta
-        /// </summary>
 		public void Distruggi() { _ingioco = false; Riconfigura(true); }
 
-        /// <summary>True se la nave è del colore del giocatore argomento</summary>
+        //True se la nave è del colore del giocatore argomento
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
-        /// <summary>True se la nave può muoversi in diagonale</summary>
+        ///True se la nave può muoversi in diagonale
         public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
         // CAMPI 
         private Giocatore _proprietario;
