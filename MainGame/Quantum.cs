@@ -24,12 +24,16 @@ namespace Quantum_Game
 
         private FlussoDiGioco flussoGioco;
 
+        Dummy caselle, bottonilaterali, barraindentata;
+        Texture2D texture;
+
         public Quantum()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1024;  
             graphics.PreferredBackBufferHeight = 576;
+            graphics.IsFullScreen = false;
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
@@ -65,8 +69,8 @@ namespace Quantum_Game
             Components.Add(gui);
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
-            Tabellone tab = new Tabellone(this, 3, 3, 80, 70);
-            Components.Add(tab);
+            //parametri: origine x-y; larghezza; altezza;
+
             sfondo = new Sfondo(this);
             Components.Add(sfondo);
 
@@ -75,6 +79,8 @@ namespace Quantum_Game
 
         protected override void LoadContent()
         {
+            Riquadro.LarghezzaSchermo = GraphicsDevice.Viewport.Width;
+            Riquadro.AltezzaSchermo = GraphicsDevice.Viewport.Height;
             spriteBatch = Services.GetService<SpriteBatch>();
 
             var gui = Services.GetService<GuiManager>();
@@ -88,12 +94,33 @@ namespace Quantum_Game
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(boh);
 
-            ConsoleMessaggi console = new ConsoleMessaggi(3, 83, 80, 18);
-            gui.Iscrivi(console);
+            var tab = gui.Tabellone;
+            //ConsoleMessaggi console = new ConsoleMessaggi(tab, 100, 20);
+            //gui.Iscrivi(console);
 
             Cimitero cim = new Cimitero(3, 73, 80, 15);
             gui.Iscrivi(cim);
 
+            // PARTE BRUTTA
+            var schermo = new Riquadro(null, 0, 0, 100, 100);
+
+            var barra = new Riquadro(schermo, 0, 0, 100, 10);
+            var tabellone = new Riquadro(schermo, 0, barra.AltRel, 70, 100 - barra.AltRel);
+            var latodestro = new Riquadro(schermo, tabellone.LarghRel, barra.AltRel, 100 - tabellone.LarghRel, 100 - barra.AltRel);
+
+
+            caselle = new Dummy(tabellone,0);
+            barraindentata = new Dummy(barra,1);
+            bottonilaterali = new Dummy(latodestro,2);
+
+
+            texture = new Texture2D(GraphicsDevice, 1, 1);
+            texture.SetData(new[] { (Color.White) });
+
+            Tabellone tab2 = new Tabellone(this, tabellone);
+            Components.Add(tab);
+            gui.Iscrivi(tab2);
+            // FINE PARTE BRUTTA
 
             base.LoadContent();
         } 
@@ -124,7 +151,15 @@ namespace Quantum_Game
 
             spriteBatch.Begin();
 
+
+
             sfondo.Draw();
+
+            var spr = Services.GetService<SpriteBatch>();
+
+            caselle.Draw(spr, texture);
+            barraindentata.Draw(spr, texture);
+            bottonilaterali.Draw(spr, texture);
 
             base.Draw(gameTime);
 

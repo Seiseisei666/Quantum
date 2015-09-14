@@ -42,6 +42,15 @@ namespace Quantum_Game
             _coordIlluminazione = new Point[0];
         }
 
+        public Tabellone (Game game, Riquadro riquadro): base (riquadro)
+        {
+            _game = game;
+            _IdSelezione = -1;
+            _idMouseOver = -1;
+            _coordIlluminazione = new Point[0];
+
+        }
+
         public void Initialize()
         {
             // Iscrizione al Gui
@@ -64,6 +73,11 @@ namespace Quantum_Game
             //Calcolo il lato delle caselle:
             float h = Altezza / (float)Tile.Righe; float w = Larghezza / (float)Tile.Colonne;
             _latoCasella = (w <= h) ? (int)w : (int)h;
+
+            offset = new Point(
+                (Larghezza - (_latoCasella * Tile.Colonne)) / 2,
+                (Altezza - (_latoCasella * Tile.Righe) ) / 2
+                );
 
             //rettangoli per lo spritebatch:
             _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
@@ -100,8 +114,8 @@ namespace Quantum_Game
 
                     //calcolo delle coordinate su cui disegnare:
                     id2nm(Idx, out x, out y);
-                    _target.X = x * _latoCasella + Posizione.X;
-                    _target.Y = y * _latoCasella + Posizione.Y;
+                    _target.X = x * _latoCasella + Posizione.X + offset.X;
+                    _target.Y = y * _latoCasella + Posizione.Y + offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
                     // TODO: qua è ancora tutto provvisorio
@@ -167,11 +181,11 @@ namespace Quantum_Game
         {
             if (_coordIlluminazione.Any())
             { 
-            Color colore = Color.LightGreen;
+            Color colore = Color.LightGoldenrodYellow;
             foreach (var p in _coordIlluminazione)
                 {
                     spriteBatch.Draw
-                        (pennello, new Rectangle(p.X, p.Y, _latoCasella, _latoCasella), colore * 0.5f);
+                        (pennello, new Rectangle(p.X, p.Y, _latoCasella, _latoCasella), colore * 0.3f);
                 }
             }
         }
@@ -207,7 +221,7 @@ namespace Quantum_Game
         private bool coordinatePixel2Casella(ref int x, ref int y)
         {
             float tempX = x; float tempY = y;
-            tempX -= Posizione.X; tempY -= Posizione.Y;
+            tempX -= (Posizione.X+offset.X); tempY -= (Posizione.Y + offset.Y);
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
             if (x < 0 || x > Tile.Colonne - 1 || y < 0 || y > Tile.Righe - 1)
@@ -219,7 +233,7 @@ namespace Quantum_Game
             int n, m;
             id2nm(id, out n, out m);
             return new Point
-                (n * _latoCasella + Posizione.X, m * _latoCasella + Posizione.Y);
+                (n * _latoCasella + Posizione.X + offset.X, m * _latoCasella + Posizione.Y + offset.Y);
         }
         public Point Tile2Pixel(Tile tile)
         {
@@ -234,14 +248,14 @@ namespace Quantum_Game
         {
             if (Compreso(args.Posizione.X, args.Posizione.Y))
             {
-                int tempX = args.Posizione.X;
-                int tempY = args.Posizione.Y;
+                int X = args.Posizione.X;
+                int Y = args.Posizione.Y;
 
-                if (coordinatePixel2Casella(ref tempX, ref tempY) &&
-                    Tile.id2Tile(_idMouseOver = (tempX + tempY * Tile.Colonne)).Esistente)
+                if (coordinatePixel2Casella(ref X, ref Y) &&
+                    Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
                 {
-                    id2nm(_idMouseOver, out tempX, out tempY);
-                    _SelezPixCoord.X = tempX*_latoCasella + Posizione.X; _SelezPixCoord.Y = tempY*_latoCasella + Posizione.Y;
+                    id2nm(_idMouseOver, out X, out Y);
+                    _SelezPixCoord.X = X*_latoCasella + Posizione.X + offset.X; _SelezPixCoord.Y = Y*_latoCasella + Posizione.Y + offset.Y;
                     return;
                 }
             }
@@ -283,6 +297,8 @@ namespace Quantum_Game
         }
 
         private Game _game;
+        Point offset;
+
 
         // Per disegnare
         private int _latoCasella;

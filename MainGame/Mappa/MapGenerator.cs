@@ -56,7 +56,7 @@ namespace Quantum_Game.Mappa
             else
             {
                 for (int x = 0; x < _righe; x++)
-                    for (int y = 0; y < _colonne; y++)
+                    for (int y = _colonne-1; y>=0; y--)
                         tileData = tileData + mapData[y][x];
             }
 
