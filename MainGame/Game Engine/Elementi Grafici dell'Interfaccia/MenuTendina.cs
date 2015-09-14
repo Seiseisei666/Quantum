@@ -15,9 +15,9 @@ namespace Quantum_Game
             _elementi = new List<Bottone>(Bottoni.Length + 1);
 
             int i = 0;
-            foreach (var bottone in Bottoni)
-                _elementi.Add
-                    (Bottone.MenuEntry(i++, bottone, parent));
+          //  foreach (var bottone in Bottoni) 
+              //  _elementi.Add
+              //      (Bottone.MenuEntry(i++, bottone, parent));
         }
 
         public List<Bottone> Elementi { get { return _elementi; } }

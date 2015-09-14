@@ -28,7 +28,7 @@ namespace Quantum_Game.Azioni
 
             menu.Elementi[0].Enabled = riconfig;
             menu.Elementi[1].Enabled = special;
-            gui.Iscrivi(menu);
+           // gui.Iscrivi(menu);
             menu.Elementi[0].Click += BottonePremuto;
             menu.Elementi[1].Click += BottonePremuto;
         }
@@ -60,7 +60,7 @@ namespace Quantum_Game.Azioni
         {
             menu.Elementi[0].Click -= BottonePremuto;
             menu.Elementi[1].Click -= BottonePremuto;
-            gui.Rimuovi(this);
+        //    gui.Rimuovi(this);
             gui.Tabellone.ResetSelezioneMouse();
         }
         #endregion

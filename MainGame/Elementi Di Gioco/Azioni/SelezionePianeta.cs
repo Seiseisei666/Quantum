@@ -16,13 +16,14 @@ namespace Quantum_Game.Azioni
             {
                 MenuTendina menu = new MenuTendina(gui.Tabellone.Tile2Pixel(_pianeta), new bottone[] { bottone.Colonizza }, this);
                 menu.Elementi[0].Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
-                gui.Iscrivi(menu);
+            //    gui.Iscrivi(menu);
             }
             else
             {
-                Bottone colonizza = Bottone.Standard(bottone.Colonizza, 82, 45, this);
-                colonizza.Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
-                gui.Iscrivi(colonizza);
+                //TODO: rifare questo pezzo con i nuovi elementi grafici
+                //Bottone colonizza = Bottone.Standard(bottone.Colonizza, 82, 45, this);
+                //colonizza.Enabled = _pianeta.Colonizzabile(giocatoreDiTurno);
+      //          gui.Iscrivi(colonizza);
             }
 
             gui.Tabellone.ResetSelezioneMouse();
@@ -52,7 +53,7 @@ namespace Quantum_Game.Azioni
         {
             ConsoleMessaggi.NuovoMessaggio("Deselezionato Pianeta");
 
-            gui.Rimuovi(this);
+        //    gui.Rimuovi(this);
             gui.Tabellone.ResetSelezioneMouse();
             AzioneSuccessiva = null;
         }

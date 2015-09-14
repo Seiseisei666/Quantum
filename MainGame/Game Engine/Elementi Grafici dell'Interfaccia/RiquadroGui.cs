@@ -7,13 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game.Interfaccia
 {
-    public enum Allineamento
-    {
-        BassoDx,
-        BassoSx,
-        AltoDx,
-        AltoSx
-    }
+
 
     public class RiquadroGui
     {

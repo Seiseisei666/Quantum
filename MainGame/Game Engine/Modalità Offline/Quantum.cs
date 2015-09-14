@@ -24,7 +24,7 @@ namespace Quantum_Game
         */
         private FlussoDiGioco flussoGioco;
 
-        Dummy caselle, bottonilaterali, barraindentata;
+
         Texture2D texture;
 
         public Quantum()
@@ -63,16 +63,18 @@ namespace Quantum_Game
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
             Services.AddService<GameSystem>(gameSystem);
 
+            var schermo = new Schermo(this);
+            Components.Add(schermo);
+
             MouseInput mouseInput = new MouseInput(this);
             Components.Add(mouseInput);
             GuiManager gui = new GuiManager(this);
             Components.Add(gui);
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
-            //parametri: origine x-y; larghezza; altezza;
-
             sfondo = new Sfondo(this);
             Components.Add(sfondo);
+
 
             base.Initialize();
         }
@@ -80,43 +82,41 @@ namespace Quantum_Game
         //crea l'interfaccia grafica con le sue componenti
         protected override void LoadContent()
         {
-
             spriteBatch = Services.GetService<SpriteBatch>();
 
             var gui = Services.GetService<GuiManager>();
 
-               Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
-            Bottone boh = Bottone.Standard(bottone.Ricerca, 82, 75);
-            gui.Iscrivi(passaTurno);
-            gui.Iscrivi(boh);
+            /*  ESEMPIO DEL SISTEMA RIQUADRI  */
 
-            var tab = gui.Tabellone;
-            //ConsoleMessaggi console = new ConsoleMessaggi(tab, 100, 20);
-            //gui.Iscrivi(console);
+            var schermo = Riquadro.Main;
+            var barraSuperiore = schermo.Riga(5);
 
-            Cimitero cim = new Cimitero(3, 73, 80, 15);
-            gui.Iscrivi(cim);
+            var main = schermo.Colonna(75);
+                var tabellone = main.Riga(100, 5,5);
+                
 
-            // PARTE BRUTTA
-            var schermo = new Schermo(Window);
+            var laterale = schermo.Colonna(100, 5);
 
-            var barra = new Riquadro(schermo, 0, 0, 100, 10);
-            var tabellone = new Riquadro(schermo, 0, barra.AltRelativa, 70, 100 - barra.AltRelativa);
-            var latodestro = new Riquadro(schermo, tabellone.LarghRelativa, barra.AltRelativa, 100 - tabellone.LarghRelativa, 100 - barra.AltRelativa);
-
-
-            caselle = new Dummy(tabellone,0);
-            barraindentata = new Dummy(barra,1);
-            bottonilaterali = new Dummy(latodestro,2);
-
-
-            texture = new Texture2D(GraphicsDevice, 1, 1);
-            texture.SetData(new[] { (Color.White) });
+                var info = laterale.Riga(50, 0,10);
+                var bott1 = laterale.Riga(10,35,5);
+                var bott2 = laterale.Riga(10,35,5);
+                var bott3 = laterale.Riga(10,35,5);
+                var bott4 = laterale.Riga(10,35,5);
+                var msg = laterale.Riga(100, 0,15);
 
             Tabellone tab2 = new Tabellone(this, tabellone);
-            Components.Add(tab);
             gui.Iscrivi(tab2);
-            // FINE PARTE BRUTTA
+            Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
+            Bottone passaTurno = new Bottone(bottone.Passa, bott4);
+            Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
+            gui.Iscrivi(colonizza);
+            gui.Iscrivi(passaTurno);
+            gui.Iscrivi(ricerca);
+            ConsoleMessaggi console = new ConsoleMessaggi(msg);
+            gui.Iscrivi(console);
+            Cimitero cim = new Cimitero(info);
+            gui.Iscrivi(cim);
+
 
             base.LoadContent();
         } 
@@ -151,11 +151,6 @@ namespace Quantum_Game
 
             sfondo.Draw();
 
-            var spr = Services.GetService<SpriteBatch>();
-
-            caselle.Draw(spr, texture);
-            barraindentata.Draw(spr, texture);
-            bottonilaterali.Draw(spr, texture);
 
             base.Draw(gameTime);
 
@@ -167,6 +162,7 @@ namespace Quantum_Game
         private void InizioPartita(object sender, EventArgs args)
         {
             Debug.WriteLine("Partita iniziata!!");
-        }       
+        }
+
     }
 }
