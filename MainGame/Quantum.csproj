@@ -109,16 +109,12 @@
     </Content>
     <Content Include="Data Content\img\TileSet_prova2.png" />
     <Content Include="Data Content\img\TileSet_prova3.png" />
-    <Content Include="Data Content\Mappe\mappa_prova1.txt">
+    <Content Include="Data Content\Mappe\mappaeasy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappa_prova2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data Content\Mappe\mappa_prova3.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data Content\Mappe\mappaeasy.txt" />
+    <Content Include="Data Content\Mappe\mappa_prova1.txt" />
+    <Content Include="Data Content\Mappe\mappa_prova2.txt" />
+    <Content Include="Data Content\Mappe\mappa_prova3.txt" />
     <Content Include="Data Content\TileSet_prova1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

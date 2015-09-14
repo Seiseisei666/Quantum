@@ -78,8 +78,8 @@ namespace Quantum_Game.Interfaccia
         #region Override di Game Component
         protected override void LoadContent()
         {
-            _spriteSheet = _game.Content.Load<Texture2D>(@"Graphica\TileSet_prova3");
-            font = _game.Content.Load<SpriteFont>("Font\\Font");
+            _spriteSheet = _game.Content.Load<Texture2D>(@"img\TileSet_prova3");
+            font = _game.Content.Load<SpriteFont>(@"Font\Font");
 
             _texture = new Texture2D(GraphicsDevice, 1, 1);
             _texture.SetData(new[] { (Color.White) });
