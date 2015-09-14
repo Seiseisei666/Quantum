@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin TileSet_prova1.png
+#begin img/TileSet_prova1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,7 +23,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:TileSet_prova1.png
+/build:img/TileSet_prova1.png
 
 #begin Font/Font.spritefont
 /importer:FontDescriptionImporter
@@ -40,7 +40,7 @@
 #begin Mappe/mappaeasy.txt
 /copy:Mappe/mappaeasy.txt
 
-#begin Graphica/TileSet_prova2.png
+#begin img/TileSet_prova2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,9 +50,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Graphica/TileSet_prova2.png
+/build:img/TileSet_prova2.png
 
-#begin Graphica/TileSet_prova3.png
+#begin img/TileSet_prova3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -62,5 +62,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Graphica/TileSet_prova3.png
+/build:img/TileSet_prova3.png
 
