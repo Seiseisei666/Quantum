@@ -24,7 +24,7 @@ namespace Quantum_Game
         // soluzione non molto elegante. Cmq converte i nostri colori nel formato System.Color
         public static Dictionary<e_color, Color> QuantumColor = new Dictionary<e_color, Color>();
 
-        
+
         public event EventHandler InizioPartita;
 
         public GameSystem()
@@ -38,15 +38,15 @@ namespace Quantum_Game
 
         //riferimento al giocatore di turno 
         public Giocatore GiocatoreDiTurno { get { return _giocatori[(_contaTurni % _giocatori.Count)]; } }
-        
+
         //riferimento alla fase di gioco corrente
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } }
 
         // Crea N=_numGiocatori giocatori. Utilizzabile solo prima che cominci la partita
         public void AggiungiGiocatori (int _numGiocatori)
         {
             //se la fase di gioco non è quella giusta o se ci sono già N giocatori si esce
-            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni || this._numGiocatori > _numGiocatori) return;
+            if (_faseDiGioco != FasiDiGioco.SceltaOpzioni || this._numGiocatori > _numGiocatori) throw new Exception(); 
 
             //aggiungo giocatori
             while (this._numGiocatori < _numGiocatori)
@@ -59,16 +59,22 @@ namespace Quantum_Game
         // Metodo per lanciare il setup della partita
         public void IniziaSetupPartita()
         {
+           
             _faseDiGioco = FasiDiGioco.SetupPartita;
-            foreach (Giocatore g in _giocatori)
+             foreach (Giocatore g in _giocatori)
+            {
+                //Interfaccia.ConsoleMessaggi.NuovoMessaggio("Setup del giocatore di colore" + g.Colore + " in corso", g.SpriteColor);
                 g.GlobalInit();
+                
+            }
         }
        
         // Metodo per passare il turno al giocatore successivo
         public void NextTurn()
         {
             //se la partita non è in corso esce
-            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) return;
+            if (_faseDiGioco == FasiDiGioco.SceltaOpzioni) throw new Exception();
+    
 
             //se la partita è in fase di setup lancio un evento di inizio partita
             if (_faseDiGioco == FasiDiGioco.SetupPartita)

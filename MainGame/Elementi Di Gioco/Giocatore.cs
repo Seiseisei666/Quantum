@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Quantum_Game {
 
@@ -93,7 +94,7 @@ public class Giocatore
         public void Ricerca ()
         {
             _ricerca++;
-            System.Diagnostics.Debug.WriteLine(_ricerca);
+             System.Diagnostics.Debug.WriteLine(_ricerca);
         }
 
         // Fine turno

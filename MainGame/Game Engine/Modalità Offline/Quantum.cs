@@ -23,6 +23,7 @@ namespace Quantum_Game
         che vengono poi stampate a video dal metodo draw
         */
         private FlussoDiGioco flussoGioco;
+        private GameSystem gameSystem;
 
         public Quantum()
         {
@@ -32,6 +33,7 @@ namespace Quantum_Game
             graphics.PreferredBackBufferHeight = 576;
             IsMouseVisible = true;
             graphics.ApplyChanges();
+
         }
 
         protected override void Initialize()
@@ -44,7 +46,7 @@ namespace Quantum_Game
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             // Crea il gamesystem con 2 giocatori
-            GameSystem gameSystem = new GameSystem();
+            gameSystem = new GameSystem();
             gameSystem.AggiungiGiocatori(2);
             
             //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
@@ -52,9 +54,7 @@ namespace Quantum_Game
             //che lo utilizzeranno
             gameSystem.InizioPartita += InizioPartita;
 
-            // QUESTA RIGA SERVE SOLO PER TESTARE IL POSIZIONAMENTO DELLE NAVI
-            gameSystem.IniziaSetupPartita();
-            //TODO: DA TOGLIERE
+  
 
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
             Services.AddService<GameSystem>(gameSystem);
@@ -71,6 +71,7 @@ namespace Quantum_Game
             Components.Add(sfondo);
 
             base.Initialize();
+
         }
 
         //crea l'interfaccia grafica con le sue componenti
@@ -79,11 +80,14 @@ namespace Quantum_Game
             spriteBatch = Services.GetService<SpriteBatch>();
 
             var gui = Services.GetService<GuiManager>();
-
-               Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
-            Bottone boh = Bottone.Standard(bottone.Ricerca, 82, 75);
+            Bottone iniziaPartita = Bottone.Standard(bottone.IniziaPartita, 82, 95);
+            Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
+            Bottone ricerca = Bottone.Standard(bottone.Ricerca, 82, 75);
             gui.Iscrivi(passaTurno);
-            gui.Iscrivi(boh);
+            gui.Iscrivi(iniziaPartita);
+            gui.Iscrivi(ricerca);
+      
+  
 
             ConsoleMessaggi console = new ConsoleMessaggi(3, 83, 80, 18);
             gui.Iscrivi(console);
@@ -133,6 +137,11 @@ namespace Quantum_Game
         private void InizioPartita(object sender, EventArgs args)
         {
             Debug.WriteLine("Partita iniziata!!");
-        }       
+        }
+
+        public GameSystem getGameSystem()
+        {
+            return gameSystem;
+        }
     }
 }

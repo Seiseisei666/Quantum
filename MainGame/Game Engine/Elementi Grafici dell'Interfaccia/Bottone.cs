@@ -11,6 +11,7 @@ namespace Quantum_Game.Interfaccia
     public enum bottone : byte
     {
         nessuno,
+        IniziaPartita,
         Passa,
         Ricerca,
         UsaSpecial,
@@ -100,6 +101,8 @@ namespace Quantum_Game.Interfaccia
             {
                 switch (_tipoBottone)
                 {
+                    case bottone.IniziaPartita:
+                        return "Inizia Partita";
                     case bottone.Passa:
                         return "Passa il turno";
                     case bottone.Ricerca:

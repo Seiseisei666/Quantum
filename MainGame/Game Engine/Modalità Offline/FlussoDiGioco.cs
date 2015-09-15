@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Quantum_Game.Azioni;
 using Quantum_Game.Interfaccia;
+using System.Threading;
 
 namespace Quantum_Game
 {
@@ -10,12 +11,12 @@ namespace Quantum_Game
     public class FlussoDiGioco: GameComponent
     {
 
-        private Game _game;
+        private Quantum _game;
         private AzioneDiGioco _prossimaAzione;
         private GuiManager gui;
         private GameSystem turno;
 
-        public FlussoDiGioco(Game game): base(game)
+        public FlussoDiGioco(Quantum game): base(game)
         {
             _game = game;
             _prossimaAzione = null;
@@ -40,6 +41,7 @@ namespace Quantum_Game
         //metodo che controlla se ci sono nuove azioni ed, eventualmente, le esegue 
         public void Update() 
         {
+
             if (turno.FasePartita == FasiDiGioco.PartitaInCorso)
             {
                 if (_prossimaAzione != null)
@@ -54,6 +56,15 @@ namespace Quantum_Game
 
             else if (turno.FasePartita == FasiDiGioco.SetupPartita)
                 setupPartita();
+
+            else if(turno.FasePartita == FasiDiGioco.SceltaOpzioni)
+            {
+                foreach (Bottone b in gui.Bottoni)
+                {
+                    if(b.TipoBottone == (bottone.IniziaPartita))
+                        b.Click += onIniziaPartita;
+                }
+            }
         }
 
         void setupPartita() 
@@ -74,7 +85,8 @@ namespace Quantum_Game
         // EventHandler per gestire il click dei bottoni
         void bottoneCliccato(object bott, EventArgs a)
         {
-            var b = (Bottone)bott;
+            
+            Bottone b = (Bottone) bott;
             switch (b.TipoBottone)
             {
                 case bottone.Passa:
@@ -89,6 +101,21 @@ namespace Quantum_Game
                     break;
             }
         }
-     }
+
+        void onIniziaPartita(object bott, EventArgs a)
+        {
+            //BUG: il metodo viene chiamato piu volte quando si clicca sul bottone. 
+            if (_game.getGameSystem().FasePartita == FasiDiGioco.SceltaOpzioni)
+            {
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Setup partita in corso...");
+                _game.getGameSystem().IniziaSetupPartita();
+                foreach (Bottone b in gui.Bottoni)
+                {
+                    if (b.TipoBottone == (bottone.IniziaPartita)) gui.Rimuovi(b);
+                }
+            }
+
+        }
+    }
 }
 

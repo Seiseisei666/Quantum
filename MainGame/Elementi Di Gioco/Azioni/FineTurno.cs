@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Quantum_Game.Azioni
 {
@@ -24,7 +21,7 @@ namespace Quantum_Game.Azioni
         public override bool Abort() { return false; }
         protected override void Cleanup()
         {
-            AzioneSuccessiva = null;
+            AzioneSuccessiva = null; 
             gameSystem.NextTurn();
             Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gameSystem.GiocatoreDiTurno.Colore, gameSystem.GiocatoreDiTurno.SpriteColor);
             gui.Cimitero.Aggiorna(gameSystem.GiocatoreDiTurno);

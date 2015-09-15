@@ -7,11 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game
 {
-    /// <summary>
     /// Classe che si occupa della gestione dell'input del mouse
     /// e dell'inoltro degli eventi click dx, click sn e mouseover.
     /// Gli eventi vengono prodotti solo se qualche oggetto nel programma si è iscritto per riceverli
-    /// </summary>
     public class MouseInput: GameComponent
     {
         private MouseState newState, oldState;
