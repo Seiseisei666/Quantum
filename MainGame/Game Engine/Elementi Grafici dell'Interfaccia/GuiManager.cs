@@ -17,6 +17,7 @@ namespace Quantum_Game.Interfaccia
         {
             _game = game;
             elementi = new List<ElementoGrafico> (MAX_ELEMENTI);
+            animati = new List<IElementoAnimato>(5);
             // Iscrivo il managerGui ai servizi del gioco
             _game.Services.AddService(this);
         }
@@ -56,10 +57,31 @@ namespace Quantum_Game.Interfaccia
             elemento.CaricaContenuti(this);
             elementi.Add(elemento);
         }
+        public void Iscrivi (Widget elemento)
+        {
+            animati.Add(elemento);
+            Iscrivi((ElementoGrafico)elemento);
+        }
+        
         /// <summary>Rimuove un RiquadroGui dall'interfaccia </summary>
         public void Rimuovi(ElementoGrafico elemento)
         {
             elementi.Remove(elemento);
+        }
+        public void RimuoviWidget ()
+        {
+            foreach (var widg in animati)
+            {
+                Rimuovi((ElementoGrafico)widg);
+            }
+            animati.Clear();
+            //if (animati.Any())
+            //    for (int i = animati.Count()-1; i>=0; i++)
+            //    {
+            //        var W = (ElementoGrafico)animati[i];
+            //        Rimuovi(W);
+            //        animati.RemoveAt(i);
+            //    }
         }
 
         /// <summary> Iscrizione del tabellone al GUI</summary>
@@ -89,27 +111,8 @@ namespace Quantum_Game.Interfaccia
         /// <summary>Controlla ad ogni frame se è stato premuto un bottone. </summary>
         public override void Update(GameTime gameTime)
         {
-            /* TODO:
-
-Il sistema di bottoni attuale è molto basic: in pratica, se in un certo frame è stato premuto un bottone, la proprietà GuiManager.BottonePremuto verrà settata sul tipo di bottone.
-Problema: se in un pezzo di codice non controlliamo esplicitamente un dato bottone, questo, anche se viene premuto, non produce risultati.
-Ad esempio, se durante un'azione di movimento premo "passa turno" non succede niente, perché quel bottone viene osservato solo durante la fase di attesa della selezione.
-
-L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno ad eventi... (work in progress)
-
-            */
-            //foreach (var elemento in elementi)
-            //{
-            //    Bottone bott = elemento as Bottone;
-            //    if (bott?.Cliccato == true)
-            //    {
-            //        bott.Reset();
-            //        BottonePremuto = bott.TipoBottone;
-
-            //        return;
-            //    }
-            //    BottonePremuto = bottone.nessuno;
-            //}
+            foreach (var Widg in animati)
+                Widg.Update();
         }
 
 
@@ -147,6 +150,7 @@ L'unica soluzione che mi viene in mente è: sostituire questo meccanismo con uno
 
         // Campi privati
         private List<ElementoGrafico> elementi;
+        private List<IElementoAnimato> animati;
 
         private Game _game;
         private Tabellone _tabellone;

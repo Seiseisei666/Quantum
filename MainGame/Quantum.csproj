@@ -69,6 +69,7 @@
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Riquadro.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Sfondo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Casella.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Widget.cs" />
     <Compile Include="Game Engine\Modalità Offline\FlussoDiGioco.cs" />
     <Compile Include="Game Engine\Modalità Offline\GameSystem.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Bottone.cs" />

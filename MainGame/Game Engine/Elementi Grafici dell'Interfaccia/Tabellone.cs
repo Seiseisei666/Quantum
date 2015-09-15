@@ -37,6 +37,7 @@ namespace Quantum_Game
             _IdSelezione = -1;
             _idMouseOver = -1;
             _coordIlluminazione = new Point[0];
+            MostraSelezione = true;
         }
 
         public override void CaricaContenuti(GuiManager gui)
@@ -69,6 +70,7 @@ namespace Quantum_Game
         /// <summary>Restituisce l'ultimo evento del mouse: click sinistro, click destro o nessuno (se la selezione è stata resettata)</summary>
         public TipoEventoMouse UltimoClick { get; private set; }
 
+        public int LatoCasella { get { return _latoCasella; } }
         // METODI PUBBLICI
 
         /// <summary>Annulla la selezione del mouse, in modo che una volta finita un'azione 
@@ -77,7 +79,9 @@ namespace Quantum_Game
         {
             _IdSelezione = -1;
             UltimoClick = TipoEventoMouse.nessuno;
+            MostraSelezione = true;
         }
+        public bool MostraSelezione { get; set; }
 
         #region Metodi di Disegno
         // disegna il tabellone e le navi
@@ -149,7 +153,7 @@ namespace Quantum_Game
             // illumina la casella su cui sta il mouse
         void DisegnaSelezione(SpriteBatch spriteBatch)
         {
-            if (_idMouseOver >= 0)
+            if (_idMouseOver >= 0 && MostraSelezione)
             {
                 _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y;
                 spriteBatch.Draw(pennello, _target, Color.IndianRed*0.5f);

@@ -14,6 +14,7 @@ namespace Quantum_Game.Azioni
         {
             _casellaPartenza = casellaCliccata;
             gui.Tabellone.ResetSelezioneMouse();
+            gui.Tabellone.MostraSelezione = false;
 
             // TODO: Questa è una pecionata! serve un sistema più uniforme e ragionevole per gestire dinamicamente 2 bottoni del cazzo
             bool special, riconfig;
@@ -24,18 +25,28 @@ namespace Quantum_Game.Azioni
             bottoni[0] = bottone.Riconfigura;
             bottoni[1] = bottone.UsaSpecial;
 
-            menu = new MenuTendina(gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
+            Point pos1 = gui.Tabellone.Tile2Pixel(_casellaPartenza);
+            Point pos2 = pos1;
+            var lato = gui.Tabellone.LatoCasella;
+            if (riconfig && special)
+            {
+                pos1 -= new Point(20 - lato/2, 15);
+                pos2 += new Point(20 + lato/2, - 15);
+            }
 
-            menu.Elementi[0].Enabled = riconfig;
-            menu.Elementi[1].Enabled = special;
-           // gui.Iscrivi(menu);
-            menu.Elementi[0].Click += BottonePremuto;
-            menu.Elementi[1].Click += BottonePremuto;
+
+            Widget r = new Widget(pos1, widget.Riconfigura);
+            Widget s = new Widget(pos2, widget.UsaSpecial);
+
+            gui.Iscrivi(r);
+            gui.Iscrivi(s);
+            
         }
 
         #region Implementazione di AzioneDiGioco
         public override void Esegui ()
         {
+
             // Chiude i menù con il click destro
             if (ultimoClick == TipoEventoMouse.ClkDx)
             {
@@ -58,9 +69,7 @@ namespace Quantum_Game.Azioni
         }
         protected override void Cleanup()
         {
-            menu.Elementi[0].Click -= BottonePremuto;
-            menu.Elementi[1].Click -= BottonePremuto;
-        //    gui.Rimuovi(this);
+            gui.RimuoviWidget();
             gui.Tabellone.ResetSelezioneMouse();
         }
         #endregion
