@@ -111,7 +111,11 @@ namespace Quantum_Game
                 _game.getGameSystem().IniziaSetupPartita();
                 foreach (Bottone b in gui.Bottoni)
                 {
-                    if (b.TipoBottone == (bottone.IniziaPartita)) gui.Rimuovi(b);
+                    if (b.TipoBottone == (bottone.IniziaPartita))
+                    {
+                        b.Click -= onIniziaPartita;
+                        gui.Rimuovi(b);
+                    }
                 }
             }
 
