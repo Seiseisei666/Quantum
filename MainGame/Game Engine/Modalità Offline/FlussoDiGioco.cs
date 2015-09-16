@@ -14,7 +14,7 @@ namespace Quantum_Game
         private Quantum _game;
         private AzioneDiGioco _prossimaAzione;
         private GuiManager gui;
-        private GameSystem turno;
+        private GameSystem gameSystem;
 
         public FlussoDiGioco(Quantum game): base(game)
         {
@@ -24,10 +24,10 @@ namespace Quantum_Game
 
         public override void Initialize()
         {
-            turno = _game.Services.GetService<GameSystem>();
+            gameSystem = _game.Services.GetService<GameSystem>();
             gui = _game.Services.GetService<GuiManager>();
 
-            turno.InizioPartita += inizioPartita;
+            gameSystem.InizioPartita += inizioPartita;
         }
 
         public void inizioPartita (object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace Quantum_Game
         public void Update() 
         {
 
-            if (turno.FasePartita == FasiDiGioco.PartitaInCorso)
+            if (gameSystem.FasePartita == FasiDiGioco.PartitaInCorso)
             {
                 if (_prossimaAzione != null)
                 {
@@ -54,10 +54,10 @@ namespace Quantum_Game
                     
             }
 
-            else if (turno.FasePartita == FasiDiGioco.SetupPartita)
+            else if (gameSystem.FasePartita == FasiDiGioco.SetupPartita)
                 setupPartita();
 
-            else if(turno.FasePartita == FasiDiGioco.SceltaOpzioni)
+            else if(gameSystem.FasePartita == FasiDiGioco.SceltaOpzioni)
             {
                 foreach (Bottone b in gui.Bottoni)
                 {
@@ -71,7 +71,7 @@ namespace Quantum_Game
         {
             // TODO: facciamo una classe azione a parte anche per questa roba qui please?
             Casella tempCas = gui.Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
-            Nave naveTemp = turno.GiocatoreDiTurno.NaveDaPiazzare;
+            Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
             if (naveTemp != null)
             {
                 if (tempCas != null && tempCas.Occupante == null)
@@ -79,7 +79,7 @@ namespace Quantum_Game
             }
             else
                 //quando nextTurn() viene chiamato finisce la fase di Setup
-                turno.NextTurn();
+                gameSystem.NextTurn();
         }
 
         // EventHandler per gestire il click dei bottoni
@@ -95,8 +95,8 @@ namespace Quantum_Game
                 case bottone.Ricerca:
                     if (_prossimaAzione.Abort())
                     {
-                        turno.GiocatoreDiTurno.Ricerca();
-                        turno.GiocatoreDiTurno.Azione();
+                        gameSystem.GiocatoreDiTurno.Ricerca();
+                        gameSystem.GiocatoreDiTurno.Azione();
                     }
                     break;
             }
@@ -105,10 +105,11 @@ namespace Quantum_Game
         void onIniziaPartita(object bott, EventArgs a)
         {
             //BUG: il metodo viene chiamato piu volte quando si clicca sul bottone. 
-            if (turno.FasePartita == FasiDiGioco.SceltaOpzioni)
+            if (gameSystem.FasePartita == FasiDiGioco.SceltaOpzioni)
             {
                 Interfaccia.ConsoleMessaggi.NuovoMessaggio("Setup partita in corso...");
-                turno.IniziaSetupPartita();
+                gameSystem.IniziaSetupPartita();
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Fine setup partita.");
                 foreach (Bottone b in gui.Bottoni)
                 {
                     if (b.TipoBottone == (bottone.IniziaPartita))

@@ -40,7 +40,7 @@ namespace Quantum_Game
         public Giocatore GiocatoreDiTurno { get { return _giocatori[(_contaTurni % _giocatori.Count)]; } }
         
         //riferimento alla fase di gioco corrente
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } }
 
         // Crea N=_numGiocatori giocatori. Utilizzabile solo prima che cominci la partita
         public void AggiungiGiocatori (int _numGiocatori)

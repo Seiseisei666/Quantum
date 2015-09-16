@@ -96,21 +96,27 @@ namespace Quantum_Game
 
             var laterale = schermo.Colonna(100, 5);
 
-                var info = laterale.Riga(50, 0,10);
-                var bott1 = laterale.Riga(10,35,5);
-                var bott2 = laterale.Riga(10,35,5);
-                var bott3 = laterale.Riga(10,35,5);
-                var bott4 = laterale.Riga(10,35,5);
-                var msg = laterale.Riga(100, 0,15);
+            var info = laterale.Riga(50, 0,10);
+            var bott1 = laterale.Riga(10,35,5);
+            var bott2 = laterale.Riga(10,35,5);
+            var bott3 = laterale.Riga(10,35,5);
+            var bott4 = laterale.Riga(10,35,5);
+            var msg = laterale.Riga(100, 0,15);
 
             Tabellone tab2 = new Tabellone(this, tabellone);
-            gui.Iscrivi(tab2);
             Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
+            Bottone iniziaPartita = new Bottone(bottone.IniziaPartita, bott2);
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
             Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
+
             gui.Iscrivi(colonizza);
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(ricerca);
+            gui.Iscrivi(iniziaPartita);
+
+            gui.Iscrivi(tab2);
+
+
             ConsoleMessaggi console = new ConsoleMessaggi(msg);
             gui.Iscrivi(console);
             Cimitero cim = new Cimitero(info);
