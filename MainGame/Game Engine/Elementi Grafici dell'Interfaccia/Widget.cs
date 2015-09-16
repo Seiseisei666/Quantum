@@ -48,11 +48,11 @@ namespace Quantum_Game.Interfaccia
             {
                 _fase += INCREMENTO;
                 if (_fase > 1.0) _fase = 1 - _fase;
-                var phi = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
+                var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
 
                 _scala *=1.1f;
                 if (_scala.X > MAX_ESPANSIONE) _scala = new Vector2(MAX_ESPANSIONE, MAX_ESPANSIONE);
-                _scala += new Vector2(phi, phi);
+                _scala += new Vector2(seno, seno);
             }
             else
             {
