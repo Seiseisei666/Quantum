@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Data Content\img\Icon.ico</ApplicationIcon>
+    <ApplicationIcon>Planet_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
@@ -65,15 +65,17 @@
     <Compile Include="Elementi Di Gioco\Azioni\Special_Flagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\Special_Warp.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Riquadro.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Sfondo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Casella.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Widget.cs" />
     <Compile Include="Game Engine\Modalità Offline\FlussoDiGioco.cs" />
     <Compile Include="Game Engine\Modalità Offline\GameSystem.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Bottone.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\GuiManager.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ConsoleMessaggi.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\RiquadroGui.cs" />
-    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\TemplateElementoGui.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\MenuTendina.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Vuoto.cs" />
     <Compile Include="Game Engine\Input Devices Manager\Mouse\MouseInput.cs" />
@@ -85,10 +87,12 @@
     <Compile Include="Game Engine\Modalità Offline\Quantum.cs" />
     <Compile Include="Elementi Di Gioco\Giocatore.cs" />
     <Compile Include="Elementi Di Gioco\Nave.cs" />
+    <Compile Include="Interfaccia\Dummy.cs" />
     <Compile Include="Main\Start.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Tile.cs" />
     <Compile Include="Game Engine\util.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Schermata.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -106,21 +110,16 @@
     </Content>
     <Content Include="Data Content\img\TileSet_prova2.png" />
     <Content Include="Data Content\img\TileSet_prova3.png" />
-    <Content Include="Data Content\Mappe\mappa_prova1.txt">
+    <Content Include="Data Content\Mappe\mappaeasy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappa_prova2.txt">
+    <Content Include="Data Content\Mappe\mappa_prova1.txt" />
+    <Content Include="Data Content\Mappe\mappa_prova2.txt" />
+    <Content Include="Data Content\Mappe\mappa_prova3.txt" />
+    <Content Include="Data Content\TileSet_prova1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappa_prova3.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data Content\Mappe\mappaeasy.txt" />
-    <Content Include="Data Content\img\TileSet_prova1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data Content\img\Icon.ico" />
-    <Content Include="Main\AAA LEGGIMI!.txt" />
+    <Content Include="Planet_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Data Content\Content.mgcb" />
@@ -143,7 +142,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Main\ClassDiagram1.cd" />
     <None Include="Data Content\Font\Font.spritefont" />
     <None Include="Main\settings.config" />
   </ItemGroup>

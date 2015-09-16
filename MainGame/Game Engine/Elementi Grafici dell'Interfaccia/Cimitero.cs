@@ -7,16 +7,15 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game.Interfaccia
 {
-    public class Cimitero: RiquadroGui
+    public class Cimitero: ElementoGrafico
     {
-        public Cimitero (int x, int y, int l, int a): base (x,y,l,a)
+        public Cimitero (Riquadro contenitore): base (contenitore)
         {
             //non c'è niente da costruire in particolare
         }
 
-        public override void Inizializzazione(GuiManager gui)
+        public override void CaricaContenuti(GuiManager gui)
         {
-            base.Inizializzazione(gui);
             // carico le sprite e il font
             _texture = gui.SpriteSheet;
             _font = gui.Font;
@@ -40,8 +39,8 @@ namespace Quantum_Game.Interfaccia
             foreach (Nave n in _rottami)
             {
 
-                spriteBatch.Draw(_texture, new Rectangle(Posizione.X +  (LARGH_SPRITES + DISTANZA_X) * i, Posizione.Y, LARGH_SPRITES, LARGH_SPRITES), new Rectangle(300, 0, 100, 100), Color.White);
-                spriteBatch.DrawString(_font, n.Tipo.ToString(), new Vector2(Posizione.X + (LARGH_SPRITES + DISTANZA_X) * i, Posizione.Y + LARGH_SPRITES), Color.White);
+                spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X +  (LARGH_SPRITES + DISTANZA_X) * i, contenitore.Superficie.Location.Y, LARGH_SPRITES, LARGH_SPRITES), new Rectangle(300, 0, 100, 100), Color.White);
+                spriteBatch.DrawString(_font, n.Tipo.ToString(), new Vector2(contenitore.Superficie.Location.X + (LARGH_SPRITES + DISTANZA_X) * i, contenitore.Superficie.Location.Y + LARGH_SPRITES), Color.White);
 
                 i++;
             }
@@ -51,9 +50,9 @@ namespace Quantum_Game.Interfaccia
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            if (Compreso(args.Posizione) && args.Posizione.Y - Posizione.Y <= LARGH_SPRITES)
+            if (contenitore.Superficie.Contains(args.Posizione) && args.Posizione.Y - contenitore.Superficie.Location.Y <= LARGH_SPRITES)
             {
-                int x = args.Posizione.X - Posizione.X; //posizione X del mouse - posizione X del cimitero
+                int x = args.Posizione.X - contenitore.Superficie.Location.X; //posizione X del mouse - posizione X del cimitero
                 
                 // calcolo per capire se il mouse sta nello spazio fra una navicella e l'altra
                 _selezione = x % LATO < LARGH_SPRITES ? (int)Math.Floor(x / (float)LATO) : -1;
@@ -68,7 +67,7 @@ namespace Quantum_Game.Interfaccia
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
 
-            if (_selezione >= 0)
+            if (_selezione >= 0 && _rottami != null)
             {
                 ConsoleMessaggi.NuovoMessaggio(_rottami[_selezione].Tipo.ToString());
                 _naveSelezionata = _rottami[_selezione];

@@ -10,32 +10,39 @@ namespace Quantum_Game.Azioni
 {
     public class SelezioneDestra: AzioneDiGioco
     {
+        Widget Riconfig, Special;
         public SelezioneDestra (Game game) : base (game)
         {
             _casellaPartenza = casellaCliccata;
             gui.Tabellone.ResetSelezioneMouse();
+            gui.Tabellone.MostraSelezione = false;
 
-            // TODO: Questa è una pecionata! serve un sistema più uniforme e ragionevole per gestire dinamicamente 2 bottoni del cazzo
-            bool special, riconfig;
-            riconfig = !naveUsata.Riconfigurata;
-            special = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
+            // TODO: gestire in maniera sensata  e più agile il posizionamento dei Widget
+            // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
+            Point pos1 = gui.Tabellone.Tile2Pixel(_casellaPartenza);
+            Point pos2 = pos1;
+            var lato = gui.Tabellone.LatoCasella;
 
-            bottone[] bottoni = new bottone[2];
-            bottoni[0] = bottone.Riconfigura;
-            bottoni[1] = bottone.UsaSpecial;
+                pos1 -= new Point(20 - lato/2, 15);
+                pos2 += new Point(20 + lato/2, - 15);
 
-            menu = new MenuTendina(gui.Tabellone.Tile2Pixel(_casellaPartenza), bottoni, this);
+            bool puòRiconfig = !naveUsata.Riconfigurata;
+            bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
 
-            menu.Elementi[0].Enabled = riconfig;
-            menu.Elementi[1].Enabled = special;
-            gui.Iscrivi(menu);
-            menu.Elementi[0].Click += BottonePremuto;
-            menu.Elementi[1].Click += BottonePremuto;
+            Riconfig = new Widget(pos1, widget.Riconfigura, puòRiconfig);
+            Special = new Widget(pos2, widget.UsaSpecial, puòUsareSpecial);
+
+            Riconfig.Click += riconfigura;
+            Special.Click += usaSpecial;
+            gui.Iscrivi(Riconfig);
+            gui.Iscrivi(Special);
+
         }
 
         #region Implementazione di AzioneDiGioco
         public override void Esegui ()
         {
+
             // Chiude i menù con il click destro
             if (ultimoClick == TipoEventoMouse.ClkDx)
             {
@@ -58,21 +65,16 @@ namespace Quantum_Game.Azioni
         }
         protected override void Cleanup()
         {
-            menu.Elementi[0].Click -= BottonePremuto;
-            menu.Elementi[1].Click -= BottonePremuto;
-            gui.Rimuovi(this);
+            Riconfig.Click -= riconfigura;
+            Special.Click -= usaSpecial;
+            gui.RimuoviWidget();
             gui.Tabellone.ResetSelezioneMouse();
         }
         #endregion
 
         #region Gestione Bottoni Speciali
-        void BottonePremuto (object bott, EventArgs e)
-        {
-            var b = (Bottone)bott;
-            if (b.TipoBottone == bottone.Riconfigura) riconfigura();
-            else if (b.TipoBottone == bottone.UsaSpecial) usaSpecial();
-        }
-        void riconfigura()
+
+        void riconfigura (object sender, EventArgs e)
         {
             e_nave t1 = naveUsata.Tipo;
             naveUsata.Riconfigura();
@@ -82,7 +84,7 @@ namespace Quantum_Game.Azioni
             System.Diagnostics.Debug.WriteLine("Riconfigurata nave {0} in nave {1}!", t1, t2);
             Cleanup(true);
         }
-        void usaSpecial()
+        void usaSpecial (object sender, EventArgs e)
         {
             bool azioneSuccessivaNulla = false;
             switch (naveUsata.Tipo)
@@ -161,7 +163,6 @@ namespace Quantum_Game.Azioni
 
         private readonly Casella _casellaPartenza;
         private Nave naveUsata { get { return _casellaPartenza.Occupante; } }
-        private MenuTendina menu;
         #endregion
     }
 

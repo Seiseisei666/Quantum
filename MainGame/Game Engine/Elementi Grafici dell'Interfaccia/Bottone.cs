@@ -19,60 +19,30 @@ namespace Quantum_Game.Interfaccia
         Colonizza,
     }
 
-    public class Bottone : RiquadroGui
+    public class Bottone : ElementoGrafico
     {
         #region Costruttori
-        /// <summary> Costruttore per un Bottone senza parent </summary>
-        public Bottone(bottone TipoBottone, int xRel, int yRel, int larghRel, int altRel) : 
-            this (TipoBottone, xRel, yRel, larghRel, altRel, null)
-        { // chiama il costruttore seguente
-        } 
-        /// <summary> Costruttore per un Bottone con un oggetto parent </summary>
-        public Bottone(bottone TipoBottone, int xRel, int yRel, int larghRel, int altRel, object parent) :
-            base(xRel, yRel, larghRel, altRel, parent)
+
+        public Bottone (bottone TipoBottone, Riquadro contenitore): base (contenitore)
         {
             _tipoBottone = TipoBottone;
             _cliccato = _mouseover = false;
-            _parent = parent;
             Enabled = true;
         }
-        /// <summary> Costruttore statico per la voce di un menù a tendina </summary>
-        public static Bottone MenuEntry (int num, bottone tipoBottone, object parent)
-        {
-            return new Bottone(tipoBottone, OFFSETX,( ALT_BOT *num), LARGH_BOT, ALT_BOT, parent);
-        }
-        /// <summary> Costruttore statico per un Bottone di dimensioni standard </summary>
-        public static Bottone Standard (bottone tipoBottone, int xRel, int yRel)
-        {
-            return new Bottone(tipoBottone, xRel, yRel, LARGH_BOT, ALT_BOT);
-        }
-        /// <summary> Costruttore statico per un Bottone di dimensioni standard con parent</summary>
-        public static Bottone Standard(bottone tipoBottone, int xRel, int yRel, object parent)
-        {
-            return new Bottone(tipoBottone, xRel, yRel, LARGH_BOT, ALT_BOT, parent);
-        }
+
         #endregion
 
-        public override void Inizializzazione(GuiManager gui)
+        public override void CaricaContenuti(GuiManager gui)
         {
             _texture = gui.Pennello;
             font = gui.Font;
 
-            // RiquardoGui.Inizializzazione() calcola le misure assolute in pixel di questo oggetto
-            // Chiamarlo è assolutamente indispensabile!!!
-            base.Inizializzazione(gui);
 
             // Calcolo della grandezza e della posizione della scritta da stampare sul bottone
             var grandezzaStringa = font.MeasureString(Caption);
             posScritta = new Vector2
-                (Posizione.X + (Larghezza - grandezzaStringa.X) / 2, Posizione.Y + (Altezza - grandezzaStringa.Y) / 2);
+                (contenitore.Superficie.Location.X + (contenitore.Superficie.Width - grandezzaStringa.X) / 2, contenitore.Superficie.Location.Y + (contenitore.Superficie.Height - grandezzaStringa.Y) / 2);
             
-        }
-
-        public override void Riposiziona(Point posizione)
-        {
-            base.Riposiziona(posizione);
-            posScritta += new Vector2(posizione.X, posizione.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -85,9 +55,9 @@ namespace Quantum_Game.Interfaccia
             if (!Enabled) color = Color.Gray;
 
             //bordo
-            spriteBatch.Draw(_texture, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), _colBordo);
+            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), _colBordo);
             //sfondo
-            spriteBatch.Draw(_texture, new Rectangle(Posizione.X + 3, Posizione.Y + 3, Larghezza - 6, Altezza - 6), color);
+            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 3, contenitore.Superficie.Location.Y + 3, contenitore.Superficie.Width - 6, contenitore.Superficie.Height - 6), color);
             //scritta
             spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
         }
@@ -128,7 +98,7 @@ namespace Quantum_Game.Interfaccia
         #region MouseInput
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-            if (Enabled && Compreso(args.Posizione.X, args.Posizione.Y))
+            if (Enabled && contenitore.Superficie.Contains(args.Posizione.X, args.Posizione.Y))
             {
                 _cliccato = true;
                 _contatoreIllumin = FRAME_ILLUMINATO;
@@ -139,7 +109,7 @@ namespace Quantum_Game.Interfaccia
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            if (Enabled && Compreso(args.Posizione))
+            if (Enabled && contenitore.Superficie.Contains(args.Posizione))
                 _mouseover = true;
             else _mouseover = false;
         }

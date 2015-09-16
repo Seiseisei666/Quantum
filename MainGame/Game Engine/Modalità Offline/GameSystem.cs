@@ -24,7 +24,7 @@ namespace Quantum_Game
         // soluzione non molto elegante. Cmq converte i nostri colori nel formato System.Color
         public static Dictionary<e_color, Color> QuantumColor = new Dictionary<e_color, Color>();
 
-
+        
         public event EventHandler InizioPartita;
 
         public GameSystem()
@@ -38,9 +38,9 @@ namespace Quantum_Game
 
         //riferimento al giocatore di turno 
         public Giocatore GiocatoreDiTurno { get { return _giocatori[(_contaTurni % _giocatori.Count)]; } }
-
+        
         //riferimento alla fase di gioco corrente
-        public FasiDiGioco FasePartita { get { return _faseDiGioco; } set { _faseDiGioco = value; } }
+        public FasiDiGioco FasePartita { get { return _faseDiGioco; } }
 
         // Crea N=_numGiocatori giocatori. Utilizzabile solo prima che cominci la partita
         public void AggiungiGiocatori (int _numGiocatori)
@@ -61,7 +61,7 @@ namespace Quantum_Game
         {
            
             _faseDiGioco = FasiDiGioco.SetupPartita;
-             foreach (Giocatore g in _giocatori)
+            foreach (Giocatore g in _giocatori)
             {
                 //Interfaccia.ConsoleMessaggi.NuovoMessaggio("Setup del giocatore di colore" + g.Colore + " in corso", g.SpriteColor);
                 g.GlobalInit();

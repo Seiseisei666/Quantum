@@ -8,14 +8,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Quantum_Game.Interfaccia
 {
     
-    public class ConsoleMessaggi : RiquadroGui
+    public class ConsoleMessaggi : ElementoGrafico
     {
-        public ConsoleMessaggi(int x, int y, int larg, int alt) : base(x, y, larg, alt)
+        public ConsoleMessaggi (Riquadro contenitore): base (contenitore)
         {
             _messaggi = new List<MessaggioDiGioco>(CAPACITA);
             for (int i = 0; i < CAPACITA; i++)
                 _messaggi.Add(new MessaggioDiGioco("", Color.White));
         }
+
+        
         /// <summary>Aggiunge un messaggio colorato alla console</summary>
         public static void NuovoMessaggio(string messaggio, Color colore)
         {
@@ -35,29 +37,29 @@ namespace Quantum_Game.Interfaccia
         }
 
         
-        public override void Inizializzazione(GuiManager gui)
+        public override void CaricaContenuti(GuiManager gui)
         {
-            base.Inizializzazione(gui);
+
             font = gui.Font;
             pennello = gui.Pennello;
 
             _altezzaRiga = font.MeasureString("A").Y* 1.25f;
 
-            _righe = (int)(Altezza / _altezzaRiga);
+            _righe = (int)(contenitore.Superficie.Height / _altezzaRiga);
 
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pennello, new Rectangle(Posizione.X, Posizione.Y, Larghezza, Altezza), Color.White);
-            spriteBatch.Draw(pennello, new Rectangle(Posizione.X+5, Posizione.Y+5, Larghezza-10, Altezza-10), Color.Black);
+            spriteBatch.Draw(pennello, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), Color.White);
+            spriteBatch.Draw(pennello, new Rectangle(contenitore.Superficie.Location.X+5, contenitore.Superficie.Location.Y+5, contenitore.Superficie.Width - 10, contenitore.Superficie.Height - 10), Color.Black);
 
             for (int i = 0; i < _righe; i++)
             {
                 int n = wrap(N - _righe + i);
                 string messaggio = _messaggi[n].Messaggio;
                 Color colore = _messaggi[n].Colore;
-                spriteBatch.DrawString (font, messaggio, new Vector2(Posizione.X + 10, Posizione.Y + _altezzaRiga * i), colore);
+                spriteBatch.DrawString (font, messaggio, new Vector2(contenitore.Superficie.Location.X + 10, contenitore.Superficie.Location.Y + _altezzaRiga * i), colore);
 
             }
         }

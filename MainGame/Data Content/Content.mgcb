@@ -1,8 +1,8 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:bin/Windows
-/intermediateDir:obj/Windows
+/outputDir:bin
+/intermediateDir:obj
 /platform:Windows
 /config:
 /profile:Reach
@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin img/TileSet_prova1.png
+#begin img/schermataIniziale_bottoni_2.1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,22 +23,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:img/TileSet_prova1.png
+/build:img/schermataIniziale_bottoni_2.1.png
 
-#begin Font/Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:Font/Font.spritefont
+#begin img/schermataIniziale_sfondo_2.1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:img/schermataIniziale_sfondo_2.1.png
 
-#begin Mappe/mappa_prova1.txt
-/copy:Mappe/mappa_prova1.txt
-
-#begin Mappe/mappa_prova2.txt
-/copy:Mappe/mappa_prova2.txt
-
-#begin Mappe/mappaeasy.txt
-/copy:Mappe/mappaeasy.txt
+#begin img/TileSet_prova2- originale.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:img/TileSet_prova2- originale.png
 
 #begin img/TileSet_prova2.png
 /importer:TextureImporter
@@ -63,4 +72,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:img/TileSet_prova3.png
+
+#begin Font/Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Font/Font.spritefont
 

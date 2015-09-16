@@ -25,12 +25,14 @@ namespace Quantum_Game
         private FlussoDiGioco flussoGioco;
         private GameSystem gameSystem;
 
+
         public Quantum()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1024;  
             graphics.PreferredBackBufferHeight = 576;
+            graphics.IsFullScreen = false;
             IsMouseVisible = true;
             graphics.ApplyChanges();
 
@@ -41,7 +43,7 @@ namespace Quantum_Game
             //Crea la mappa.
             //Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
             //o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
-            string file = @"Content\Mappe\mappaeasy.txt";
+            string file = @"Data Content\Mappe\mappaeasy.txt";
             MapGenerator generatore = new MapGenerator(file);
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
@@ -54,10 +56,13 @@ namespace Quantum_Game
             //che lo utilizzeranno
             gameSystem.InizioPartita += InizioPartita;
 
-  
+
 
             // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
             Services.AddService<GameSystem>(gameSystem);
+
+            var schermo = new Schermo(this);
+            Components.Add(schermo);
 
             MouseInput mouseInput = new MouseInput(this);
             Components.Add(mouseInput);
@@ -65,10 +70,9 @@ namespace Quantum_Game
             Components.Add(gui);
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
-            Tabellone tab = new Tabellone(this, 3, 3, 80, 70);
-            Components.Add(tab);
             sfondo = new Sfondo(this);
             Components.Add(sfondo);
+
 
             base.Initialize();
 
@@ -80,19 +84,36 @@ namespace Quantum_Game
             spriteBatch = Services.GetService<SpriteBatch>();
 
             var gui = Services.GetService<GuiManager>();
-            Bottone iniziaPartita = Bottone.Standard(bottone.IniziaPartita, 82, 95);
-            Bottone passaTurno = Bottone.Standard(bottone.Passa, 82, 85);
-            Bottone ricerca = Bottone.Standard(bottone.Ricerca, 82, 75);
+
+            /*  ESEMPIO DEL SISTEMA RIQUADRI  */
+
+            var schermo = Riquadro.Main;
+            var barraSuperiore = schermo.Riga(5);
+
+            var main = schermo.Colonna(75);
+                var tabellone = main.Riga(100, 5,5);
+                
+
+            var laterale = schermo.Colonna(100, 5);
+
+                var info = laterale.Riga(50, 0,10);
+                var bott1 = laterale.Riga(10,35,5);
+                var bott2 = laterale.Riga(10,35,5);
+                var bott3 = laterale.Riga(10,35,5);
+                var bott4 = laterale.Riga(10,35,5);
+                var msg = laterale.Riga(100, 0,15);
+
+            Tabellone tab2 = new Tabellone(this, tabellone);
+            gui.Iscrivi(tab2);
+            Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
+            Bottone passaTurno = new Bottone(bottone.Passa, bott4);
+            Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
+            gui.Iscrivi(colonizza);
             gui.Iscrivi(passaTurno);
-            gui.Iscrivi(iniziaPartita);
             gui.Iscrivi(ricerca);
-      
-  
-
-            ConsoleMessaggi console = new ConsoleMessaggi(3, 83, 80, 18);
+            ConsoleMessaggi console = new ConsoleMessaggi(msg);
             gui.Iscrivi(console);
-
-            Cimitero cim = new Cimitero(3, 73, 80, 15);
+            Cimitero cim = new Cimitero(info);
             gui.Iscrivi(cim);
 
 
@@ -125,7 +146,10 @@ namespace Quantum_Game
 
             spriteBatch.Begin();
 
+
+
             sfondo.Draw();
+
 
             base.Draw(gameTime);
 
@@ -137,6 +161,7 @@ namespace Quantum_Game
         private void InizioPartita(object sender, EventArgs args)
         {
             Debug.WriteLine("Partita iniziata!!");
-        }
+        }       
+
     }
 }
