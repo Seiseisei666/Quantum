@@ -185,9 +185,6 @@ namespace Quantum_Game.Interfaccia
             finestra.ClientSizeChanged += Ridimensionamento;
             mouse = _game.Services.GetService<MouseInput>();
 
-
-
-
             calcolaDimensioniInPixel(0, 0, finestra.ClientBounds.Width, finestra.ClientBounds.Height);
 
         }

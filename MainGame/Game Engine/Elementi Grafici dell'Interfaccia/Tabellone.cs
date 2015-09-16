@@ -69,7 +69,7 @@ namespace Quantum_Game
         public Tile TileClick { get { return (_IdSelezione >= 0) ? Tile.id2Tile(_IdSelezione) : null; } }
         /// <summary>Restituisce l'ultimo evento del mouse: click sinistro, click destro o nessuno (se la selezione è stata resettata)</summary>
         public TipoEventoMouse UltimoClick { get; private set; }
-
+        /// <summary> Restituisce il lato in pixel della casella </summary>
         public int LatoCasella { get { return _latoCasella; } }
         // METODI PUBBLICI
 
@@ -81,6 +81,7 @@ namespace Quantum_Game
             UltimoClick = TipoEventoMouse.nessuno;
             MostraSelezione = true;
         }
+
         public bool MostraSelezione { get; set; }
 
         #region Metodi di Disegno

@@ -25,8 +25,6 @@ namespace Quantum_Game
         private FlussoDiGioco flussoGioco;
 
 
-        Texture2D texture;
-
         public Quantum()
         {
             graphics = new GraphicsDeviceManager(this);

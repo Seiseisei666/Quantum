@@ -68,6 +68,7 @@ namespace Quantum_Game.Interfaccia
         {
             elementi.Remove(elemento);
         }
+
         public void RimuoviWidget ()
         {
             foreach (var widg in animati)
