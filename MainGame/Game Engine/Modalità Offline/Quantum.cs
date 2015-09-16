@@ -138,10 +138,5 @@ namespace Quantum_Game
         {
             Debug.WriteLine("Partita iniziata!!");
         }
-
-        public GameSystem getGameSystem()
-        {
-            return gameSystem;
-        }
     }
 }
