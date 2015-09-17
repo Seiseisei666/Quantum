@@ -10,7 +10,7 @@ namespace Quantum_Game.Interfaccia
     /// <summary>
     /// Classe ipotetica per gestire lo sfondo (soprattuto in caso di future animazioni simpatiche)
     /// </summary>
-    public class Sfondo: GameComponent
+    public class Sfondo: DrawableGameComponent
     {
         public Sfondo (Game game): base (game)
         {

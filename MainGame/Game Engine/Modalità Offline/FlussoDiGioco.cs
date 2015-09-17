@@ -107,9 +107,9 @@ namespace Quantum_Game
             //BUG: il metodo viene chiamato piu volte quando si clicca sul bottone. 
             if (gameSystem.FasePartita == FasiDiGioco.SceltaOpzioni)
             {
-                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Setup partita in corso...");
+                ConsoleMessaggi.NuovoMessaggio("Setup partita in corso...");
                 gameSystem.IniziaSetupPartita();
-                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Fine setup partita.");
+
                 foreach (Bottone b in gui.Bottoni)
                 {
                     if (b.TipoBottone == (bottone.IniziaPartita))

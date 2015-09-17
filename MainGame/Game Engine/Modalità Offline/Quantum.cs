@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System;
 using Quantum_Game.Interfaccia;
@@ -10,69 +9,69 @@ using Quantum_Game.Mappa;
 
 namespace Quantum_Game
 {
-    // Modalità OffLine ("Single"Player)
+    /* Core della Modalità Off-Line ("Single"Player) */
     public class Quantum : Game
     {
+        //Componenti del motore di gioco
+        private GameSystem gameSystem;
+        private FlussoDiGioco flussoGioco;
+       
+        //Componenti del motore grafico
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-
-        private Sfondo sfondo;
-
-
-        /*Contiene le informazioni sullo stato della partita
-        che vengono poi stampate a video dal metodo draw
-        */
-        private FlussoDiGioco flussoGioco;
-        private GameSystem gameSystem;
+        private GuiManager gui;
 
 
+        /* Costruttore di default che carica i settings salvati nel file settings.config  */
         public Quantum()
         {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1024;  
-            graphics.PreferredBackBufferHeight = 576;
-            graphics.IsFullScreen = false;
-            IsMouseVisible = true;
-            graphics.ApplyChanges();
+            //creazione motore di giogo
+            gameSystem = new GameSystem();
+            Services.AddService(gameSystem);
 
+            //perché gamesystem è un servizio e flussoDiGioco un componente?
+            flussoGioco = new FlussoDiGioco(this);
+            Components.Add(flussoGioco);
+
+            //creazione motore grafico
+            graphics = new GraphicsDeviceManager(this);
+
+            gui = new GuiManager(this);
+            gui = Services.GetService<GuiManager>();
+            Components.Add(gui);
+
+            //carichiamo i settings di default (o salvati)
+            loadSettings();
         }
 
         protected override void Initialize()
         {
-            //Crea la mappa.
-            //Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
-            //o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
-            string file = @"Data Content\Mappe\mappaeasy.txt";
-            MapGenerator generatore = new MapGenerator(file);
-            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+            //colleghiamo periferiche I/O
 
-            // Crea il gamesystem con 2 giocatori
-            gameSystem = new GameSystem();
-            gameSystem.AggiungiGiocatori(2);
-            
-            //L'evento InizioPartita viene generato dopo che sono state disposte le pedine iniziali
-            //avviene una volta per partita e lo associamo manualmente a tutti gli oggetti
-            //che lo utilizzeranno
-            gameSystem.InizioPartita += InizioPartita;
-
-
-
-            // CREIAMO I COMPONENTI E LI AGGIUNGIAMO ALLA RACCOLTA GAME.COMPONENTS
-            Services.AddService<GameSystem>(gameSystem);
-
-            var schermo = new Schermo(this);
+            Schermo schermo = new Schermo(this);
             Components.Add(schermo);
 
             MouseInput mouseInput = new MouseInput(this);
             Components.Add(mouseInput);
-            GuiManager gui = new GuiManager(this);
-            Components.Add(gui);
-            flussoGioco = new FlussoDiGioco(this);
-            Components.Add(flussoGioco);
-            sfondo = new Sfondo(this);
+
+            // TODO: creare menu apposito per caricare le  opzioni di partita (giocatori, mappa, etc) e sintetizzarlo con un metodo
+
+            /*Crea la mappa.
+            //TODO: Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
+            o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
+            */
+            MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
+            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+
+            //carichiamo lo sfondo per la mappa
+            Sfondo sfondo = new Sfondo(this);
             Components.Add(sfondo);
 
+            // Imposta il numero di giocatori
+            this.gameSystem.AggiungiGiocatori(2);
+
+            //Mettiamo il gamesystem in attesa di un evento InizioPartita che viene generato dopo la disposizione delle pedine iniziali
+            gameSystem.InizioPartita += InizioPartita;
 
             base.Initialize();
 
@@ -81,9 +80,11 @@ namespace Quantum_Game
         //crea l'interfaccia grafica con le sue componenti
         protected override void LoadContent()
         {
+            //Per qualche motivo mistorioso lo spriteBatch va preso in LoadContent()
             spriteBatch = Services.GetService<SpriteBatch>();
+            
+          //TODO: da sistemare
 
-            var gui = Services.GetService<GuiManager>();
 
             /*  ESEMPIO DEL SISTEMA RIQUADRI  */
 
@@ -133,30 +134,26 @@ namespace Quantum_Game
         
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit(); //questa ci stava per default, è per chiudere la finestra
-            
-            
             flussoGioco.Update();
-
 
             base.Update(gameTime);
         }
-        
-            
-        
    
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+           spriteBatch.Begin();
+           
+            //fa uno scan delle componenti in cerca di cose da fare
+           foreach (IGameComponent component in Components)
+            {
 
-            spriteBatch.Begin();
-
-
-
-            sfondo.Draw();
-
-
+                //disegna lo sfondo
+                if (component is Sfondo)
+                {
+                    ((Sfondo)component).Draw();
+                }
+            }
+               
             base.Draw(gameTime);
 
             spriteBatch.End();
@@ -166,8 +163,21 @@ namespace Quantum_Game
 
         private void InizioPartita(object sender, EventArgs args)
         {
+            ConsoleMessaggi.NuovoMessaggio("Partita iniziata!!");
             Debug.WriteLine("Partita iniziata!!");
         }       
 
+        public void loadSettings()
+        {
+            //TODO: 1) mettere dei settings di default nel file settings.config; 
+            //TODO: 2) sostituire tutto quello con una istruzione che carica il contenuto di settings.config.
+            Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 576;
+            graphics.IsFullScreen = false;
+            IsMouseVisible = true;
+            graphics.ApplyChanges();
+        }
     }
 }
