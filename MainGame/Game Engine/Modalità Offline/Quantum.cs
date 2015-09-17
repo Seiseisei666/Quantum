@@ -25,11 +25,11 @@ namespace Quantum_Game
         /* Costruttore di default che carica i settings salvati nel file settings.config  */
         public Quantum()
         {
-            //creazione motore di giogo
+            //creazione motore di gioco
             gameSystem = new GameSystem();
             Services.AddService(gameSystem);
 
-            //perché gamesystem è un servizio e flussoDiGioco un componente?
+            //TODO: perché gamesystem è un servizio e flussoDiGioco un componente?
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
 
@@ -148,10 +148,8 @@ namespace Quantum_Game
             {
 
                 //disegna lo sfondo
-                if (component is Sfondo)
-                {
-                    ((Sfondo)component).Draw();
-                }
+                if (component is Sfondo) ((Sfondo)component).Draw();
+                
             }
                
             base.Draw(gameTime);
