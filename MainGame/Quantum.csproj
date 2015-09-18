@@ -120,7 +120,6 @@
     <Content Include="Data Content\Mappe\mappa_prova3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappaeasy.txt" />
     <Content Include="Data Content\img\Planet_icon.ico" />
   </ItemGroup>
   <ItemGroup>
