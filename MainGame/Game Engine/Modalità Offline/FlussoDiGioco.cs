@@ -70,12 +70,15 @@ namespace Quantum_Game
         void setupPartita() 
         {
             // TODO: facciamo una classe azione a parte anche per questa roba qui please?
-            Casella tempCas = gui.Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
-            Nave naveTemp = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
-            if (naveTemp != null)
+            Casella casella = gui.Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
+            Nave nave = gameSystem.GiocatoreDiTurno.NaveDaPiazzare;
+            if (nave != null)
             {
-                if (tempCas != null && tempCas.Occupante == null)
-                    naveTemp.Piazza(tempCas);
+                if (casella != null && casella.Occupante == null)
+                {
+                    nave.Piazza(casella);
+                    gui.Tabellone.AggiungiNave(nave);
+                }
             }
             else
                 //quando nextTurn() viene chiamato finisce la fase di Setup
@@ -101,6 +104,7 @@ namespace Quantum_Game
                     break;
             }
         }
+        
 
         void onIniziaPartita(object bott, EventArgs a)
         {

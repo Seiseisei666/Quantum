@@ -168,6 +168,15 @@ namespace Quantum_Game
             else return null;
         }
 
+        public static void id2nm(int idCasella, out int n, out int m)
+        {
+            if (!idValido(idCasella))
+                throw new IndexOutOfRangeException("Indice non esistente");
+
+            n = idCasella % Colonne;
+            m = idCasella / Colonne;
+        }
+
         public static bool idValido(int id)
         {
             return (id >= 0 && id < _righe*_colonne);

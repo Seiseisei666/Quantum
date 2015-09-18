@@ -9,7 +9,7 @@ using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game
 {   
-    public class Tabellone: ElementoGrafico
+    public class Tabellone: ElementoGrafico,IElementoAnimato
     {
         readonly Pianeta[] pianeti;
         readonly Casella[] caselle;
@@ -19,7 +19,7 @@ namespace Quantum_Game
         {
             _IdSelezione = -1;
             _idMouseOver = -1;
-            _coordIlluminazione = new Point[0];
+            _coordIlluminazione = new Vector2[0];
             MostraSelezione = true;
 
             pianeti = Tile.Tiles(t => t is Pianeta).Select (p => (Pianeta) p ).ToArray();
@@ -31,6 +31,8 @@ namespace Quantum_Game
             //Calcolo la scala:
             float s = _latoCasella / 100f;
             scala = new Vector2(s, s);
+
+            navi = new ManagerNavi(Tile2Vector, scala);
         }
 
         public override void CaricaContenuti(GuiManager gui)
@@ -42,7 +44,7 @@ namespace Quantum_Game
             font = gui.Font;
 
             // Calcolo l'offset rispetto al riquadro, in modo da posizionare il tabellone esattamente al centro
-            offset = new Point(
+            offset = new Vector2(
                 (contenitore.Superficie.Width - (_latoCasella * Tile.Colonne)) / 2,
                 (contenitore.Superficie.Height - (_latoCasella * Tile.Righe) ) / 2
                 );
@@ -110,6 +112,12 @@ namespace Quantum_Game
 
             foreach (var casella in caselle)
             {
+                if (casella == null)
+                {
+                    Debug.WriteLine("CASELLA NULLA!!!");
+                    continue;
+                }
+
                 coordDraw = Tile2Vector(casella);
 
                 if (casella.Orbita)
@@ -123,6 +131,8 @@ namespace Quantum_Game
             DisegnaSelezione(spriteBatch);
 
             disegnaIlluminaCaselle(spriteBatch);
+
+            navi.Draw(spriteBatch, tileset);
         }
 
 
@@ -144,7 +154,7 @@ namespace Quantum_Game
             foreach (var p in _coordIlluminazione)
                 {
                     spriteBatch.Draw
-                        (pennello, new Rectangle(p.X, p.Y, _latoCasella, _latoCasella), colore * 0.3f);
+                        (pennello, p, scale: new Vector2(_latoCasella,_latoCasella), color: colore * 0.3f);
                 }
             }
         }
@@ -156,10 +166,10 @@ namespace Quantum_Game
         public void IlluminaCaselle (int[] idCaselle)
         {
                 if (idCaselle == null || !idCaselle.Any())
-                    _coordIlluminazione = new Point[0];
+                    _coordIlluminazione = new Vector2[0];
                 else
                 {
-                    _coordIlluminazione = new Point[idCaselle.Length];
+                    _coordIlluminazione = new Vector2[idCaselle.Length];
                     int c = 0;
                     foreach (var id in idCaselle)
                         _coordIlluminazione[c++] = id2Pixel(id);
@@ -168,8 +178,10 @@ namespace Quantum_Game
         /// <summary>Spegne l'illuminazione delle caselle.</summary>
         public void SpegniCaselle()
         {
-            _coordIlluminazione = new Point[0];
+            _coordIlluminazione = new Vector2[0];
         }
+        public void AggiungiNave(Nave nave) { navi.Aggiungi(nave); }
+
 
         // METODI PRIVATI
 
@@ -187,21 +199,22 @@ namespace Quantum_Game
                 return false;
             return true;
         }
-        private Point id2Pixel(int id)
+        private Vector2 id2Pixel(int id)
         {
             int n, m;
-            id2nm(id, out n, out m);
-            return new Point
+            Tile.id2nm(id, out n, out m);
+            return new Vector2
                 (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
         public Point Tile2Pixel(Tile tile)
         {
-            return id2Pixel(tile.ID);
+            var pix = id2Pixel(tile.ID);
+            return new Point ((int)pix.X,(int) pix.Y);
         }
         private Vector2 Tile2Vector (Tile tile)
         {
             int n, m;
-            id2nm(tile.ID, out n, out m);
+            Tile.id2nm(tile.ID, out n, out m);
             return new Vector2
                 (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
@@ -220,8 +233,9 @@ namespace Quantum_Game
                 if (coordinatePixel2Casella(ref X, ref Y) &&
                     Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
                 {
-                    id2nm(_idMouseOver, out X, out Y);
-                    _SelezPixCoord.X = X*_latoCasella + contenitore.Superficie.Location.X + offset.X; _SelezPixCoord.Y = Y*_latoCasella + contenitore.Superficie.Location.Y + offset.Y;
+                    Tile.id2nm(_idMouseOver, out X, out Y);
+                    _SelezPixCoord.X = (int) (X*_latoCasella + contenitore.Superficie.Location.X + offset.X);
+                    _SelezPixCoord.Y = (int) (Y*_latoCasella + contenitore.Superficie.Location.Y + offset.Y);
                     return;
                 }
             }
@@ -251,27 +265,26 @@ namespace Quantum_Game
             else
                 _IdSelezione = -1;              // sennò annulliamo la selezione attuale
         }
-        #endregion
-        // CAMPI DELLA CLASSE
-        void id2nm(int idCasella, out int n, out int m)
-        {
-            if (!Tile.idValido(idCasella))
-                throw new IndexOutOfRangeException("Indice non esistente");
 
-            n = idCasella % Tile.Colonne;
-            m = idCasella / Tile.Colonne;
+        public void Update()
+        {
+            navi.Update();
         }
 
-        Point offset;
+        #endregion
+        // CAMPI DELLA CLASSE
 
+        Vector2 offset;
+        public Vector2 Posizione { get { return id2Pixel(0); } }
 
         // Per disegnare
         readonly int _latoCasella;
-        private Point[] _coordIlluminazione; // Coordinate delle caselle da illuminare
+        private Vector2[] _coordIlluminazione; // Coordinate delle caselle da illuminare
         private Texture2D tileset;
         private Texture2D pennello;
         private Rectangle _source, _target;
         private SpriteFont font;
+        private ManagerNavi navi;
 
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int _IdSelezione;

@@ -45,7 +45,7 @@ namespace Quantum_Game.Azioni
                 // Selezionato alleato da trasportare
                 _casellaTarget = casellaCliccata;
                 _naveTrasportata = _casellaTarget.Occupante;
-                _casellaTarget.Occupante = null;
+                _casellaTarget.Occupante.RimuoviDalGioco();
 
                 // prepara l'azione successiva
                 azione = new MovimentoAttacco(game, _casellaPartenza);

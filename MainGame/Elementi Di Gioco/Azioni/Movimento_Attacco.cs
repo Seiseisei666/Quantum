@@ -79,7 +79,7 @@ namespace Quantum_Game.Azioni
                     Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco fallito! Piazza l'astronave sulla casella desiderata");
                 }
 
-                _casellaPartenza.Occupante = null;  // rimuovo temporaneamente dal gioco la nave attaccante
+                _casellaPartenza.Occupante.RimuoviDalGioco();  // rimuovo temporaneamente dal gioco la nave attaccante
 
                 giocatoreDiTurno.Azione();
 

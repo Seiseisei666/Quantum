@@ -114,6 +114,7 @@ namespace Quantum_Game.Interfaccia
         {
             foreach (var Widg in animati)
                 Widg.Update();
+            Tabellone?.Update();
         }
 
 

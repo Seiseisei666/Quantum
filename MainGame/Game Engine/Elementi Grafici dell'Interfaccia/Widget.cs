@@ -47,7 +47,7 @@ namespace Quantum_Game.Interfaccia
             if (_mouseOver)
             {
                 _fase += INCREMENTO;
-                if (_fase > 1.0) _fase = 1 - _fase;
+                if (_fase > 2.0) _fase = 2 - _fase;
                 var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
 
                 _scala *=1.1f;

@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 namespace Quantum_Game
 {
     /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
@@ -12,7 +14,7 @@ namespace Quantum_Game
 		
 	}
 	
-    /// Tipi di nave. Rottame == 0 == nave nel cimitero (o non ancora giocata)
+    /// Tipi di nave
 	public enum e_nave: byte {
 		Rottame,
 		Battlestation,
@@ -26,16 +28,15 @@ namespace Quantum_Game
 
 	public class Nave
 	{
-        // COSTRUTTORE
+
         public Nave(Giocatore proprietario)
         {
-            this._proprietario = proprietario;
-            _ingioco = _mossa = _special = _riconfigurata = false;
+            _proprietario = proprietario;
+            _ingioco = _mossa = _special = _riconfigurata = visibile = false;
             _tipo = e_nave.Rottame;
         }
 
-        // PROPRIETA' PUBBLICHE
-            // tutte le varie informazioni che abbiamo sulla nave
+
         public int Pwr { get { return (int)_tipo; } }
         public e_nave Tipo { get { return this._tipo; } } // il nome della nave, nel caso dobbiamo scriverlo
         public bool Viva { get { return (_tipo > 0); } } // _tipo == 0 significa che la nave è un rottame attualmente
@@ -74,15 +75,29 @@ namespace Quantum_Game
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
+            Posizione = CasellaTarget;
             _ingioco = true;
+            visibile = true;
         }
         /// Muove la nave da una casella a un'altra.
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
         {
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
+            Posizione = CasellaTarget;
             this._mossa = true;
         }
+
+        /// <summary>
+        /// Per rimuovere temporaneamente una nave dal gioco.
+        /// La nave resta viva!!!
+        /// </summary>
+        public void RimuoviDalGioco()
+        {
+            Posizione.Occupante = null;
+            visibile = false;
+        }
+
         /// Metodo per attaccare una nave target
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
@@ -111,24 +126,52 @@ namespace Quantum_Game
             if (_tipo == e_nave.Interceptor) _muoveinDiagonale = true;
         }
         /// La nave viene distrutta
-		public void Distruggi() { _ingioco = false; Riconfigura(true); }
+		public void Distruggi() { _ingioco = false; Riconfigura(true); visibile = false; }
 
         //True se la nave è del colore del giocatore argomento
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
         ///True se la nave può muoversi in diagonale
         public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
+
+        public void Update ()
+        {
+            _fase += INCREMENTO;
+            if (_fase > 2.0) _fase = 2 - _fase;
+            var seno = (float)(Math.Sin(_fase * Math.PI));
+            offset = new Vector2(seno * 3.5f, 0);
+        }
+
+        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 posizione, Vector2 scala )
+        {
+            if (visibile)
+            {
+                spriteBatch.Draw(
+                    texture,
+                    posizione + ( offset ),
+                    sourceRectangle: new Rectangle(300, 0, 100, 100),
+                    scale: scala,
+                    color: SpriteColor
+                    );
+            }
+        }
+
         // CAMPI 
         private Giocatore _proprietario;
         private bool _mossa, _special, _ingioco, _riconfigurata, _muoveinDiagonale;
 		private e_nave _tipo;
-        
 
+        public Casella Posizione { get; private set; }
+
+        private Vector2 offset = Vector2.Zero;
+        bool visibile;
+        private float _fase = 0;
+        const float INCREMENTO = 0.007f;
     }
 	
 	
 	
 	
 		
-	}
+}
 	
 
