@@ -111,6 +111,7 @@ namespace Quantum_Game.Azioni
 
                 var idCasellePercorso = pathFinder.PercorsoXCasella(_casellaTarget);
                 punti = idCasellePercorso.Select(i => gui.Tabellone.Tile2Pixel(Tile.id2Tile(i))).ToArray();
+                Array.Reverse(punti);
                 naveMossa.Animazione = new Movimento(punti);
                 faseAttuale = attesaAnimazione;     // nuova fase
 

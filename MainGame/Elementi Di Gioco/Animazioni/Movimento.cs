@@ -61,7 +61,7 @@ namespace Quantum_Game.Animazioni
 
         public bool Completata { get { return pos >= lungh; } }
 
-        const float INCREMENTO = 0.01f;
+        const float INCREMENTO = 0.03f;
         public Vector2 Posizione { get; private set; }
         public float Rotazione { get; private set; }
 
