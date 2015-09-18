@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quantum_Game.Animazioni;
 namespace Quantum_Game
 {
     /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
@@ -139,18 +140,31 @@ namespace Quantum_Game
             if (_fase > 2.0) _fase = 2 - _fase;
             var seno = (float)(Math.Sin(_fase * Math.PI));
             offset = new Vector2(seno * 3.5f, 0);
+            if (Animazione != null)
+            {
+                Animazione.Esegui();
+                // rotazione = Animazione.Rotazione;
+                if (Animazione.Completata) Animazione = null;
+            }
         }
+
+        public float Fase { set { rotazione = value; } }
 
         public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 posizione, Vector2 scala )
         {
+            Vector2 pos = Animazione != null ? Animazione.Posizione : posizione;
             if (visibile)
             {
+
+
                 spriteBatch.Draw(
                     texture,
-                    posizione + ( offset ),
+                    pos + ( offset ) + scala*50,
                     sourceRectangle: new Rectangle(300, 0, 100, 100),
                     scale: scala,
-                    color: SpriteColor
+                    color: SpriteColor,
+                    rotation: rotazione,
+                    origin: scala * 100
                     );
             }
         }
@@ -166,6 +180,9 @@ namespace Quantum_Game
         bool visibile;
         private float _fase = 0;
         const float INCREMENTO = 0.007f;
+
+        float rotazione = 0f;
+        public IAnimazione Animazione;
     }
 	
 	

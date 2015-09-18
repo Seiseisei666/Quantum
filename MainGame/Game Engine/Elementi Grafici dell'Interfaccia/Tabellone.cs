@@ -9,7 +9,7 @@ using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game
 {   
-    public class Tabellone: ElementoGrafico,IElementoAnimato
+    public class Tabellone: ElementoGrafico, IElementoAnimato
     {
         readonly Pianeta[] pianeti;
         readonly Casella[] caselle;
@@ -218,13 +218,20 @@ namespace Quantum_Game
         // calcola il tile su cui sta il mouse
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
+            var casella = Tile.id2Tile(_IdSelezione) as Casella;
+            if (casella?.Occupante != null)
+            {
+                var diff = Tile2Pixel(casella) - new Vector2(args.Posizione.X, args.Posizione.Y);
+                casella.Occupante.Fase = -(float) Math.Atan2(diff.X, diff.Y);
+            }
+
             if (contenitore.Superficie.Contains(args.Posizione.X, args.Posizione.Y))
             {
                 int X = args.Posizione.X;
                 int Y = args.Posizione.Y;
 
                 if (coordinatePixel2Casella(ref X, ref Y) &&
-                    Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).EunaCasella)
+                    Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
                 {
                     Tile.id2nm(_idMouseOver, out X, out Y);
                     _SelezPixCoord.X = (int) (X*_latoCasella + contenitore.Superficie.Location.X + offset.X);
@@ -261,6 +268,7 @@ namespace Quantum_Game
 
         public void Update()
         {
+
             navi.Update();
         }
 

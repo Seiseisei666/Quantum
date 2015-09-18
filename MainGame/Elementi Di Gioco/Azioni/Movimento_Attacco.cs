@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-
+using Quantum_Game.Animazioni;
 namespace Quantum_Game.Azioni
 {
     public class MovimentoAttacco : AzioneDiGiocoComplessa
@@ -79,17 +79,13 @@ namespace Quantum_Game.Azioni
                     Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco fallito! Piazza l'astronave sulla casella desiderata");
                 }
 
-                _casellaPartenza.Occupante.RimuoviDalGioco();  // rimuovo temporaneamente dal gioco la nave attaccante
+              //  _casellaPartenza.Occupante.RimuoviDalGioco();  // rimuovo temporaneamente dal gioco la nave attaccante
 
                 giocatoreDiTurno.Azione();
 
                 gui.Tabellone.ResetSelezioneMouse();
 
-                //int[] caselleAdiacentiTarget = pathFinder.IdCaselleAdiacenti(_casellaTarget, naveMossa.MuoveInDiagonale, risultatoAttacco);
-                //if (_casellaPartenza.Adiacente(_casellaTarget, naveMossa.MuoveInDiagonale))
-                //{
-                //    caselleAdiacentiTarget = caselleAdiacentiTarget.Concat(Enumerable.Repeat(_casellaPartenza.ID, 1)).ToArray();
-                //}
+
                 var adiacenti = _casellaTarget.TileAdiacenti(true, naveMossa.MuoveInDiagonale);
 
                 var disponibili = adiacenti.Where(t =>
@@ -111,16 +107,38 @@ namespace Quantum_Game.Azioni
 
                 gui.Tabellone.IlluminaCaselle (disponibili);
 
-                faseAttuale = indietreggia;     // nuova fase
+                Vector2[] punti;
+
+                var idCasellePercorso = pathFinder.PercorsoXCasella(_casellaTarget);
+                punti = idCasellePercorso.Select(i => gui.Tabellone.Tile2Pixel(Tile.id2Tile(i))).ToArray();
+                naveMossa.Animazione = new Movimento(punti);
+                faseAttuale = attesaAnimazione;     // nuova fase
+
             }
 
             else if (_casellaTarget != null && naveTarget == null)
             {
-                // Movimento
-                naveMossa.Muovi(_casellaPartenza, _casellaTarget);
-                giocatoreDiTurno.Azione();
-                Cleanup();
+                Vector2[] punti;
+
+                var idCasellePercorso = pathFinder.PercorsoXCasella(_casellaTarget);
+                punti = idCasellePercorso.Select(i => gui.Tabellone.Tile2Pixel(Tile.id2Tile(i))).ToArray();
+                Array.Reverse(punti);
+                naveMossa.Animazione = new Movimento(punti);
+                faseAttuale = fineMovimento;     // nuova fase
+
             }
+        }
+        void fineMovimento ()
+        {
+            // Movimento
+            naveMossa.Muovi(_casellaPartenza, _casellaTarget);
+            giocatoreDiTurno.Azione();
+            Cleanup();
+        }
+        void attesaAnimazione()
+        {
+            if (naveMossa.Animazione== null)
+                faseAttuale = indietreggia;
         }
 
         /// <summary>L'attaccante viene posizionato nella casella da cui proveniva l'attacco (ovvero, una casella distante 1 in meno del massimo movimento della nave attaccante)</summary>
