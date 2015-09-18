@@ -17,7 +17,7 @@ namespace Quantum_Game.Azioni
             gui.Tabellone.ResetSelezioneMouse();
             gui.Tabellone.MostraSelezione = false;
 
-            // TODO: gestire in maniera sensata  e più agile il posizionamento dei Widget
+            // HACK: gestire in maniera sensata  e più agile il posizionamento dei Widget
             // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
             Point pos1 = gui.Tabellone.Tile2Pixel(_casellaPartenza);
             Point pos2 = pos1;

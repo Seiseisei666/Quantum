@@ -32,8 +32,8 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw (SpriteBatch spriteBatch)
         {
-            // TODO: Disegnare lo sfondo
 
+            // TODO: la grafica del cimitero è completamente temporanea
             int i = 0;
             if (_rottami != null)
             foreach (Nave n in _rottami)
@@ -45,7 +45,6 @@ namespace Quantum_Game.Interfaccia
                 i++;
             }
 
-            // TODO: Disegnare i bordi
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)

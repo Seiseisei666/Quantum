@@ -61,7 +61,7 @@ namespace Quantum_Game
 
             //rettangoli per lo spritebatch:
             _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
-            _source = new Rectangle(0, 0, 100, 100);  // TODO: 100 è il lato del nostro tileset di prova!! 
+            _source = new Rectangle(0, 0, 100, 100);  // HACK: valori provvisori, da cambiare una volta deciso il tileset 
         }
 
         // PROPRIETA' PUBBLICHE
@@ -102,7 +102,7 @@ namespace Quantum_Game
                     _target.Y = y * _latoCasella + contenitore.Superficie.Location.Y + offset.Y;
 
                     //calcolo del tipo di tile (semplificato, manca il tileset!!!)
-                    // TODO: qua è ancora tutto provvisorio
+
                     switch (tile.Tipo)
                     {
 

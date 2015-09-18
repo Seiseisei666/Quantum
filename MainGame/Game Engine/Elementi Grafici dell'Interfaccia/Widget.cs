@@ -101,7 +101,7 @@ namespace Quantum_Game.Interfaccia
         Vector2 _posizione;
         Vector2 _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 
-        // TODO: valori provvisori calcolati con una sprite 100x100 pixel
+        //valori provvisori calcolati con una sprite 100x100 pixel
         readonly float raggio_al_quadrato;
         const float  MAX_ESPANSIONE = 0.45f;
         const float MIN_ESPANSIONE = 0.25f;

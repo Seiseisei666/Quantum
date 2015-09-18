@@ -56,16 +56,7 @@ namespace Quantum_Game
         {
             return PercorsoXCasella(tile).Length;
         }
-
-        public void Clear()
-        {
-            // TODO: non credo che il metodo Clear serva più, dato che ora il pathfinder è una risorsa allocata
-            // dinamicamente quando ne abbiamo bisogno
-            if (_partito == false)
-                return;
-            _matrice = null;
-        }
-       
+    
 
         /// <summary>
         /// restituisce l'array con gli id delle caselle da percorrere per raggiungere il tile targetId

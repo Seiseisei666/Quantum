@@ -29,7 +29,7 @@ namespace Quantum_Game
             gameSystem = new GameSystem();
             Services.AddService(gameSystem);
 
-            //TODO: perché gamesystem è un servizio e flussoDiGioco un componente?
+
             flussoGioco = new FlussoDiGioco(this);
             Components.Add(flussoGioco);
 
@@ -56,10 +56,8 @@ namespace Quantum_Game
 
             // TODO: creare menu apposito per caricare le  opzioni di partita (giocatori, mappa, etc) e sintetizzarlo con un metodo
 
-            /*Crea la mappa.
-            //TODO: Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
-            o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
-            */
+            //Crea la mappa.
+
             MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
@@ -83,7 +81,6 @@ namespace Quantum_Game
             //Per qualche motivo mistorioso lo spriteBatch va preso in LoadContent()
             spriteBatch = Services.GetService<SpriteBatch>();
             
-          //TODO: da sistemare
 
 
             /*  ESEMPIO DEL SISTEMA RIQUADRI  */

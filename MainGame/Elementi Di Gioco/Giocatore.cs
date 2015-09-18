@@ -100,12 +100,9 @@ public class Giocatore
         // Fine turno
         public void Cleanup()  
         {
-            if (_dominio >= 5)
-            {
-                //reset dominio
-                _dominio -= 5; 
-                // TODO: Piazzare la mentina
-            }
+            // TODO: probabilmente questo metodo non ha senso, lo lascio vuoto per sicurezza
+            // Sarà il flusso di gioco a controllare le condizioni e a gestire, quando necessario, il cleanup di fine turno
+
         }
         // METODI PRIVATI
         private void inizializzaFlotta(int NUMERO_NAVI_INIZIALI = 3)

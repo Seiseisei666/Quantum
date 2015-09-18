@@ -154,7 +154,6 @@ namespace Quantum_Game.Azioni
         }
         protected override void Cleanup()
         {
-            pathFinder.Clear();
             gui.Tabellone.ResetSelezioneMouse();
             gui.Tabellone.SpegniCaselle();
             faseAttuale = null;
