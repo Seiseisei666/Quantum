@@ -24,9 +24,9 @@ namespace Quantum_Game.Interfaccia
     {
         public event EventHandler Click;
 
-        public Widget (Point posizione, widget tipo, bool enabled): base (Riquadro.Main)
+        public Widget (Vector2 posizione, widget tipo, bool enabled): base (Riquadro.Main)
         {
-            _posizione = new Vector2 (posizione.X, posizione.Y);
+            _posizione = posizione;
 
             // TODO: valore impostato ad occhio
             // con le sprite definitive, in caso di bottoncino più o meno circolare, bisognerà assicurarsi che il valore sia giusto 

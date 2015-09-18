@@ -32,7 +32,7 @@ namespace Quantum_Game
             float s = _latoCasella / 100f;
             scala = new Vector2(s, s);
 
-            navi = new ManagerNavi(Tile2Vector, scala);
+            navi = new ManagerNavi(Tile2Pixel, scala);
         }
 
         public override void CaricaContenuti(GuiManager gui)
@@ -89,7 +89,7 @@ namespace Quantum_Game
 
             foreach (var pianeta in pianeti)
             {
-                coordDraw = Tile2Vector(pianeta) + ofst;
+                coordDraw = Tile2Pixel(pianeta) + ofst;
 
                 switch (pianeta.Tipo)
                 {
@@ -107,7 +107,7 @@ namespace Quantum_Game
                         break;
                 }
 
-                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti);
+                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti, color: Color.Gray*0.8f);
             }
 
             foreach (var casella in caselle)
@@ -118,7 +118,7 @@ namespace Quantum_Game
                     continue;
                 }
 
-                coordDraw = Tile2Vector(casella);
+                coordDraw = Tile2Pixel(casella);
 
                 if (casella.Orbita)
                     coordTile = new Point(100, 0);
@@ -206,17 +206,10 @@ namespace Quantum_Game
             return new Vector2
                 (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
-        public Point Tile2Pixel(Tile tile)
+      
+        public Vector2 Tile2Pixel (Tile tile)
         {
-            var pix = id2Pixel(tile.ID);
-            return new Point ((int)pix.X,(int) pix.Y);
-        }
-        private Vector2 Tile2Vector (Tile tile)
-        {
-            int n, m;
-            Tile.id2nm(tile.ID, out n, out m);
-            return new Vector2
-                (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
+            return id2Pixel(tile.ID);
         }
 
         #region Input Mouse
@@ -231,7 +224,7 @@ namespace Quantum_Game
                 int Y = args.Posizione.Y;
 
                 if (coordinatePixel2Casella(ref X, ref Y) &&
-                    Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
+                    Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).EunaCasella)
                 {
                     Tile.id2nm(_idMouseOver, out X, out Y);
                     _SelezPixCoord.X = (int) (X*_latoCasella + contenitore.Superficie.Location.X + offset.X);
