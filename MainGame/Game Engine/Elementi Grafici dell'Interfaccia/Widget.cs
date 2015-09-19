@@ -38,8 +38,6 @@ namespace Quantum_Game.Interfaccia
             _enabled = true; 
 
             _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
-
-            Console.WriteLine("Lato casella: " + _lunghLatoCasella);
         }
 
 
@@ -90,9 +88,17 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(
+                _spritePalliniAzioni,
+                _posizione - _scala * 50,
+                sourceRectangle: new Rectangle(0, 0, 100, 100),
+                scale: _scala,
+                color: Color.White
+                );
+
             //TODO: da sostituire con uno switch se abbiamo intenzione di usare tutti i lati
             Rectangle sceltaTile;
-            if (_doveWidget == doveDisegnoWidget.sinistra)  sceltaTile = new Rectangle(0, 0, 100, 100);
+            if (_doveWidget == doveDisegnoWidget.sinistra)  sceltaTile = new Rectangle(100, 0, 200, 100);
             else                                sceltaTile = new Rectangle(100, 0, 200, 100);
 
             spriteBatch.Draw (
@@ -122,7 +128,6 @@ namespace Quantum_Game.Interfaccia
 
             if (x + y < raggio_al_quadrato)
                 _mouseOver = true;
-
             else
             {
                 _mouseOver = false;
