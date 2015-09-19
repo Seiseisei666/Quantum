@@ -103,7 +103,7 @@ namespace Quantum_Game.Interfaccia
         protected override void LoadContent()
         {
             _spriteSheet = _game.Content.Load<Texture2D>(@"img\TileSet_prova3");
-            _spritePalliniAzioni = _game.Content.Load<Texture2D>(@"img\pallini_azioni_v1");
+            _spritePalliniAzioni = _game.Content.Load<Texture2D>(@"img\pallini_azioni_v1.1");
             font = _game.Content.Load<SpriteFont>(@"Font\Font");
 
             _texture = new Texture2D(GraphicsDevice, 1, 1);

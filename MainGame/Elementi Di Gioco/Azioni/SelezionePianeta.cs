@@ -19,7 +19,7 @@ namespace Quantum_Game.Azioni
             int offset = gui.Tabellone.LatoCasella / 10;
 
             pos += new Point(offset, offset);
-            colonizza = new Widget(pos, widget.Colonizza, _pianeta.Colonizzabile (giocatoreDiTurno));
+            colonizza = new Widget(pos, doveDisegnoWidget.sinistra, widget.Colonizza, _pianeta.Colonizzabile (giocatoreDiTurno));
 
             colonizza.Click += completaAzione;
             gui.Iscrivi(colonizza);

@@ -141,7 +141,7 @@ namespace Quantum_Game
                         {
                             _source.X = 300;
                             spriteBatch.Draw(tileset, _target, _source, tempCas.Occupante.SpriteColor);
-                            spriteBatch.DrawString(font, tempCas.Occupante.Tipo.ToString(), new Vector2(_target.X, _target.Y + _latoCasella*0.75f), Color.White);
+                            //spriteBatch.DrawString(font, tempCas.Occupante.Tipo.ToString(), new Vector2(_target.X, _target.Y + _latoCasella*0.75f), Color.White);
                         }
                     }
                 }

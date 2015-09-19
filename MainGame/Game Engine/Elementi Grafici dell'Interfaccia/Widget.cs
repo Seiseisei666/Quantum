@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game.Interfaccia
 {
@@ -19,26 +19,48 @@ namespace Quantum_Game.Interfaccia
         Colonizza,
     }
 
+    public enum doveDisegnoWidget
+    {
+        sinistra,
+        destra,
+        sopra,
+        sotto
+    }
 
     public class Widget: ElementoGrafico, IElementoAnimato
     {
         public event EventHandler Click;
 
-        public Widget (Point posizione, widget tipo, bool enabled): base (Riquadro.Main)
+        public Widget (Point posizione, doveDisegnoWidget doveW, widget tipo, bool enabled): base (Riquadro.Main)
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
+            _doveWidget = doveW;
+            _enabled = false; //da rimettere a posto!
 
-            // TODO: valore impostato ad occhio
-            // con le sprite definitive, in caso di bottoncino più o meno circolare, bisognerà assicurarsi che il valore sia giusto 
-            raggio_al_quadrato = Riquadro.Main.Superficie.Width * 0.4f;
+            Console.WriteLine("Lato casella: " + _lunghLatoCasella);
 
-            _enabled = enabled;
+            switch (_doveWidget) {
+                case doveDisegnoWidget.sinistra:
+                    _posizione.X += 0;
+                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    break;
+                case doveDisegnoWidget.destra:
+                    _posizione.X += 0;
+                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    break;
+                default:
+                    Console.WriteLine("Non posso posizionare il widget qui!");
+                    break;
+
+            }
         }
+
 
         public override void CaricaContenuti(GuiManager gui)
         {
-            _spriteSheet = gui.SpriteSheet;
+            //_spriteSheet = gui.SpriteSheet;
             _spritePalliniAzioni = gui.SpritePalliniAzioni;
+            _lunghLatoCasella = gui.Tabellone.LatoCasella;
     }
 
         public void Update ()
@@ -58,35 +80,49 @@ namespace Quantum_Game.Interfaccia
             else
             {
                 _fase = 0;
-                _scala *= 0.8f;
-                if (_scala.X < 0.25f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
+                _scala *= 1f;
+                if (_scala.X < 0.75f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
             }
             
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw
-                (_spritePalliniAzioni, 
-                _posizione - _scala*50,
-                sourceRectangle: new Rectangle(0, 0, 100, 100),
+            //TODO: da sostituire con uno switch se abbiamo intenzione di usare tutti i lati
+            Rectangle sceltaTile;
+            if (_doveWidget == doveDisegnoWidget.sinistra)  sceltaTile = new Rectangle(0, 0, 100, 100);
+            else                                sceltaTile = new Rectangle(100, 0, 200, 100);
+
+            spriteBatch.Draw (
+                _spritePalliniAzioni,
+                _posizione - _scala * 50,
+                sourceRectangle: sceltaTile,
                 scale: _scala,
-                color: _enabled ? Color.White : Color.Gray);
+                color: Color.White
+                );
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
             if (!_enabled) return;
+
+
+            /*
             double x =  Math.Pow( (args.Posizione.X - _posizione.X),2);
             double y = Math.Pow((args.Posizione.Y - _posizione.Y),2);
-
-            if (x + y < raggio_al_quadrato)
-
+            */
+            if (args.Posizione.X < _posizione.X + _lunghLatoCasella && args.Posizione.X > _posizione.X)
             {
+                if (args.Posizione.Y < _posizione.Y + _lunghLatoCasella && args.Posizione.Y > _posizione.Y )
                 _mouseOver = true;
             }
 
-            else _mouseOver = false;
+            //if (args.Posizione.X < contenitore.Superficie.)
+
+            else
+            {
+                _mouseOver = false;
+            }
         }
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
@@ -101,12 +137,14 @@ namespace Quantum_Game.Interfaccia
         Texture2D _spriteSheet;
         Texture2D _spritePalliniAzioni;
         Vector2 _posizione;
+        int _lunghLatoCasella;
+        doveDisegnoWidget _doveWidget;
         Vector2 _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 
         // TODO: valori provvisori calcolati con una sprite 100x100 pixel
         readonly float raggio_al_quadrato;
-        const float  MAX_ESPANSIONE = 0.45f;
-        const float MIN_ESPANSIONE = 0.25f;
+        const float  MAX_ESPANSIONE = 1.2f;
+        const float MIN_ESPANSIONE = 0.75f;
 
         const float INCREMENTO = 0.015f;
     }
