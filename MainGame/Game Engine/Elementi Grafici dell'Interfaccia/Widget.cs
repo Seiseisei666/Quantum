@@ -35,24 +35,11 @@ namespace Quantum_Game.Interfaccia
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
             _doveWidget = doveW;
-            _enabled = false; //da rimettere a posto!
+            _enabled = true; 
+
+            _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 
             Console.WriteLine("Lato casella: " + _lunghLatoCasella);
-
-            switch (_doveWidget) {
-                case doveDisegnoWidget.sinistra:
-                    _posizione.X += 0;
-                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
-                    break;
-                case doveDisegnoWidget.destra:
-                    _posizione.X += 0;
-                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
-                    break;
-                default:
-                    Console.WriteLine("Non posso posizionare il widget qui!");
-                    break;
-
-            }
         }
 
 
@@ -61,7 +48,22 @@ namespace Quantum_Game.Interfaccia
             //_spriteSheet = gui.SpriteSheet;
             _spritePalliniAzioni = gui.SpritePalliniAzioni;
             _lunghLatoCasella = gui.Tabellone.LatoCasella;
-    }
+            raggio_al_quadrato = (float)Math.Pow(_lunghLatoCasella / 4f, 2);
+            switch (_doveWidget)
+            {
+                case doveDisegnoWidget.sinistra:
+                    _posizione.X += 0;
+                    _posizione.Y += _lunghLatoCasella/2; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    break;
+                case doveDisegnoWidget.destra:
+                    _posizione.X += 0;
+                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    break;
+                default:
+                    Console.WriteLine("Non posso posizionare il widget qui!");
+                    break;
+            }
+        }
 
         public void Update ()
         {
@@ -80,8 +82,8 @@ namespace Quantum_Game.Interfaccia
             else
             {
                 _fase = 0;
-                _scala *= 1f;
-                if (_scala.X < 0.75f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
+                _scala *= 0.8f;
+                if (_scala.X <1f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
             }
             
         }
@@ -107,17 +109,19 @@ namespace Quantum_Game.Interfaccia
             if (!_enabled) return;
 
 
-            /*
+            
             double x =  Math.Pow( (args.Posizione.X - _posizione.X),2);
-            double y = Math.Pow((args.Posizione.Y - _posizione.Y),2);
-            */
-            if (args.Posizione.X < _posizione.X + _lunghLatoCasella && args.Posizione.X > _posizione.X)
-            {
-                if (args.Posizione.Y < _posizione.Y + _lunghLatoCasella && args.Posizione.Y > _posizione.Y )
-                _mouseOver = true;
-            }
+            double y = Math.Pow((args.Posizione.Y - _posizione.Y), 2);
 
-            //if (args.Posizione.X < contenitore.Superficie.)
+            //{
+            //    if (args.Posizione.Y < _posizione.Y + _lunghLatoCasella && args.Posizione.Y > _posizione.Y )
+            //    _mouseOver = true;
+            //}
+
+            //   if (args.Posizione.X < contenitore.Superficie.)
+
+            if (x + y < raggio_al_quadrato)
+                _mouseOver = true;
 
             else
             {
@@ -142,9 +146,9 @@ namespace Quantum_Game.Interfaccia
         Vector2 _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 
         // TODO: valori provvisori calcolati con una sprite 100x100 pixel
-        readonly float raggio_al_quadrato;
-        const float  MAX_ESPANSIONE = 1.2f;
-        const float MIN_ESPANSIONE = 0.75f;
+        float raggio_al_quadrato;
+        const float  MAX_ESPANSIONE = 1.25f;
+        const float MIN_ESPANSIONE = 1f;
 
         const float INCREMENTO = 0.015f;
     }
