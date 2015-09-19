@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quantum_Game;
 
 namespace Quantum_Game.Interfaccia
 {
@@ -19,6 +15,7 @@ namespace Quantum_Game.Interfaccia
         Colonizza,
     }
 
+    //TODO: rendere abstract bottone
     public class Bottone : ElementoGrafico
     {
         #region Costruttori
@@ -115,6 +112,11 @@ namespace Quantum_Game.Interfaccia
         }
         #endregion
 
+        /* Istruzioni eseguite al click del bottone*/
+        public void associatedEvent(object bott, EventArgs a)
+        {
+            //mettere questo metodo astratto
+        }
 
         public event EventHandler Click;
 

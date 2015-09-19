@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
-using System;
 using Quantum_Game.Interfaccia;
 using Quantum_Game.Mappa;
-
-
+using Quantum_Game.Azioni;
 
 namespace Quantum_Game
 {
@@ -13,8 +10,8 @@ namespace Quantum_Game
     public class Quantum : Game
     {
         //Componenti del motore di gioco
-        private GameSystem gameSystem;
-        private FlussoDiGioco flussoGioco;
+        private GestoreDiGiocatori gestoreDiGiocatori;
+        private GestoreDiAzioni gestoreDiAzioni;
        
         //Componenti del motore grafico
         private GraphicsDeviceManager graphics;
@@ -25,13 +22,10 @@ namespace Quantum_Game
         /* Costruttore di default che carica i settings salvati nel file settings.config  */
         public Quantum()
         {
-            //creazione motore di gioco
-            gameSystem = new GameSystem();
-            Services.AddService(gameSystem);
+            //creazione dei gestori degli elementi di gioco
+            gestoreDiGiocatori = new GestoreDiGiocatori();
+            gestoreDiAzioni = new GestoreDiAzioni();
 
-
-            flussoGioco = new FlussoDiGioco(this);
-            Components.Add(flussoGioco);
 
             //creazione motore grafico
             graphics = new GraphicsDeviceManager(this);
@@ -42,6 +36,7 @@ namespace Quantum_Game
 
             //carichiamo i settings di default (o salvati)
             loadSettings();
+            
         }
 
         protected override void Initialize()
@@ -66,10 +61,10 @@ namespace Quantum_Game
             Components.Add(sfondo);
 
             // Imposta il numero di giocatori
-            this.gameSystem.AggiungiGiocatori(2);
+            int numeroGiocatori = 2;
 
-            //Mettiamo il gamesystem in attesa di un evento InizioPartita che viene generato dopo la disposizione delle pedine iniziali
-            gameSystem.InizioPartita += InizioPartita;
+            //viene incodata un'azione che si occuperà di eseguire il setup di una partita offline con due giocatore
+            gestoreDiAzioni.IncodaAzione(new AzioneSetupPartitaOffLine(this, numeroGiocatori));
 
             base.Initialize();
 
@@ -96,21 +91,21 @@ namespace Quantum_Game
 
             var info = laterale.Riga(50, 0,10);
             var bott1 = laterale.Riga(10,35,5);
-            var bott2 = laterale.Riga(10,35,5);
+
             var bott3 = laterale.Riga(10,35,5);
             var bott4 = laterale.Riga(10,35,5);
             var msg = laterale.Riga(100, 0,15);
 
             Tabellone tab2 = new Tabellone(this, tabellone);
             Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
-            Bottone iniziaPartita = new Bottone(bottone.IniziaPartita, bott2);
+
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
             Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
 
             gui.Iscrivi(colonizza);
             gui.Iscrivi(passaTurno);
             gui.Iscrivi(ricerca);
-            gui.Iscrivi(iniziaPartita);
+
 
             gui.Iscrivi(tab2);
 
@@ -120,7 +115,7 @@ namespace Quantum_Game
             Cimitero cim = new Cimitero(info);
             gui.Iscrivi(cim);
 
-
+            
             base.LoadContent();
         } 
 
@@ -131,7 +126,8 @@ namespace Quantum_Game
         
         protected override void Update(GameTime gameTime)
         {
-            flussoGioco.Update();
+
+            gestoreDiAzioni.Update();
 
             base.Update(gameTime);
         }
@@ -154,14 +150,6 @@ namespace Quantum_Game
             spriteBatch.End();
         }
 
-        //trigger che si attiva ad inizio partita (?)
-
-        private void InizioPartita(object sender, EventArgs args)
-        {
-            ConsoleMessaggi.NuovoMessaggio("Partita iniziata!!");
-            Debug.WriteLine("Partita iniziata!!");
-        }       
-
         public void loadSettings()
         {
             //TODO: 1) mettere dei settings di default nel file settings.config; 
@@ -174,5 +162,9 @@ namespace Quantum_Game
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
+
+        public GuiManager getGUI() {return gui;}
+        public GestoreDiGiocatori getGestoreDiGiocatori() {return gestoreDiGiocatori; }
+        public GestoreDiAzioni getGestoreDiAzioni() {return gestoreDiAzioni;}
     }
 }

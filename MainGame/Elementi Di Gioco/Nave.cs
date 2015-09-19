@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+
 namespace Quantum_Game
 {
     /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
@@ -75,6 +77,7 @@ namespace Quantum_Game
         {
             CasellaTarget.Occupante = this;
             _ingioco = true;
+           
         }
         /// Muove la nave da una casella a un'altra.
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
