@@ -16,8 +16,9 @@ namespace Quantum_Game.Azioni
             _pianeta = (Pianeta)gui.Tabellone.TileClick;
 
             Point pos = gui.Tabellone.Tile2Pixel(_pianeta);
+            int offset = gui.Tabellone.LatoCasella / 10;
 
-            pos += new Point(0, -gui.Tabellone.LatoCasella / 2);
+            pos += new Point(offset, offset);
             colonizza = new Widget(pos, widget.Colonizza, _pianeta.Colonizzabile (giocatoreDiTurno));
 
             colonizza.Click += completaAzione;

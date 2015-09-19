@@ -16,7 +16,7 @@ namespace Quantum_Game
     public enum TipoEventoMouse
     {
         nessuno,
-        ClkSin,
+        ClkSx,
         ClkDx,
         Over
     }

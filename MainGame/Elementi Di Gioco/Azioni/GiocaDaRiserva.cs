@@ -33,7 +33,7 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
-            if (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata != null)
+            if (ultimoClick == TipoEventoMouse.ClkSx && casellaCliccata != null)
             {
                 if (_caselleDisponibili.Contains(casellaCliccata)) completaAzione();
             }

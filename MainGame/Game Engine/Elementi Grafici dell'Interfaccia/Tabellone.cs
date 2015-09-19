@@ -250,7 +250,7 @@ namespace Quantum_Game
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-            UltimoClick = TipoEventoMouse.ClkSin;
+            UltimoClick = TipoEventoMouse.ClkSx;
             if (_idMouseOver >= 0)              // se il mouse sta sopra una casella valida prendiamo 
             {
                 _IdSelezione = _idMouseOver;

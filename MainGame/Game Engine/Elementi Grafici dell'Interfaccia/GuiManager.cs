@@ -34,6 +34,7 @@ namespace Quantum_Game.Interfaccia
 
         public Texture2D Pennello { get { return _texture; } }
         public Texture2D SpriteSheet { get { return _spriteSheet; } }
+        public Texture2D SpritePalliniAzioni { get { return _spritePalliniAzioni; } }
         public SpriteFont Font { get { return font; } }
         public Tabellone Tabellone { get { return _tabellone; } }
         public Cimitero Cimitero { get { return _cimitero; } }
@@ -102,6 +103,7 @@ namespace Quantum_Game.Interfaccia
         protected override void LoadContent()
         {
             _spriteSheet = _game.Content.Load<Texture2D>(@"img\TileSet_prova3");
+            _spritePalliniAzioni = _game.Content.Load<Texture2D>(@"img\pallini_azioni_v1");
             font = _game.Content.Load<SpriteFont>(@"Font\Font");
 
             _texture = new Texture2D(GraphicsDevice, 1, 1);
@@ -160,6 +162,7 @@ namespace Quantum_Game.Interfaccia
         private SpriteBatch _spriteBatch;
         private Texture2D _spriteSheet;
         private Texture2D _texture;
+        private Texture2D _spritePalliniAzioni;
         private SpriteFont font;
 
     }

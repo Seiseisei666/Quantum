@@ -30,7 +30,7 @@ namespace Quantum_Game.Azioni
 
             if (nave != null) { 
 
-                if (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
+                if (ultimoClick == TipoEventoMouse.ClkSx && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
                 {
                     AzioneSuccessiva = new MovimentoAttacco(game);
                     return;

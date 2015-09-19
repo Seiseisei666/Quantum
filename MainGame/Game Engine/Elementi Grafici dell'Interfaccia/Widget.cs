@@ -38,7 +38,8 @@ namespace Quantum_Game.Interfaccia
         public override void CaricaContenuti(GuiManager gui)
         {
             _spriteSheet = gui.SpriteSheet;
-        }
+            _spritePalliniAzioni = gui.SpritePalliniAzioni;
+    }
 
         public void Update ()
         {
@@ -66,7 +67,7 @@ namespace Quantum_Game.Interfaccia
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw
-                (_spriteSheet, 
+                (_spritePalliniAzioni, 
                 _posizione - _scala*50,
                 sourceRectangle: new Rectangle(0, 0, 100, 100),
                 scale: _scala,
@@ -98,6 +99,7 @@ namespace Quantum_Game.Interfaccia
         float _fase = 0;
 
         Texture2D _spriteSheet;
+        Texture2D _spritePalliniAzioni;
         Vector2 _posizione;
         Vector2 _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 

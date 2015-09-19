@@ -19,12 +19,12 @@ namespace Quantum_Game.Azioni
 
             // TODO: gestire in maniera sensata  e più agile il posizionamento dei Widget
             // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
+            var lato = gui.Tabellone.LatoCasella;
             Point pos1 = gui.Tabellone.Tile2Pixel(_casellaPartenza);
             Point pos2 = pos1;
-            var lato = gui.Tabellone.LatoCasella;
 
-                pos1 -= new Point(20 - lato/2, 15);
-                pos2 += new Point(20 + lato/2, - 15);
+            pos1 += new Point(0, lato / 2);
+            pos2 += new Point(lato, lato/2);
 
             bool puòRiconfig = !naveUsata.Riconfigurata;
             bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
@@ -44,7 +44,7 @@ namespace Quantum_Game.Azioni
         {
 
             // Chiude i menù con il click destro
-            if (ultimoClick == TipoEventoMouse.ClkDx)
+            if (ultimoClick == TipoEventoMouse.ClkSx || ultimoClick == TipoEventoMouse.ClkDx)
             {
                 Cleanup(true);
             }
