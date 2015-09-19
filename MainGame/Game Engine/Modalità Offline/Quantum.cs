@@ -31,7 +31,6 @@ namespace Quantum_Game
             graphics = new GraphicsDeviceManager(this);
 
             gui = new GuiManager(this);
-            gui = Services.GetService<GuiManager>();
             Components.Add(gui);
 
             //carichiamo i settings di default (o salvati)

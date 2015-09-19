@@ -1,4 +1,5 @@
-﻿using Quantum_Game.Interfaccia;
+﻿using System;
+using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game.Azioni
 {
@@ -6,13 +7,14 @@ namespace Quantum_Game.Azioni
     {
 
         private Quantum quantum;
+
         private int numeroGiocatori;
 
         public AzioneSetupPartitaOffLine(Quantum quantum, int numeroGiocatori)
         {
             this.quantum = quantum;
             this.numeroGiocatori = numeroGiocatori;
-                    }
+        }
 
         /*Viene eseguito il setum della partita */
         protected override void Esegui()
@@ -36,10 +38,11 @@ namespace Quantum_Game.Azioni
             //alla fine della fase di Setup lancio un'azione di inizio partita.
             //alternativamente posso farla lanciare tramite bottone
             quantum.getGestoreDiAzioni().IncodaAzione(new AzioneInizioPartitaOffLine(quantum)); //rimpiazza con crea bottone inizia partita
-              
-            
+            Terminata = true;  
         }
-   
+
+        public override bool Abort() { return false; }
+
         /*  */
         protected override void Cleanup()
         {
