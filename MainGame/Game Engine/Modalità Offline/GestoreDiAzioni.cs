@@ -1,5 +1,6 @@
 ﻿using Quantum_Game.Azioni;
 using Quantum_Game.Interfaccia;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Quantum_Game
@@ -7,19 +8,22 @@ namespace Quantum_Game
     public class GestoreDiAzioni
     {
         /* coda di azioni da eseguire che viene gestita da questa classe */
-        private List<Azione> azioniDaEseguire;
+        private Queue<Azione> azioniDaEseguire;
 
         public GestoreDiAzioni()
         {
-            azioniDaEseguire = new List<Azione>();
+            azioniDaEseguire = new Queue<Azione>();
         }
-        /* se c'è almeno una azione in coda da eseguire, viene eseguita e cancellata dalla coda*/
+
+        /* Eseguo la prima azione, e se è terminata la cancello dalla coda*/
         private void EseguiAzione()
         {
-            if (azioniDaEseguire.Count > 0)
+            if (azioniDaEseguire.Any())
             {
-                azioniDaEseguire[0].Start();
-                azioniDaEseguire.RemoveAt(0);
+                var azione = azioniDaEseguire.Peek();
+                azione.Start();
+                if (azione.Terminata)
+                    azioniDaEseguire.Dequeue();
             }
         }
 
@@ -27,12 +31,13 @@ namespace Quantum_Game
         public void IncodaAzione(Azione azione)
         {
             
-            azioniDaEseguire.Add(azione);
+            azioniDaEseguire.Enqueue(azione);
         }
 
         public void MettiAzioneInTesta(Azione azione)
         {
-            azioniDaEseguire.Insert(0, azione);
+            var azioni = azioniDaEseguire;
+            azioniDaEseguire = new Queue<Azione> (new Azione[] { azione }.Concat(azioni));
         }
 
         //metodo che controlla se ci sono nuove azioni ed, eventualmente, le esegue 
@@ -41,10 +46,7 @@ namespace Quantum_Game
             EseguiAzione();
         }
 
-        public int Count()
-        {
-            return azioniDaEseguire.Count;
-        }
+        public int Count { get { return azioniDaEseguire.Count; } }
     }
 }
 

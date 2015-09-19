@@ -26,11 +26,12 @@ namespace Quantum_Game.Azioni
                 if (tempCas != null && tempCas.Occupante == null)
                 {
                     naveTemp.Piazza(tempCas);
+                    Terminata = true;
                 }//riesegue l'azione fino a che non viene piazzata davvero una nave
-                else quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzionePiazzaNave(quantum,giocatore));
             }
         }
 
+        public override bool Abort() { return false; }
         protected override void Cleanup() { }
     }
 }

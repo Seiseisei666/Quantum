@@ -9,6 +9,7 @@ using System.Text;
 namespace Quantum_Game.Azioni
 {
     /* azione da utilizzare per stampare a console */
+    // EDIT: Questa mi sembra esagerata...
     public class AzioneStampaAConsole : Azione
     {
         private String messaggio;
@@ -30,9 +31,12 @@ namespace Quantum_Game.Azioni
             
         }
 
+        public override bool Abort() { return false; }
+
         protected override void Esegui()
         {
             ConsoleMessaggi.NuovoMessaggio(messaggio, color);
+            Terminata = true;
         }
     }
 }
