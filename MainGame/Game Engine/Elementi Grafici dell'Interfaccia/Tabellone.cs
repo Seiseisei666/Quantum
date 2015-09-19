@@ -81,7 +81,7 @@ namespace Quantum_Game
         {
             Vector2 coordDraw;
             Point coordTile;
-            Vector2 scalaPianeti = scala * 2f;
+            Vector2 scalaPianeti = scala * 1.3f;
 
             // Risistemare
 
@@ -107,16 +107,11 @@ namespace Quantum_Game
                         break;
                 }
 
-                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti, color: Color.Gray*0.8f);
+                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti);
             }
 
             foreach (var casella in caselle)
             {
-                if (casella == null)
-                {
-                    Debug.WriteLine("CASELLA NULLA!!!");
-                    continue;
-                }
 
                 coordDraw = Tile2Pixel(casella);
 
@@ -125,7 +120,7 @@ namespace Quantum_Game
                 else
                     coordTile = Point.Zero;
 
-                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle(coordTile, new Point(100, 100)), scale: scala, color: Color.White*0.7f);
+                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle(coordTile, new Point(100, 100)), scale: scala);
             }
 
             DisegnaSelezione(spriteBatch);
