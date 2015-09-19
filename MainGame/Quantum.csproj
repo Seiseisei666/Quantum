@@ -55,6 +55,11 @@
   <ItemGroup>
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGiocoComplessa.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\Azione.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneInizioPartitaOffLine.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneSetupPartitaOffLine.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzionePiazzaNave.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\FineTurno.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\CheckSelezione.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\GiocaDaRiserva.cs" />
@@ -65,13 +70,14 @@
     <Compile Include="Elementi Di Gioco\Azioni\Special_Flagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\Special_Warp.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoneInizioPartitaOffLine.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Riquadro.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Sfondo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Casella.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Widget.cs" />
-    <Compile Include="Game Engine\Modalità Offline\FlussoDiGioco.cs" />
-    <Compile Include="Game Engine\Modalità Offline\GameSystem.cs" />
+    <Compile Include="Game Engine\Modalità Offline\GestoreDiAzioni.cs" />
+    <Compile Include="Game Engine\Modalità Offline\GestoreDiGiocatori.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Bottone.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\GuiManager.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ConsoleMessaggi.cs" />

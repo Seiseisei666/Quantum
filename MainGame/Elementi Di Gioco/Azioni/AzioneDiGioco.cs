@@ -3,6 +3,7 @@ using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game.Azioni
 {
+    //TODO: da rimuovere apena finisco di sistemare le altre azioni
     public abstract class AzioneDiGioco
     {
         /// <summary>
@@ -13,8 +14,6 @@ namespace Quantum_Game.Azioni
         public AzioneDiGioco(Game game)
         {
             this.game = game;
-
-            gameSystem = game.Services.GetService<GameSystem>();
             gui = game.Services.GetService<GuiManager>();
             AzioneSuccessiva = this;
         }
@@ -34,13 +33,13 @@ namespace Quantum_Game.Azioni
         public virtual AzioneDiGioco AzioneSuccessiva { get; protected set; }
 
         // Informazioni a disposizione che prendiamo da altri oggetti di gioco
-        protected Giocatore giocatoreDiTurno { get { return gameSystem.GiocatoreDiTurno; } }
+        protected Giocatore giocatoreDiTurno { get { return gestoreDiGiocatori.getGiocatoreDiTurno(); } }
         protected Casella casellaCliccata { get { return gui.Tabellone.TileClick as Casella; } }
         protected TipoEventoMouse ultimoClick { get { return gui.Tabellone.UltimoClick; } }
 
         // Oggetti di gioco che ci portiamo dietro
         protected Game game;
-        protected GameSystem gameSystem;    // per accedere al giocatore di turno
+        protected GestoreDiGiocatori gestoreDiGiocatori;    // per accedere al giocatore di turno
         protected GuiManager gui;      // per accedere alla grafica e ai click sul tabellone
     }
 }

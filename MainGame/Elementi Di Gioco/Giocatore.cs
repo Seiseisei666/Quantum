@@ -4,7 +4,7 @@ using System;
 
 namespace Quantum_Game {
 
-
+//TODO rifare la gestione dei colori!
 public class Giocatore
     {
 
@@ -39,7 +39,7 @@ public class Giocatore
         public List<Nave> Rottami { get { return _flotta.FindAll(n => !n.InGioco); } }
 
         public e_color Colore { get { return this._colore; } }
-        public Color SpriteColor { get { return GameSystem.QuantumColor[_colore]; } }
+        public Color SpriteColor { get { return GestoreDiGiocatori.QuantumColor[_colore]; } }
 
         public bool PuòAgire { get { return _azioni > 0; } }
         public bool PuòColonizzare { get { return _azioni > 1; } }
@@ -57,6 +57,11 @@ public class Giocatore
         }
 
         //METODI PUBBLICI 
+        /* Restituisce un ID (nome e/o colore) del giocatore */
+        public override String ToString()
+        {
+            return this.Colore.ToString();
+        }
         // inizializzazione globale
         public void GlobalInit() 
         {
