@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Data Content\img\Planet_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Content\img\Planet_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
@@ -102,28 +102,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data Content\img\schermataIniziale_bottoni_2.1.png">
+    <Content Include="Content\img\schermataIniziale_bottoni_2.1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\img\schermataIniziale_sfondo_2.1.png">
+    <Content Include="Content\img\schermataIniziale_sfondo_2.1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\img\TileSet_prova1.png" />
-    <Content Include="Data Content\img\TileSet_prova2.png" />
-    <Content Include="Data Content\img\TileSet_prova3.png" />
-    <Content Include="Data Content\Mappe\mappaeasy.txt">
+    <Content Include="Content\img\TileSet_prova1.png" />
+    <Content Include="Content\img\TileSet_prova2.png" />
+    <Content Include="Content\img\TileSet_prova3.png" />
+    <Content Include="Content\Mappe\mappaeasy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappa_prova2.txt">
+    <Content Include="Content\Mappe\mappa_prova2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\Mappe\mappa_prova3.txt">
+    <Content Include="Content\Mappe\mappa_prova3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data Content\img\Planet_icon.ico" />
+    <Content Include="Content\img\Planet_icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Data Content\Content.mgcb" />
+    <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -143,7 +143,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data Content\Font\Font.spritefont" />
+    <None Include="Content\Font\Font.spritefont" />
     <None Include="Main\settings.config" />
   </ItemGroup>
   <ItemGroup>
