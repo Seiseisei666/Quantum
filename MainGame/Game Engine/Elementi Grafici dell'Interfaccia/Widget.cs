@@ -37,7 +37,7 @@ namespace Quantum_Game.Interfaccia
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
             _doveWidget = doveW;
-            _enabled = enabled; 
+            _enabled = false; 
 
             _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
         }
@@ -57,12 +57,11 @@ namespace Quantum_Game.Interfaccia
                     _posizione.Y += 0;
                     break;
                 case doveDisegnoWidget.sinistra:
-                    //_posizione.X += -(_lunghLatoCasella/2);
-                    _posizione.X += 0;
+                    _posizione.X += -(_lunghLatoCasella/2)+5;
                     _posizione.Y += 0; 
                     break;
                 case doveDisegnoWidget.destra:
-                    _posizione.X += 0;
+                    _posizione.X += (_lunghLatoCasella / 2)-5;
                     _posizione.Y += 0; 
                     break;
                 default:
@@ -101,7 +100,7 @@ namespace Quantum_Game.Interfaccia
             Rectangle srcRect;
             Rectangle destRect;
             if (_doveWidget == doveDisegnoWidget.centro)    srcRect = new Rectangle(0, 0, 100, 100);
-            else                                            srcRect = new Rectangle(100, 0, 200, 100);
+            else                                            srcRect = new Rectangle(100, 0, 100, 100);
 
             destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
             spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);

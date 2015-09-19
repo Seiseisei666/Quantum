@@ -28,13 +28,13 @@ namespace Quantum_Game.Azioni
             bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
 
             Riconfig = new Widget(posTopSx, doveDisegnoWidget.sinistra, widget.Riconfigura, puòRiconfig);
-            //Special = new Widget(posTopSx, doveDisegnoWidget.destra, widget.UsaSpecial, puòUsareSpecial);
+            Special = new Widget(posTopSx, doveDisegnoWidget.destra, widget.UsaSpecial, puòUsareSpecial);
 
             Riconfig.Click += riconfigura;
-            //Special.Click += usaSpecial;
+            Special.Click += usaSpecial;
             gui.Iscrivi(SfondoWid);
             gui.Iscrivi(Riconfig);
-            //gui.Iscrivi(Special);
+            gui.Iscrivi(Special);
 
         }
 
