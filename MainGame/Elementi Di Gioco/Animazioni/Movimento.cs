@@ -19,9 +19,10 @@ namespace Quantum_Game.Animazioni
 
         public Movimento (Vector2 [] percorso)
         {
+            // Avevo provato ad usare le curve, ma è troppo difficile (bisogna settare tutte le tangenti una per una)
+            // e probabilmente, con il tabellone quadrato, non viene nemmeno bene
             //percorsoX = new Curve();
             //percorsoY = new Curve();
-
             //float i = 0;
             //float n = percorso.Length;
             //foreach (var p in percorso)
@@ -38,30 +39,31 @@ namespace Quantum_Game.Animazioni
 
         public void Esegui()
         {
-            if (pos >= lungh || lungh <2) return;
-            //Posizione = new Vector2(percorsoX.Evaluate(pos), percorsoY.Evaluate(pos));
-            int n = (int)Math.Floor (pos / lungh);
+            int n = ((int)pos % lungh);
+
+            if (n + 1 >= lungh)
+            {
+                Completata = true;
+                return;
+            }
+
             float xfade1 = pos - n;
-            float xfade2 = 1 - xfade1;
-
-            float x1, y1, x2, y2;
-
-            x1 = _percorso[n].X * xfade1;
-            y1 = _percorso[n].Y * xfade1;
-
-            x2 = _percorso[n + 1].X * xfade2;
-            y2 = _percorso[n + 1].Y * xfade2;
-
-            Posizione = new Vector2(x1 + x2, y1 + y2);
-            System.Diagnostics.Debug.WriteLine("{0}, {1}", Posizione.X, Posizione.Y);
+            float x1, y1;
+            // Interpolazione lineare fra 2 punti consecutivi del percorso
+            x1 = MathHelper.Lerp ( _percorso[n].X, _percorso[n+1].X, xfade1);
+            y1 = MathHelper.Lerp (_percorso[n].Y, _percorso[n + 1].Y, xfade1);
+            // TODO: sistemare la rotazione!! Mi impiccio con le cose trigonometriche!
+            // help wanted
+            Vector2 differenza = _percorso[n + 1] - _percorso[n];
+            Rotazione = (float) Math.Atan2(differenza.X, differenza.Y);
+            Posizione = new Vector2 (x1,y1);
 
             pos += INCREMENTO;
-            if (n == lungh) pos = lungh;
         }
 
-        public bool Completata { get { return pos >= lungh; } }
+        public bool Completata { get; private set; }
 
-        const float INCREMENTO = 0.03f;
+        const float INCREMENTO = 0.09f;
         public Vector2 Posizione { get; private set; }
         public float Rotazione { get; private set; }
 

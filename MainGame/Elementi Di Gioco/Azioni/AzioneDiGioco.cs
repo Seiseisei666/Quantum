@@ -18,6 +18,8 @@ namespace Quantum_Game.Azioni
             gui = game.Services.GetService<GuiManager>();
             AzioneSuccessiva = this;
         }
+        public AzioneDiGioco()
+        { AzioneSuccessiva = this; }
         #region Metodi Astratti
         /// <summary>Il corpo dell'azione. E' astratto, per cui è obbligatorio implementarlo.</summary>
         public abstract void Esegui();

@@ -41,8 +41,6 @@ namespace Quantum_Game.Azioni
             faseAttuale = movimentoAttacco; // il puntatore faseAttuale viene chiamato dal metodo AzioneDiGiocoComplessa.Esegui()
         }
 
-
-
         void movimentoAttacco()
         {
             int dist = pathFinder.DistanzaCasella(casellaCliccata);
@@ -52,31 +50,28 @@ namespace Quantum_Game.Azioni
                 Cleanup();
                 return;
             }
+
             _casellaTarget = casellaCliccata;
 
-
             Nave naveTarget = _casellaTarget?.Occupante;
-            if (naveTarget != null &&
-                !naveTarget.Alleato(giocatoreDiTurno))
+            if (naveTarget != null && !naveTarget.Alleato(giocatoreDiTurno))
             {
                 // Combattimento
 
-                bool risultatoAttacco;
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio
+                    ("Una nave" + naveMossa.Tipo + " di colore" + naveMossa.Colore + " ha attaccato una nave" + naveTarget.Tipo + " di colore" + naveTarget.Colore + ".", giocatoreDiTurno.SpriteColor);
 
-                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Una nave" + naveMossa.Tipo + " di colore" + naveMossa.Colore + " ha attaccato una nave" + naveTarget.Tipo + " di colore" + naveTarget.Colore + ".", giocatoreDiTurno.SpriteColor);
-
-                risultatoAttacco = naveMossa.Attacco(_casellaTarget, true);
-
-
+                bool risultatoAttacco = naveMossa.Attacco(_casellaTarget, true);
 
                 if (risultatoAttacco)
                 {
-                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco riuscito! Piazza l'astronave sulla casella desiderata");
-
+                    Interfaccia.ConsoleMessaggi.NuovoMessaggio 
+                        ("Attacco riuscito! Piazza l'astronave sulla casella desiderata");
                 }
                 else
                 {
-                    Interfaccia.ConsoleMessaggi.NuovoMessaggio ("Attacco fallito! Piazza l'astronave sulla casella desiderata");
+                    Interfaccia.ConsoleMessaggi.NuovoMessaggio 
+                        ("Attacco fallito! Piazza l'astronave sulla casella desiderata");
                 }
 
               //  _casellaPartenza.Occupante.RimuoviDalGioco();  // rimuovo temporaneamente dal gioco la nave attaccante
@@ -85,14 +80,16 @@ namespace Quantum_Game.Azioni
 
                 gui.Tabellone.ResetSelezioneMouse();
 
-
+                // Illumino le caselle su cui può posizionarsi ora la nave attaccante
+                // TODO: spostare questa fase dell'azione prima dell'attacco vero e proprio
+                // per riprodurre l'azione come quella del gioco da tavolo
                 var adiacenti = _casellaTarget.TileAdiacenti(true, naveMossa.MuoveInDiagonale);
 
                 var disponibili = adiacenti.Where(t =>
                {
                    Casella c;
-                   if (t?.EunaCasella == true) c = (Casella)t; else return false;
-
+                   if (t?.EunaCasella == true) c = (Casella)t;
+                   else return false;
                    int d = pathFinder.DistanzaCasella(c);
                    return
                    (
@@ -103,30 +100,20 @@ namespace Quantum_Game.Azioni
 
                }).Select(t => t.ID).ToArray();
                 
-
-
                 gui.Tabellone.IlluminaCaselle (disponibili);
 
-                Vector2[] punti;
-
-                var idCasellePercorso = pathFinder.PercorsoXCasella(_casellaTarget);
-                punti = idCasellePercorso.Select(i => gui.Tabellone.Tile2Pixel(Tile.id2Tile(i))).ToArray();
-                Array.Reverse(punti);
-                naveMossa.Animazione = new Movimento(punti);
-                faseAttuale = attesaAnimazione;     // nuova fase
-
+                // preparo la fase successiva (riposizionamento dopo l'attacco)
+                faseAttuale = indietreggia;
+                // faccio partire l'animazione
+                lancioAnimazione();
             }
 
             else if (_casellaTarget != null && naveTarget == null)
             {
-                Vector2[] punti;
-
-                var idCasellePercorso = pathFinder.PercorsoXCasella(_casellaTarget);
-                punti = idCasellePercorso.Select(i => gui.Tabellone.Tile2Pixel(Tile.id2Tile(i))).ToArray();
-                Array.Reverse(punti);
-                naveMossa.Animazione = new Movimento(punti);
+                // Movimento
                 faseAttuale = fineMovimento;     // nuova fase
-
+                AzioneSuccessiva = new AttesaAnimazione(naveMossa, this);
+                lancioAnimazione();
             }
         }
         void fineMovimento ()
@@ -136,10 +123,24 @@ namespace Quantum_Game.Azioni
             giocatoreDiTurno.Azione();
             Cleanup();
         }
-        void attesaAnimazione()
+        void lancioAnimazione()
         {
-            if (naveMossa.Animazione== null)
-                faseAttuale = indietreggia;
+            // Arrivati a questo punto dell'azione non possiamo più annullarla
+            puòAbortire = false;
+
+            // Prendo tutti i punti del percorso per visualizzare il movimento della nave
+            var enumPunti = 
+                pathFinder.PercorsoXCasella(_casellaTarget).Select
+                (
+                    idCasella => gui.Tabellone.Tile2Pixel(Tile.id2Tile(idCasella))
+                );
+            //Aggiungo la casella di partenza della nave
+            Vector2[] punti = new Vector2[] { gui.Tabellone.Tile2Pixel(_casellaPartenza) }.Concat(enumPunti).ToArray();
+
+            // Faccio partire l'animazione
+            naveMossa.Animazione = new Movimento(punti);
+            // Attendo che finisca
+            AzioneSuccessiva = new AttesaAnimazione(naveMossa, this);
         }
 
         /// <summary>L'attaccante viene posizionato nella casella da cui proveniva l'attacco (ovvero, una casella distante 1 in meno del massimo movimento della nave attaccante)</summary>
@@ -160,15 +161,15 @@ namespace Quantum_Game.Azioni
 
         public override bool Abort()
         {
-            if (faseAttuale == indietreggia)
-            {
-                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Impossibile annullare l'azione!", Color.Salmon);
-                return false;
-            }
-            else
+            if (puòAbortire)
             {
                 Cleanup();
                 return true;
+            }
+            else
+            {
+                Interfaccia.ConsoleMessaggi.NuovoMessaggio("Impossibile annullare l'azione!", Color.Salmon);
+                return false;
             }
         }
         protected override void Cleanup()
@@ -183,5 +184,6 @@ namespace Quantum_Game.Azioni
         Casella _casellaPartenza, _casellaTarget;
         Nave naveMossa;
         PathFinder pathFinder;
+        bool puòAbortire = true;
     }
 }

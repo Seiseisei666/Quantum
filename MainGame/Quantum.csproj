@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Elementi Di Gioco\Animazioni\IAnimazione.cs" />
     <Compile Include="Elementi Di Gioco\Animazioni\Movimento.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AttesaAnimazione.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGiocoComplessa.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\FineTurno.cs" />
