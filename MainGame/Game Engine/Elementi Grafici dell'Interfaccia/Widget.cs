@@ -14,6 +14,7 @@ namespace Quantum_Game.Interfaccia
 
     public enum widget
     {
+        SfondoWidget,
         Riconfigura,
         UsaSpecial,
         Colonizza,
@@ -21,6 +22,7 @@ namespace Quantum_Game.Interfaccia
 
     public enum doveDisegnoWidget
     {
+        centro,
         sinistra,
         destra,
         sopra,
@@ -35,7 +37,7 @@ namespace Quantum_Game.Interfaccia
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
             _doveWidget = doveW;
-            _enabled = true; 
+            _enabled = enabled; 
 
             _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
         }
@@ -47,15 +49,21 @@ namespace Quantum_Game.Interfaccia
             _spritePalliniAzioni = gui.SpritePalliniAzioni;
             _lunghLatoCasella = gui.Tabellone.LatoCasella;
             raggio_al_quadrato = (float)Math.Pow(_lunghLatoCasella / 4f, 2);
+
             switch (_doveWidget)
             {
-                case doveDisegnoWidget.sinistra:
+                case doveDisegnoWidget.centro:
                     _posizione.X += 0;
-                    _posizione.Y += _lunghLatoCasella/2; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    _posizione.Y += 0;
+                    break;
+                case doveDisegnoWidget.sinistra:
+                    //_posizione.X += -(_lunghLatoCasella/2);
+                    _posizione.X += 0;
+                    _posizione.Y += 0; 
                     break;
                 case doveDisegnoWidget.destra:
                     _posizione.X += 0;
-                    _posizione.Y += 0; //offset da inserire perché il tassello sotto è alto 85, non 100
+                    _posizione.Y += 0; 
                     break;
                 default:
                     Console.WriteLine("Non posso posizionare il widget qui!");
@@ -88,26 +96,16 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(
-                _spritePalliniAzioni,
-                _posizione - _scala * 50,
-                sourceRectangle: new Rectangle(0, 0, 100, 100),
-                scale: _scala,
-                color: Color.White
-                );
 
-            //TODO: da sostituire con uno switch se abbiamo intenzione di usare tutti i lati
-            Rectangle sceltaTile;
-            if (_doveWidget == doveDisegnoWidget.sinistra)  sceltaTile = new Rectangle(100, 0, 200, 100);
-            else                                sceltaTile = new Rectangle(100, 0, 200, 100);
+            //calcolo quale tile sorgente usare
+            Rectangle srcRect;
+            Rectangle destRect;
+            if (_doveWidget == doveDisegnoWidget.centro)    srcRect = new Rectangle(0, 0, 100, 100);
+            else                                            srcRect = new Rectangle(100, 0, 200, 100);
 
-            spriteBatch.Draw (
-                _spritePalliniAzioni,
-                _posizione - _scala * 50,
-                sourceRectangle: sceltaTile,
-                scale: _scala,
-                color: Color.White
-                );
+            destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
+            spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
+            //spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White, 1.57f, new Vector2(0,0), SpriteEffects.None, 0);
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
@@ -143,7 +141,6 @@ namespace Quantum_Game.Interfaccia
         readonly bool _enabled;
         float _fase = 0;
 
-        Texture2D _spriteSheet;
         Texture2D _spritePalliniAzioni;
         Vector2 _posizione;
         int _lunghLatoCasella;

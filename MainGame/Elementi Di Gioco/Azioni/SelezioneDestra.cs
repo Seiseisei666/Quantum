@@ -10,30 +10,29 @@ namespace Quantum_Game.Azioni
 {
     public class SelezioneDestra: AzioneDiGioco
     {
-        Widget Riconfig, Special;
+        Widget SfondoWid, Riconfig, Special;
         public SelezioneDestra (Game game) : base (game)
         {
             _casellaCliccata = casellaCliccata;
             gui.Tabellone.ResetSelezioneMouse();
             gui.Tabellone.MostraSelezione = false;
 
+            Point posTopSx = gui.Tabellone.Tile2Pixel(_casellaCliccata);
+
+            SfondoWid = new Widget(posTopSx, doveDisegnoWidget.centro, widget.SfondoWidget, false);
+
             // TODO: gestire in maniera sensata  e più agile il posizionamento dei Widget
             // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
-            var lato = gui.Tabellone.LatoCasella;
-            Point posRic = gui.Tabellone.Tile2Pixel(_casellaCliccata);
-            Point posSpe = posRic;
-
-            //pos1 += new Point(-lato/5, lato/10);
-            //pos2 += new Point(lato/3, lato/10);
-
+            //var lato = gui.Tabellone.LatoCasella; // lo prendo dal Carica Contenuti della classe Widget
             bool puòRiconfig = !naveUsata.Riconfigurata;
             bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
 
-            Riconfig = new Widget(posRic, doveDisegnoWidget.sinistra, widget.Riconfigura, puòRiconfig);
-            //Special = new Widget(posSpe, doveDisegnoWidget.destra, widget.UsaSpecial, puòUsareSpecial);
+            Riconfig = new Widget(posTopSx, doveDisegnoWidget.sinistra, widget.Riconfigura, puòRiconfig);
+            //Special = new Widget(posTopSx, doveDisegnoWidget.destra, widget.UsaSpecial, puòUsareSpecial);
 
             Riconfig.Click += riconfigura;
             //Special.Click += usaSpecial;
+            gui.Iscrivi(SfondoWid);
             gui.Iscrivi(Riconfig);
             //gui.Iscrivi(Special);
 
