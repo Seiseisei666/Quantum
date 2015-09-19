@@ -8,11 +8,12 @@ namespace Quantum_Game
     public class GestoreDiAzioni
     {
         /* coda di azioni da eseguire che viene gestita da questa classe */
-        private Queue<Azione> azioniDaEseguire;
+        private LinkedList<Azione> azioniDaEseguire;
+
 
         public GestoreDiAzioni()
         {
-            azioniDaEseguire = new Queue<Azione>();
+            azioniDaEseguire = new LinkedList<Azione>();
         }
 
         /* Eseguo la prima azione, e se è terminata la cancello dalla coda*/
@@ -20,24 +21,22 @@ namespace Quantum_Game
         {
             if (azioniDaEseguire.Any())
             {
-                var azione = azioniDaEseguire.Peek();
+                var azione = azioniDaEseguire.First();
                 azione.Start();
                 if (azione.Terminata)
-                    azioniDaEseguire.Dequeue();
+                    azioniDaEseguire.RemoveFirst();
             }
         }
 
         /* aggiunge una azione da eseguire alla coda */
         public void IncodaAzione(Azione azione)
-        {
-            
-            azioniDaEseguire.Enqueue(azione);
+        { 
+            azioniDaEseguire.AddLast(azione);
         }
 
         public void MettiAzioneInTesta(Azione azione)
         {
-            var azioni = azioniDaEseguire;
-            azioniDaEseguire = new Queue<Azione> (new Azione[] { azione }.Concat(azioni));
+            azioniDaEseguire.AddFirst(azione);
         }
 
         //metodo che controlla se ci sono nuove azioni ed, eventualmente, le esegue 
