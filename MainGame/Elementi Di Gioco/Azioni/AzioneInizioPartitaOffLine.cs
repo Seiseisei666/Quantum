@@ -14,6 +14,7 @@ namespace Quantum_Game.Azioni
             // solo di GestoreDiAzioni e GestoreDiGiocatori per funzionare (in termini di memoria sono solo due liste, molto ragionevole).
             //Quindi si puo' costruirla come public AzioneInizioPartitaOffLine(GestoreDiAzioni a, GestoreDiGiocatori b).
             //Probabilmente vale anche per le altre azioni, avevo messo quantum in via provvisoria
+            //EDIT2: serve anche la GUI a meno di non attivare i bottoni in qualche altro modo
 
             quantum.getGestoreDiAzioni().IncodaAzione(new AzioneStampaAConsole("Partita iniziata!"));
 
