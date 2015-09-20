@@ -26,12 +26,14 @@ namespace Quantum_Game.Azioni
             //inizializza il giocatore e gli piazza tre navi
             foreach (Giocatore giocatore in quantum.getGestoreDiGiocatori().getGiocatori())
             {
-               giocatore.GlobalInit();
+                giocatore.GlobalInit();
+               
+                quantum.getGestoreDiAzioni().IncodaAzione(new AzioneStampaAConsole(giocatore.ToString()+" piazza le navi..."));
 
-               quantum.getGestoreDiAzioni().IncodaAzione(new AzioneStampaAConsole(giocatore.ToString()+" piazza le navi..."));
-               quantum.getGestoreDiAzioni().IncodaAzione(new AzionePiazzaNave(quantum,giocatore));
-               quantum.getGestoreDiAzioni().IncodaAzione(new AzionePiazzaNave(quantum,giocatore));
-               quantum.getGestoreDiAzioni().IncodaAzione(new AzionePiazzaNave(quantum,giocatore));
+                foreach (Nave nave in giocatore.NaviDaPiazzare)
+                    quantum.getGestoreDiAzioni().IncodaAzione(new AzionePiazzaNave(quantum, nave));
+                
+
               
             }
             

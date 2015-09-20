@@ -60,6 +60,7 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneInizioPartitaOffLine.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneMovimento.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSelezione.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneSelezioneDestra.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSetupPartitaOffLine.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzionePiazzaNave.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />

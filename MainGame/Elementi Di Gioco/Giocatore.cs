@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using System;
 
 namespace Quantum_Game {
@@ -35,7 +36,12 @@ public class Giocatore
         // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
         public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } 
 
-        /// Lista delle navi del giocator nel cimitero
+        /// <summary>
+        /// Restituisce l'array delle navi che sono già state create ma non sono in gioco al momento
+        /// </summary>
+        public Nave [] NaviDaPiazzare { get { return _flotta.Where(nave => !nave.InGioco).ToArray(); } }
+
+        /// <summary>Lista delle navi del giocator nel cimitero. Uguale a NaviDaPiazzare, per ora teniamoli entrambi per sicurezza</summary>
         public List<Nave> Rottami { get { return _flotta.FindAll(n => !n.InGioco); } }
 
         public e_color Colore { get { return this._colore; } }

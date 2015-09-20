@@ -79,9 +79,9 @@ namespace Quantum_Game.Azioni
 
                 quantum.getGUI().Tabellone.ResetSelezioneMouse();
 
-                var adiacenti = casellaTarget.TileAdiacenti(true, naveMossa.MuoveInDiagonale);
+                Tile[] adiacenti = casellaTarget.TileAdiacenti(true, naveMossa.MuoveInDiagonale);
 
-                var disponibili = adiacenti.Where(t =>
+                Casella[] disponibili = adiacenti.Where(t =>
                 {
                     Casella c;
                     if (t?.EunaCasella == true) c = (Casella)t; else return false;
@@ -98,9 +98,7 @@ namespace Quantum_Game.Azioni
 
                 Cleanup();
 
-                quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzionePiazzaNave(quantum, giocatoreDiTurno, naveMossa, disponibili));
-
-                quantum.getGUI().Tabellone.IlluminaCaselle(disponibili.Select(c => c.ID).ToArray());
+                quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzionePiazzaNave(quantum, naveMossa, disponibili));
 
                 //faseAttuale = indietreggia;     // nuova fase
             }

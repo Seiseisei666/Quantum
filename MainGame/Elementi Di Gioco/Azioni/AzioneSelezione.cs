@@ -42,13 +42,14 @@ namespace Quantum_Game.Azioni
                     quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneMovimento(quantum, casellaCliccata));
                     Cleanup();
                     return;
-                    // La selezione non viene rimossa finché non finisce la partita;
-                    // mettiamo le azioni chiamate dal giocatore in pila
+                    // Questa istanza di AzioneSelezione non viene rimossa finché non finisce la partita;
+                    // mettiamo le azioni ulteriori chiamate dal giocatore in pila
                 }
 
                 else if (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) && (!nave.SpecialUsata || !nave.Riconfigurata))
                 {
-                   // AzioneSuccessiva = new SelezioneDestra(game);
+                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneSelezioneDestra(quantum, casellaCliccata));
+                    Cleanup();
                     return;
                 }
             }
