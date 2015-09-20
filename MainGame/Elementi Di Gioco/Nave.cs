@@ -63,7 +63,7 @@ namespace Quantum_Game
             var TipoDiNaveIniziale = this._tipo;
             do
             {
-                risultato = util.Dadi(1);
+                risultato = util.Dadi(1); Debug.WriteLine(risultato);
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
             if (!specialScout) _riconfigurata = true;

@@ -36,6 +36,7 @@ namespace Quantum_Game
         /*riferimento al giocatore di turno */
         public Giocatore getGiocatoreDiTurno()
         {
+            // USA LE PROPRIETA', MALEDETTO PROGRAMMATORE DI JAVA!!!
             return giocatoreDiTurno;
         }
 
@@ -60,6 +61,7 @@ namespace Quantum_Game
             int index = giocatori.IndexOf(giocatoreDiTurno);
             index = (index + 1) % giocatori.Count;
             giocatoreDiTurno = giocatori[index];
+            giocatoreDiTurno.Init();
         } 
       }
 }

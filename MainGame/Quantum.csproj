@@ -56,7 +56,10 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGiocoComplessa.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\Azione.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneFineTurno.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneInizioPartitaOffLine.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneMovimento.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneSelezione.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSetupPartitaOffLine.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzionePiazzaNave.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
