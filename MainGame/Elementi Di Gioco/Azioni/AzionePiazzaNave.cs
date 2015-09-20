@@ -9,29 +9,48 @@ namespace Quantum_Game.Azioni
     {
         private Quantum quantum;
         private Giocatore giocatore;
+        private Casella[] caselleDisponibili;
+        private Nave naveDaPiazzare;
 
-        public AzionePiazzaNave(Quantum quantum, Giocatore giocatore)
+        // COSTRUTTORE PER LA FASE DI SETUP
+        public AzionePiazzaNave(Quantum quantum, Giocatore giocatore) :
+            this(quantum, giocatore,null, Tile.Tiles(t => t is Casella).Select(t => (Casella)t).ToArray())
+        { }        // Le navi non possono essere piazzate in qualsiasi casella! Dev'esserci una mentina nel pianeta
+                    // TODO: quando ci sono le mentine va modificata la selezione delle caselle disponibili
+
+
+        public AzionePiazzaNave (Quantum quantum, Giocatore giocatore, Nave naveDaPiazzare, Casella[] caselleDisponibili)
         {
+            // Piazzo una Nave in una casella arbitraria fra quelle dell'argomento
             this.quantum = quantum;
             this.giocatore = giocatore;
+            this.caselleDisponibili = caselleDisponibili;
+            this.naveDaPiazzare = naveDaPiazzare;
         }
 
         protected override void Esegui()
         {
-            Casella tempCas = quantum.getGUI().Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
-            
-            Nave naveTemp = giocatore.NaveDaPiazzare;
-            if (naveTemp != null)
+            Casella casella = quantum.getGUI().Tabellone.TileClick as Casella; // prova a castare il tile selezionato come casella
+            Nave nave = naveDaPiazzare ?? giocatore.NaveDaPiazzare;
+
+            if (nave != null)
             {
-                if (tempCas != null && tempCas.Occupante == null)
+                if (caselleDisponibili.Contains(casella) && casella.Occupante == null)
                 {
-                    naveTemp.Piazza(tempCas);
-                    Terminata = true;
-                }//riesegue l'azione fino a che non viene piazzata davvero una nave
+                    nave.Piazza(casella);
+                    Cleanup();
+                }
+                // L'azione non termina finché la nave non viene piazzata
             }
         }
 
         public override bool Abort() { return false; }
-        protected override void Cleanup() { }
+
+        protected override void Cleanup()
+        {
+            quantum.getGUI().Tabellone.ResetSelezioneMouse();
+            quantum.getGUI().Tabellone.SpegniCaselle();
+            Terminata = true;
+        }
     }
 }

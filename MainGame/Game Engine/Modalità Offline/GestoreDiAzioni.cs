@@ -22,9 +22,10 @@ namespace Quantum_Game
             if (azioniDaEseguire.Any())
             {
                 var azione = azioniDaEseguire.First();
-                azione.Start();
                 if (azione.Terminata)
                     azioniDaEseguire.RemoveFirst();
+                else azione.Start();
+                
             }
         }
 
@@ -32,11 +33,13 @@ namespace Quantum_Game
         public void IncodaAzione(Azione azione)
         { 
             azioniDaEseguire.AddLast(azione);
+
         }
 
         public void MettiAzioneInTesta(Azione azione)
         {
             azioniDaEseguire.AddFirst(azione);
+            stampaAzioni();
         }
 
         //metodo che controlla se ci sono nuove azioni ed, eventualmente, le esegue 
@@ -46,6 +49,14 @@ namespace Quantum_Game
         }
 
         public int Count { get { return azioniDaEseguire.Count; } }
+
+        void stampaAzioni ()
+        {
+            foreach (var a in azioniDaEseguire)
+            {
+                System.Diagnostics.Debug.WriteLine(a.ToString());
+            }
+        }
     }
 }
 

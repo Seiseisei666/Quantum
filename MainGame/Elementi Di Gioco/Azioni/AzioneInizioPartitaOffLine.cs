@@ -17,13 +17,14 @@ namespace Quantum_Game.Azioni
             {
                 b.Click += b.associatedEvent;
             }
-
+            quantum.getGestoreDiGiocatori().getGiocatoreDiTurno().Init();
+            quantum.getGestoreDiAzioni().IncodaAzione(new AzioneSelezione(quantum));
+            Cleanup();
         }
 
         /*Ad inizio partita tutti i bottoni vengono attivati...*/
         protected override void Esegui()
         {
-            Terminata = true;
         }
 
         public override bool Abort() { return false; }
@@ -38,6 +39,8 @@ namespace Quantum_Game.Azioni
                 b.Click -= b.associatedEvent;
             }
             */
+            Terminata = true;
+
         }
     }
 }
