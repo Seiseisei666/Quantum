@@ -152,7 +152,7 @@ namespace Quantum_Game.Interfaccia
 
         // TODO: valori provvisori calcolati con una sprite 100x100 pixel
         float raggio_al_quadrato;
-        const float  MAX_ESPANSIONE = 1.25f;
+        const float  MAX_ESPANSIONE = 1.35f;
         const float MIN_ESPANSIONE = 1f;
 
         const float INCREMENTO = 0.015f;
