@@ -109,8 +109,11 @@ namespace Quantum_Game.Interfaccia
             else
             {
                 srcRect = new Rectangle(100, 0, 100, 100);
-                Vector2 origin = new Vector2(_lunghLatoCasella/2, _lunghLatoCasella/2 );
-                spriteBatch.Draw(_spritePalliniAzioni, _posizione, srcRect, Color.White, 0, new Vector2(0, 0), _scala * _lunghLatoCasella / 100, SpriteEffects.None, 1f);
+                float differenza = ((_lunghLatoCasella * _scala.X) - _lunghLatoCasella)/2;
+                //NON BANALE: definendo il rettangolo posso facilmente scalare le dimensioni width e heigth, devo però
+                //            spostare la sprite conseguentemente in modo da centrare l'immagine, che altrimenti andrebbe in basso a destra
+                destRect = new Rectangle((int)(_posizione.X - differenza) , (int)(_posizione.Y - differenza), (int)(_lunghLatoCasella *_scala.X), (int)(_lunghLatoCasella * _scala.Y));
+                spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
             }
         }
 
