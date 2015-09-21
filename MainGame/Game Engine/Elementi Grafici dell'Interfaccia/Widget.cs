@@ -76,7 +76,6 @@ namespace Quantum_Game.Interfaccia
 
             if (_mouseOver)
             {
-                Console.WriteLine("Sono dentro l'update di MouseOver");
                 _fase += INCREMENTO;
                 if (_fase > 1.0) _fase = 1 - _fase;
                 var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
@@ -100,12 +99,19 @@ namespace Quantum_Game.Interfaccia
             //calcolo quale tile sorgente usare
             Rectangle srcRect;
             Rectangle destRect;
-            if (_doveWidget == doveDisegnoWidget.centro)    srcRect = new Rectangle(0, 0, 100, 100);
-            else                                            srcRect = new Rectangle(100, 0, 100, 100);
-
-            destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, (int)(_lunghLatoCasella * _scala.X), (int)(_lunghLatoCasella * _scala.Y));
-            spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
-            //spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White, 1.57f, new Vector2(0,0), SpriteEffects.None, 0);
+            
+            if (_doveWidget == doveDisegnoWidget.centro)
+            {
+                srcRect = new Rectangle(0, 0, 100, 100);
+                destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
+                spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
+            }
+            else
+            {
+                srcRect = new Rectangle(100, 0, 100, 100);
+                Vector2 origin = new Vector2(_lunghLatoCasella/2, _lunghLatoCasella/2 );
+                spriteBatch.Draw(_spritePalliniAzioni, _posizione, srcRect, Color.White, 0, new Vector2(0, 0), _scala * _lunghLatoCasella / 100, SpriteEffects.None, 1f);
+            }
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
