@@ -37,7 +37,7 @@ namespace Quantum_Game.Interfaccia
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
             _doveWidget = doveW;
-            _enabled = false; 
+            _enabled = enabled; 
 
             _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
         }
@@ -76,6 +76,7 @@ namespace Quantum_Game.Interfaccia
 
             if (_mouseOver)
             {
+                Console.WriteLine("Sono dentro l'update di MouseOver");
                 _fase += INCREMENTO;
                 if (_fase > 1.0) _fase = 1 - _fase;
                 var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
@@ -102,7 +103,7 @@ namespace Quantum_Game.Interfaccia
             if (_doveWidget == doveDisegnoWidget.centro)    srcRect = new Rectangle(0, 0, 100, 100);
             else                                            srcRect = new Rectangle(100, 0, 100, 100);
 
-            destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
+            destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, (int)(_lunghLatoCasella * _scala.X), (int)(_lunghLatoCasella * _scala.Y));
             spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
             //spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White, 1.57f, new Vector2(0,0), SpriteEffects.None, 0);
         }
@@ -111,10 +112,8 @@ namespace Quantum_Game.Interfaccia
         {
             if (!_enabled) return;
 
-
-            
-            double x =  Math.Pow( (args.Posizione.X - _posizione.X),2);
-            double y = Math.Pow((args.Posizione.Y - _posizione.Y), 2);
+            double x =  Math.Pow( (args.Posizione.X - (_posizione.X + _lunghLatoCasella/2) ),2);
+            double y = Math.Pow((args.Posizione.Y - (_posizione.Y + _lunghLatoCasella/2) ), 2);
 
             //{
             //    if (args.Posizione.Y < _posizione.Y + _lunghLatoCasella && args.Posizione.Y > _posizione.Y )
@@ -123,12 +122,8 @@ namespace Quantum_Game.Interfaccia
 
             //   if (args.Posizione.X < contenitore.Superficie.)
 
-            if (x + y < raggio_al_quadrato)
-                _mouseOver = true;
-            else
-            {
-                _mouseOver = false;
-            }
+            if (x + y < raggio_al_quadrato) _mouseOver = true;
+            else _mouseOver = false;
         }
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
