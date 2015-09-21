@@ -39,7 +39,7 @@ namespace Quantum_Game.Azioni
 
                 if (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
                 {
-                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneMovimento(quantum, casellaCliccata));
+                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneMovimento(quantum, casellaCliccata, puòAttaccare: true));
                     Cleanup();
                     return;
                     // Questa istanza di AzioneSelezione non viene rimossa finché non finisce la partita;

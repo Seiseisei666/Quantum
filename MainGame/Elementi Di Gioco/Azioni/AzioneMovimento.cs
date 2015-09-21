@@ -11,24 +11,27 @@ namespace Quantum_Game.Azioni
         Nave naveMossa;
         Quantum quantum;
         PathFinder pathFinder;
+        bool puòAttaccare;
 
-        public AzioneMovimento (Quantum quantum, Casella casellaPartenza)
+        public AzioneMovimento (Quantum quantum, Casella casellaPartenza, bool puòAttaccare = true)
         {
             this.casellaPartenza = casellaPartenza;
             naveMossa = casellaPartenza.Occupante;
             this.quantum = quantum;
+            this.puòAttaccare = puòAttaccare;
 
             // Faccio partire il pathfinder
             pathFinder = new PathFinder();
             pathFinder.Start(this.casellaPartenza, naveMossa.MuoveInDiagonale);
 
             // Illumino le caselle raggiungibili
-            var caselleRaggiungibili =
+            int[] caselleRaggiungibili =
 
                 Tile.Tiles(t =>
                 {
+                    Casella casella = t as Casella;
                     int d = pathFinder.DistanzaCasella(t);
-                    return (d <= naveMossa.Pwr && d > 0);
+                    return (d <= naveMossa.Pwr && d > 0 && (puòAttaccare || (casella != null && casella.Occupante == null) ));
                 }
                 ).Select(t => t.ID).ToArray();
             
@@ -54,7 +57,7 @@ namespace Quantum_Game.Azioni
                 return;
             }
 
-            if (naveTarget != null && !naveTarget.Alleato(giocatoreDiTurno))
+            if (naveTarget != null && !naveTarget.Alleato(giocatoreDiTurno) && puòAttaccare)
 
             {
                 // Combattimento
