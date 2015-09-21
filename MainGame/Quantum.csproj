@@ -63,6 +63,7 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSelezioneDestra.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSetupPartitaOffLine.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzionePiazzaNave.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialBattlestation.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\FineTurno.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\CheckSelezione.cs" />
