@@ -36,7 +36,7 @@ namespace Quantum_Game
 
         }
 
-        public void MettiAzioneInTesta(Azione azione)
+        public void ImpilaAzione(Azione azione)
         {
             azioniDaEseguire.AddFirst(azione);
             stampaAzioni();
@@ -52,6 +52,7 @@ namespace Quantum_Game
 
         void stampaAzioni ()
         {
+            System.Diagnostics.Debug.WriteLine("STACK MODIFICATA");
             foreach (var a in azioniDaEseguire)
             {
                 System.Diagnostics.Debug.WriteLine(a.ToString());

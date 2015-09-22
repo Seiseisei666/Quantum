@@ -23,7 +23,7 @@ namespace Quantum_Game.Azioni
 
             if (!giocatoreDiTurno.PuòAgire)
             {
-                quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneFineTurno(quantum));
+                quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneFineTurno(quantum));
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace Quantum_Game.Azioni
 
                 if (ultimoClick == TipoEventoMouse.ClkSin && nave.Alleato(giocatoreDiTurno) && !nave.Mossa)
                 {
-                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneMovimento(quantum, casellaCliccata, puòAttaccare: true));
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneMovimento(quantum, casellaCliccata, puòAttaccare: true));
                     Cleanup();
                     return;
                     // Questa istanza di AzioneSelezione non viene rimossa finché non finisce la partita;
@@ -48,7 +48,7 @@ namespace Quantum_Game.Azioni
 
                 else if (ultimoClick == TipoEventoMouse.ClkDx && nave.Alleato(giocatoreDiTurno) && (!nave.SpecialUsata || !nave.Riconfigurata))
                 {
-                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneSelezioneDestra(quantum, casellaCliccata));
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSelezioneDestra(quantum, casellaCliccata));
                     Cleanup();
                     return;
                 }

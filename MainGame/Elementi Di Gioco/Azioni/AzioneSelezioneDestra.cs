@@ -88,10 +88,10 @@ namespace Quantum_Game.Azioni
             switch (naveUsata.Tipo)
             {
                 case e_nave.Battlestation:
-                    quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzioneSpecialBattlestation(quantum, casellaPartenza));
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSpecialBattlestation(quantum, casellaPartenza));
                     break;
                 case e_nave.Flagship:
-                    //AzioneSuccessiva = new Special_Flagship(game, casellaPartenza);
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSpecialFlagship(quantum, casellaPartenza));
                     break;
                 case e_nave.Destroyer:
                    // AzioneSuccessiva = new Special_Warp(game, casellaPartenza);

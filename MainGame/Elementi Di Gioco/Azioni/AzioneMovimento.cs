@@ -34,7 +34,8 @@ namespace Quantum_Game.Azioni
                     return (d <= naveMossa.Pwr && d > 0 && (puòAttaccare || (casella != null && casella.Occupante == null) ));
                 }
                 ).Select(t => t.ID).ToArray();
-            
+
+            quantum.getGUI().Tabellone.ResetSelezioneMouse();
             quantum.getGUI().Tabellone.IlluminaCaselle(caselleRaggiungibili);
         }
 
@@ -101,7 +102,7 @@ namespace Quantum_Game.Azioni
 
                 Cleanup();
 
-                quantum.getGestoreDiAzioni().MettiAzioneInTesta(new AzionePiazzaNave(quantum, naveMossa, disponibili));
+                quantum.getGestoreDiAzioni().ImpilaAzione(new AzionePiazzaNave(quantum, naveMossa, disponibili));
 
                 //faseAttuale = indietreggia;     // nuova fase
             }
