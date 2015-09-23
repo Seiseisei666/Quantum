@@ -41,7 +41,11 @@ namespace Quantum_Game
         public int Pwr { get { return (int)_tipo; } }
         public e_nave Tipo { get { return this._tipo; } } // il nome della nave, nel caso dobbiamo scriverlo
         public bool Viva { get { return (_tipo > 0); } } // _tipo == 0 significa che la nave è un rottame attualmente
-        public bool InGioco { get { return _ingioco; } }
+        public bool InGioco
+        {
+            get { return _ingioco; }
+
+        }
         public bool Mossa { get { return _mossa; } }
         public bool SpecialUsata { get { return _special; } }
         public bool Riconfigurata { get { return _riconfigurata; } }
@@ -95,6 +99,7 @@ namespace Quantum_Game
         public void RimuoviDalGioco()
         {
             Posizione.Occupante = null;
+            this._ingioco = false;
         }
 
         /// Metodo per attaccare una nave target

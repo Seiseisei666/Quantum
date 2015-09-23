@@ -130,7 +130,8 @@ namespace Quantum_Game
             // Infine disegno le navi
             foreach (Nave nave in navi)
             {
-                nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.Posizione), scala);
+                if (nave.InGioco)
+                    nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.Posizione), scala);
             }
         }
 
@@ -179,8 +180,18 @@ namespace Quantum_Game
         {
             _coordIlluminazione = new Vector2[0];
         }
-        public void AggiungiNave(Nave nave) { navi = new Nave[] { nave }.Concat(navi).ToArray(); }
 
+        public void AggiungiNave (Nave nave)
+        {
+            navi = new Nave[] { nave }.Concat(navi).ToArray();
+        }
+        //public void NuovaNave (Nave nave) { nave.MessaInGioco += aggiungiNave; }
+        //void aggiungiNave (object naveCreata, EventArgs e)
+        //{
+        //    Nave nave = (Nave)naveCreata;
+        //    navi = new Nave[] { nave }.Concat(navi).ToArray();
+        //    nave.MessaInGioco -= aggiungiNave;
+        //}
 
         // METODI PRIVATI
 

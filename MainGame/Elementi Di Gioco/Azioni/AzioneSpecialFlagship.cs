@@ -48,8 +48,8 @@ namespace Quantum_Game.Azioni
                 // Selezionato alleato da trasportare
                 casellaAlleato = casellaCliccata;
                 naveTrasportata = casellaAlleato.Occupante;
-                casellaAlleato.Occupante = null;
 
+                naveTrasportata.RimuoviDalGioco();
                 fase = piazzaAlleato;
                 quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneMovimento(quantum, casellaFlagship, puòAttaccare: false));
             }

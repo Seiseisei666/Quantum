@@ -31,10 +31,13 @@ namespace Quantum_Game.Azioni
                 quantum.getGestoreDiAzioni().IncodaAzione(new AzioneStampaAConsole(giocatore.ToString()+" piazza le navi..."));
 
                 foreach (Nave nave in giocatore.NaviDaPiazzare)
+                {
                     quantum.getGestoreDiAzioni().IncodaAzione(new AzionePiazzaNave(quantum, nave));
-                
+                    quantum.getGUI().Tabellone.AggiungiNave(nave);
+                }
 
-              
+
+
             }
             
             //alla fine della fase di Setup lancio un'azione di inizio partita.

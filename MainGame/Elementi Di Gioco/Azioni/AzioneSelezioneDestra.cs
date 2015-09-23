@@ -23,12 +23,12 @@ namespace Quantum_Game.Azioni
             // HACK: gestire in maniera sensata  e più agile il posizionamento dei Widget
             // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
             // P.S: se ne è occupato Mirco! Ci metterà mano lui
-            Point pos1 = gui.Tabellone.Tile2Pixel(this.casellaPartenza);
-            Point pos2 = pos1;
+            Vector2 pos1 = gui.Tabellone.Tile2Pixel(this.casellaPartenza);
+            Vector2 pos2 = pos1;
             var lato = gui.Tabellone.LatoCasella;
 
-            pos1 -= new Point(20 - lato / 2, 15);
-            pos2 += new Point(20 + lato / 2, -15);
+            pos1 -= new Vector2(20 - lato / 2, 15);
+            pos2 += new Vector2(20 + lato / 2, -15);
 
             bool puòRiconfig = !naveUsata.Riconfigurata;
             bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
