@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Quantum_Game.Animazioni;
 namespace Quantum_Game
 {
     /// I colori del gioco... probabilmente inutile e da rimuovere, dato che esiste lo struct System.Color
@@ -14,7 +15,7 @@ namespace Quantum_Game
 		
 	}
 	
-    /// Tipi di nave. Rottame == 0 == nave nel cimitero (o non ancora giocata)
+    /// Tipi di nave
 	public enum e_nave: byte {
 		Rottame,
 		Battlestation,
@@ -28,16 +29,15 @@ namespace Quantum_Game
 
 	public class Nave
 	{
-        // COSTRUTTORE
+
         public Nave(Giocatore proprietario)
         {
-            this._proprietario = proprietario;
+            _proprietario = proprietario;
             _ingioco = _mossa = _special = _riconfigurata = false;
             _tipo = e_nave.Rottame;
         }
 
-        // PROPRIETA' PUBBLICHE
-            // tutte le varie informazioni che abbiamo sulla nave
+
         public int Pwr { get { return (int)_tipo; } }
         public e_nave Tipo { get { return this._tipo; } } // il nome della nave, nel caso dobbiamo scriverlo
         public bool Viva { get { return (_tipo > 0); } } // _tipo == 0 significa che la nave è un rottame attualmente
@@ -63,7 +63,7 @@ namespace Quantum_Game
             var TipoDiNaveIniziale = this._tipo;
             do
             {
-                risultato = util.Dadi(1); Debug.WriteLine(risultato);
+                risultato = util.Dadi(1);
             } while (risultato == (int)TipoDiNaveIniziale);
             this._tipo = (e_nave)risultato;
             if (!specialScout) _riconfigurata = true;
@@ -76,16 +76,27 @@ namespace Quantum_Game
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
+            Posizione = CasellaTarget;
             _ingioco = true;
-           
         }
         /// Muove la nave da una casella a un'altra.
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
         {
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
+            Posizione = CasellaTarget;
             this._mossa = true;
         }
+
+        /// <summary>
+        /// Per rimuovere temporaneamente una nave dal gioco.
+        /// La nave resta viva!!!
+        /// </summary>
+        public void RimuoviDalGioco()
+        {
+            Posizione.Occupante = null;
+        }
+
         /// Metodo per attaccare una nave target
         /// <param name="target">riferimento all'istanza di Nave da attaccare</param>
         /// <returns>Restituisce True se l'attacco è andato a buon fine</returns>
@@ -120,18 +131,83 @@ namespace Quantum_Game
         public bool Alleato(Giocatore player) { return (_proprietario.Colore == player.Colore); }
         ///True se la nave può muoversi in diagonale
         public bool MuoveInDiagonale { get { return _muoveinDiagonale; } }
+
+        public void Update ()
+        {
+            // spisellamento/Ondulazione
+            _fase += INCREMENTO;
+            if (_fase > 2.0) _fase = 2 - _fase;
+            var seno = (float)(Math.Sin(_fase * Math.PI));
+            offset = new Vector2(seno * 3.5f, 0);
+            if (Animazione != null)
+            {
+                // l'oggetto Animazione contiene i punti del percorso della nave
+                Animazione.Esegui();
+                rotazione = Animazione.Rotazione;
+                if (Animazione.Completata) Animazione = null;
+            }
+        }
+
+        /// <summary>
+        /// Probabilmente inutile, se decidiamo di usare il sistema mio (che utilizza l'oggetto Animazione)
+        /// </summary>
+        public float Fase { set { rotazione = value; } }
+
+        /// <summary>
+        /// Classico metodo Draw, con valori provvisori in attesa del tileset definitivo
+        /// </summary>
+        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 posizione, Vector2 scala )
+        {
+            Vector2 pos = Animazione != null ? Animazione.Posizione : posizione;
+            if (_ingioco)
+            {
+                spriteBatch.Draw(
+                    texture,
+                    pos + ( offset ) + scala * 50, // posizione + offset per spisellamenti; "scala*50" serve a centrare la nave nella casella
+                    sourceRectangle: new Rectangle(300, 0, 100, 100),
+                    scale: scala,
+                    color: SpriteColor,
+                    rotation: rotazione,
+                    origin: scala * 100
+                    );
+            }
+        }
+
         // CAMPI 
         private Giocatore _proprietario;
         private bool _mossa, _special, _ingioco, _riconfigurata, _muoveinDiagonale;
 		private e_nave _tipo;
-        
+        /// <summary>
+        /// Usato solo dal ManagerNavi, per avere il riferimento di dove disegnare questa nave
+        /// </summary>
+        public Casella Posizione { get; private set; }
 
+        /// <summary>
+        /// Per gli effetti di spisellamento/ondulazione
+        /// </summary>
+        private Vector2 offset = Vector2.Zero;
+        /// <summary>
+        /// fase dello spisellamento
+        /// </summary>
+        private float _fase = 0;
+        /// <summary>
+        /// incremento della fase ad ogni frame
+        /// </summary>
+        const float INCREMENTO = 0.007f;
+        /// <summary>
+        /// Rotazione del muso della nave
+        /// </summary>
+        float rotazione = 0f;
+        /// <summary>
+        /// Riferimento ad un oggetto che muove la nave
+        /// </summary>
+        public IAnimazione Animazione;
     }
 	
 	
 	
 	
 		
-	}
+}
 	
 
