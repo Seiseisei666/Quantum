@@ -76,44 +76,53 @@ namespace Quantum_Game.Interfaccia
 
             if (_mouseOver)
             {
-                _fase += INCREMENTO;
+                _fase += incrementoDiFase;
                 if (_fase > 1.0) _fase = 1 - _fase;
                 var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
 
-                _scala *=1.1f;
+                _scala *= velocitaCrescita;
                 if (_scala.X > MAX_ESPANSIONE) _scala = new Vector2(MAX_ESPANSIONE, MAX_ESPANSIONE);
                 _scala += new Vector2(seno, seno);
             }
             else
             {
                 _fase = 0;
-                _scala *= 0.8f;
-                if (_scala.X <1f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
+                _scala *= velocitaDecrescita;
+                if (_scala.X < MIN_ESPANSIONE) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE); 
             }
             
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
-            //calcolo quale tile sorgente usare
+            //TODO: posso spostarli nella definizione della classe così da non istanziarli ogni volta?
             Rectangle srcRect;
             Rectangle destRect;
             
-            if (_doveWidget == doveDisegnoWidget.centro)
+            if (_doveWidget == doveDisegnoWidget.centro) //disegno lo "sfondo" del widget
             {
                 srcRect = new Rectangle(0, 0, 100, 100);
+                //faccio coincidere la posizione di partenza con quella della casella, e disegno per una lunghezza pari al lato della casella
                 destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
                 spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
             }
-            else
+            else // disegno i pallini
             {
+                //NON BANALE: definendo il rettangolo di destinazione posso facilmente scalare le dimensioni width e heigth, 
+                //devo però spostare la sprite conseguentemente in modo da centrare l'immagine, che altrimenti si espanderebbe in basso a destra
+                //occhio ai cast, perché se _scala == 1 non parte l'animazione
+                int differenza = (int)( ((_lunghLatoCasella * _scala.X) - _lunghLatoCasella)/2 );
+                destRect = new Rectangle((int)_posizione.X - differenza , (int)_posizione.Y - differenza, (int)(_lunghLatoCasella *_scala.X), (int)(_lunghLatoCasella * _scala.Y));
+
                 srcRect = new Rectangle(100, 0, 100, 100);
-                float differenza = ((_lunghLatoCasella * _scala.X) - _lunghLatoCasella)/2;
-                //NON BANALE: definendo il rettangolo posso facilmente scalare le dimensioni width e heigth, devo però
-                //            spostare la sprite conseguentemente in modo da centrare l'immagine, che altrimenti andrebbe in basso a destra
-                destRect = new Rectangle((int)(_posizione.X - differenza) , (int)(_posizione.Y - differenza), (int)(_lunghLatoCasella *_scala.X), (int)(_lunghLatoCasella * _scala.Y));
                 spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
+
+                /*
+                Console.Write("scala: " + _scala);
+                Console.Write("PosXdiPar: " + _posizione.X);
+                Console.Write("PosX: " + (_posizione.X - differenza));
+                Console.WriteLine("PosXcast: " + (int)(_posizione.X - differenza));
+                */
             }
         }
 
@@ -121,15 +130,9 @@ namespace Quantum_Game.Interfaccia
         {
             if (!_enabled) return;
 
+            //aggiungere _lunghLatoCasella/2 permette di posizionare correttamente il centro del mouseOver
             double x =  Math.Pow( (args.Posizione.X - (_posizione.X + _lunghLatoCasella/2) ),2);
             double y = Math.Pow((args.Posizione.Y - (_posizione.Y + _lunghLatoCasella/2) ), 2);
-
-            //{
-            //    if (args.Posizione.Y < _posizione.Y + _lunghLatoCasella && args.Posizione.Y > _posizione.Y )
-            //    _mouseOver = true;
-            //}
-
-            //   if (args.Posizione.X < contenitore.Superficie.)
 
             if (x + y < raggio_al_quadrato) _mouseOver = true;
             else _mouseOver = false;
@@ -152,9 +155,13 @@ namespace Quantum_Game.Interfaccia
 
         // TODO: valori provvisori calcolati con una sprite 100x100 pixel
         float raggio_al_quadrato;
-        const float  MAX_ESPANSIONE = 1.35f;
+        const float  MAX_ESPANSIONE = 1.65f;
         const float MIN_ESPANSIONE = 1f;
 
-        const float INCREMENTO = 0.015f;
+        //per fluttuazioni
+        const float incrementoDiFase = 0.02f; 
+        //per zoom
+        const float velocitaCrescita = 1.1f;
+        const float velocitaDecrescita = 0.7f;
     }
 }
