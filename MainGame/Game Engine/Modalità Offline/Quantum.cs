@@ -17,6 +17,7 @@ namespace Quantum_Game
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private GuiManager gui;
+        private readonly string MappaDaCaricare;
 
 
         /* Costruttore di default che carica i settings salvati nel file settings.config  */
@@ -51,8 +52,8 @@ namespace Quantum_Game
             // TODO: creare menu apposito per caricare le  opzioni di partita (giocatori, mappa, etc) e sintetizzarlo con un metodo
 
             //Crea la mappa.
-
-            MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
+            string MappaDaCaricare = @"Content\Mappe\mappaeasy.txt"; //TODO: valore passato dalla schermata iniziale
+            MapGenerator generatore = new MapGenerator(MappaDaCaricare);
             Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             //carichiamo lo sfondo per la mappa
