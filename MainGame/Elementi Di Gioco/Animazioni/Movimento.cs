@@ -19,8 +19,11 @@ namespace Quantum_Game.Animazioni
 
         public Movimento (Vector2 [] percorso)
         {
-            // Avevo provato ad usare le curve, ma è troppo difficile (bisogna settare tutte le tangenti una per una)
-            // e probabilmente, con il tabellone quadrato, non viene nemmeno bene
+            // Avevo provato ad usare le curve, ma è un po' difficile (bisogna settare tutte le tangenti una per una)
+            // e forse, con il tabellone quadrato, non viene nemmeno bene
+            // però, con i percorsi dritti, viene un po' troppo squadrato
+            // qualche idea?
+
             //percorsoX = new Curve();
             //percorsoY = new Curve();
             //float i = 0;
@@ -47,17 +50,17 @@ namespace Quantum_Game.Animazioni
                 return;
             }
 
-            float xfade1 = pos - n;
-            float x1, y1;
+            float xfade = pos - n;
+            float x, y;
             // Interpolazione lineare fra 2 punti consecutivi del percorso
-            x1 = MathHelper.Lerp ( _percorso[n].X, _percorso[n+1].X, xfade1);
-            y1 = MathHelper.Lerp (_percorso[n].Y, _percorso[n + 1].Y, xfade1);
-            // TODO: sistemare la rotazione!! Mi impiccio con le cose trigonometriche!
-            // help wanted
+            x = MathHelper.Lerp ( _percorso[n].X, _percorso[n+1].X, xfade);
+            y = MathHelper.Lerp (_percorso[n].Y, _percorso[n + 1].Y, xfade);
+            Posizione = new Vector2(x, y);
+            // Calcolo la rotazione
             Vector2 differenza = _percorso[n + 1] - _percorso[n];
-            Rotazione = (float) Math.Atan2(differenza.X, differenza.Y);
-            Posizione = new Vector2 (x1,y1);
 
+            Rotazione = (float) Math.Atan2(differenza.X, - differenza.Y);
+            // Aggiorno la posizione della nave nel percorso
             pos += INCREMENTO;
         }
 

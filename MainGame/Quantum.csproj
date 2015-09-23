@@ -69,7 +69,6 @@
     <Compile Include="Elementi Di Gioco\Azioni\Special_Warp.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
-    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ManagerNavi.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Riquadro.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Sfondo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Casella.cs" />
@@ -80,7 +79,6 @@
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\GuiManager.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ConsoleMessaggi.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\RiquadroGui.cs" />
-    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\MenuTendina.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Vuoto.cs" />
     <Compile Include="Game Engine\Input Devices Manager\Mouse\MouseInput.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\MapGenerator.cs" />

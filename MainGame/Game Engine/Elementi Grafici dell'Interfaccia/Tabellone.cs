@@ -32,7 +32,7 @@ namespace Quantum_Game
             float s = _latoCasella / 100f;
             scala = new Vector2(s, s);
 
-            navi = new ManagerNavi(Tile2Pixel, scala);
+            navi = new Nave[0];
         }
 
         public override void CaricaContenuti(GuiManager gui)
@@ -127,7 +127,11 @@ namespace Quantum_Game
 
             disegnaIlluminaCaselle(spriteBatch);
 
-            navi.Draw(spriteBatch, tileset);
+            // Infine disegno le navi
+            foreach (Nave nave in navi)
+            {
+                nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.Posizione), scala);
+            }
         }
 
 
@@ -175,7 +179,7 @@ namespace Quantum_Game
         {
             _coordIlluminazione = new Vector2[0];
         }
-        public void AggiungiNave(Nave nave) { navi.Aggiungi(nave); }
+        public void AggiungiNave(Nave nave) { navi = new Nave[] { nave }.Concat(navi).ToArray(); }
 
 
         // METODI PRIVATI
@@ -263,8 +267,8 @@ namespace Quantum_Game
 
         public void Update()
         {
-
-            navi.Update();
+            foreach (Nave nave in navi)
+                nave.Update();
         }
 
         #endregion
@@ -280,7 +284,7 @@ namespace Quantum_Game
         private Texture2D pennello;
         private Rectangle _source, _target;
         private SpriteFont font;
-        private ManagerNavi navi;
+        private Nave [] navi;
 
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int _IdSelezione;
