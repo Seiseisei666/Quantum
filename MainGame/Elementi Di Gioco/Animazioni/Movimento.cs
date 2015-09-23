@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quantum_Game.Azioni;
 
 namespace Quantum_Game.Animazioni
 {
-    public class Movimento: IAnimazione
+    public class Movimento: Azione, IAnimazione
     {
-
+        Nave nave;
         Vector2[] _percorso;
         float pos = 0;
         int lungh;
@@ -17,7 +18,7 @@ namespace Quantum_Game.Animazioni
         //Curve percorsoX;
         //Curve percorsoY;
 
-        public Movimento (Vector2 [] percorso)
+        public Movimento (Nave nave, Vector2 [] percorso)
         {
             // Avevo provato ad usare le curve, ma è un po' difficile (bisogna settare tutte le tangenti una per una)
             // e forse, con il tabellone quadrato, non viene nemmeno bene
@@ -37,16 +38,17 @@ namespace Quantum_Game.Animazioni
             //}
             _percorso = percorso;
             lungh = percorso.Length;
-
+            this.nave = nave;
+            nave.Animazione = this;
         }
 
-        public void Esegui()
+        protected override void Esegui()
         {
             int n = ((int)pos % lungh);
 
             if (n + 1 >= lungh)
             {
-                Completata = true;
+                Cleanup();
                 return;
             }
 
@@ -63,8 +65,8 @@ namespace Quantum_Game.Animazioni
             // Aggiorno la posizione della nave nel percorso
             pos += INCREMENTO;
         }
-
-        public bool Completata { get; private set; }
+        protected override void Cleanup() { nave.Animazione = null; Terminata = true; }
+        public override bool Abort() { return false; }
 
         const float INCREMENTO = 0.09f;
         public Vector2 Posizione { get; private set; }

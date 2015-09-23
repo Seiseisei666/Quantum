@@ -29,7 +29,7 @@ namespace Quantum_Game.Azioni
         /*Esegue l'azione*/
         protected abstract void Esegui();
 
-        /* */
+        /* True quando l'azione è terminata */
         public bool Terminata { get; protected set; }
 
         /* Da chiamare quando l'azione è finita per liberare eventuali risorse utilizzate */

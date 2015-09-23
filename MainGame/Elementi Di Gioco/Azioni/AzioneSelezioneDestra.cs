@@ -94,7 +94,7 @@ namespace Quantum_Game.Azioni
                     quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSpecialFlagship(quantum, casellaPartenza));
                     break;
                 case e_nave.Destroyer:
-                   // AzioneSuccessiva = new Special_Warp(game, casellaPartenza);
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSpecialDestroyer(quantum, casellaPartenza));
                     break;
                 case e_nave.Interceptor:
                     naveUsata.UsaSpecial();

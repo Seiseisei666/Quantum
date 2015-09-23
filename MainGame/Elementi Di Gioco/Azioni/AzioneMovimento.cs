@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Quantum_Game.Animazioni;
+using Microsoft.Xna.Framework;
 
 namespace Quantum_Game.Azioni
 {
@@ -100,10 +102,9 @@ namespace Quantum_Game.Azioni
 
                 }).Select(t => (Casella)t).ToArray();
 
-                Cleanup();
 
                 quantum.getGestoreDiAzioni().ImpilaAzione(new AzionePiazzaNave(quantum, naveMossa, disponibili));
-
+                lancioAnimazione();
                 //faseAttuale = indietreggia;     // nuova fase
             }
 
@@ -112,7 +113,7 @@ namespace Quantum_Game.Azioni
                 // Movimento
                 naveMossa.Muovi(casellaPartenza, casellaTarget);
                 giocatoreDiTurno.Azione();
-                Cleanup();
+                lancioAnimazione();
             }
 
         }
@@ -122,6 +123,20 @@ namespace Quantum_Game.Azioni
             quantum.getGUI().Tabellone.ResetSelezioneMouse();
             quantum.getGUI().Tabellone.SpegniCaselle();
             Terminata = true;
+        }
+        void lancioAnimazione()
+        {
+            // Prendo tutti i punti del percorso della nave
+            var enumerablePunti =
+                pathFinder.PercorsoXCasella(casellaTarget).Select
+                (
+                    idCasella => quantum.getGUI().Tabellone.Tile2Pixel(Tile.id2Tile(idCasella))
+                );
+            //Aggiungo la casella di partenza della nave
+            Vector2[] punti = new Vector2[] { quantum.getGUI().Tabellone.Tile2Pixel(casellaPartenza) }.Concat(enumerablePunti).ToArray();
+
+            quantum.getGestoreDiAzioni().ImpilaAzione(new Movimento(naveMossa, punti));
+            Cleanup();
         }
     }
 }

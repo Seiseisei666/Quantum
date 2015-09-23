@@ -138,7 +138,7 @@ namespace Quantum_Game.Azioni
             Vector2[] punti = new Vector2[] { gui.Tabellone.Tile2Pixel(_casellaPartenza) }.Concat(enumPunti).ToArray();
 
             // Faccio partire l'animazione
-            naveMossa.Animazione = new Movimento(punti);
+        //    naveMossa.Animazione = new Movimento(punti);
             // Attendo che finisca
             AzioneSuccessiva = new AttesaAnimazione(naveMossa, this);
         }

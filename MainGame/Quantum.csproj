@@ -67,6 +67,7 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSetupPartitaOffLine.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzionePiazzaNave.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialBattlestation.cs" />
+    <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialDestroyer.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialFlagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\FineTurno.cs" />

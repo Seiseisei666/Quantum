@@ -144,12 +144,11 @@ namespace Quantum_Game
             if (_fase > 2.0) _fase = 2 - _fase;
             var seno = (float)(Math.Sin(_fase * Math.PI));
             offset = new Vector2(seno * 3.5f, 0);
+            
             if (Animazione != null)
             {
                 // l'oggetto Animazione contiene i punti del percorso della nave
-                Animazione.Esegui();
                 rotazione = Animazione.Rotazione;
-                if (Animazione.Completata) Animazione = null;
             }
         }
 
@@ -163,7 +162,11 @@ namespace Quantum_Game
         /// </summary>
         public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 posizione, Vector2 scala )
         {
-            Vector2 pos = Animazione != null ? Animazione.Posizione : posizione;
+
+            Vector2 pos = Animazione != null 
+                ? Animazione.Posizione 
+                : posizione;
+
             if (_ingioco)
             {
                 spriteBatch.Draw(
