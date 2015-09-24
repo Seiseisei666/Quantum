@@ -10,7 +10,6 @@ namespace Quantum_Game
         /* coda di azioni da eseguire che viene gestita da questa classe */
         private LinkedList<Azione> azioniDaEseguire;
 
-
         public GestoreDiAzioni()
         {
             azioniDaEseguire = new LinkedList<Azione>();
@@ -48,9 +47,13 @@ namespace Quantum_Game
             EseguiAzione();
         }
 
+        public bool AnnullaAzioneCorrente()
+        {
+            return azioniDaEseguire.First().Abort();
+        }
         public int Count { get { return azioniDaEseguire.Count; } }
 
-        void stampaAzioni ()
+        void stampaAzioni () // X Debug
         {
             System.Diagnostics.Debug.WriteLine("STACK MODIFICATA");
             foreach (var a in azioniDaEseguire)

@@ -21,7 +21,7 @@ namespace Quantum_Game.Azioni
             flagship = casellaPartenza.Occupante;
 
             // Selezione caselle da illuminare
-            Func<Tile, bool> filtraAlleati = (t => t.PresenzaAlleata(flagship));
+            Func<Tile, bool> filtraAlleati = (t => t.EunaCasella && t.PresenzaAlleata(flagship));
 
             int[] tiles = Tile.IdTiles(filtraAlleati);
             int[] caselle = tiles.Where(t => { return casellaFlagship.Adiacente(t, true); }).ToArray();
@@ -53,6 +53,8 @@ namespace Quantum_Game.Azioni
                 fase = piazzaAlleato;
                 quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneMovimento(quantum, casellaFlagship, puòAttaccare: false));
             }
+            else if (quantum.getGUI().Tabellone.UltimoClick == TipoEventoMouse.ClkDx)
+                Cleanup();
         }
 
         void piazzaAlleato()

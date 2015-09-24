@@ -148,6 +148,8 @@ namespace Quantum_Game.Interfaccia
                 }
             ResettoneGlobale();
             }
+            _spriteBatch.Dispose();
+            _spriteSheet.Dispose();
         }
 
         // Campi privati

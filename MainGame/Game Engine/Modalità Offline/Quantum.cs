@@ -111,7 +111,7 @@ namespace Quantum_Game
 
             ConsoleMessaggi console = new ConsoleMessaggi(msg);
             gui.Iscrivi(console);
-            Cimitero cim = new Cimitero(info);
+            Cimitero cim = new Cimitero(this, info);
             gui.Iscrivi(cim);
 
             

@@ -27,7 +27,7 @@ namespace Quantum_Game.Azioni
 
             gestoreDiGiocatori.aggiornaGiocatoreDiTurno();
             Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gestoreDiGiocatori.getGiocatoreDiTurno().Colore, gestoreDiGiocatori.getGiocatoreDiTurno().SpriteColor);
-            quantum.getGUI().Cimitero.Aggiorna(gestoreDiGiocatori.getGiocatoreDiTurno());
+            quantum.getGUI().Cimitero.Aggiorna();
 
             Terminata = true;
         }

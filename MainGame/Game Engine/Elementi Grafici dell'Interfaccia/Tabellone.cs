@@ -216,7 +216,11 @@ namespace Quantum_Game
             return new Vector2
                 (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
-      
+        /// <summary>
+        /// Restituisce il vettore che rappresenta le coordinate in pixel dell'angolo superiore sinistro del Tile argomento
+        /// </summary>
+        /// <param name="tile">Casella o pianeta</param>
+        /// <returns>L'angolo superiore sinistro (coordinate in Pixel)</returns>
         public Vector2 Tile2Pixel (Tile tile)
         {
             return id2Pixel(tile.ID);

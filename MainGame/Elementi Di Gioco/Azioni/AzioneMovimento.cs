@@ -124,6 +124,7 @@ namespace Quantum_Game.Azioni
             quantum.getGUI().Tabellone.SpegniCaselle();
             Terminata = true;
         }
+
         void lancioAnimazione()
         {
             // Prendo tutti i punti del percorso della nave
@@ -133,7 +134,8 @@ namespace Quantum_Game.Azioni
                     idCasella => quantum.getGUI().Tabellone.Tile2Pixel(Tile.id2Tile(idCasella))
                 );
             //Aggiungo la casella di partenza della nave
-            Vector2[] punti = new Vector2[] { quantum.getGUI().Tabellone.Tile2Pixel(casellaPartenza) }.Concat(enumerablePunti).ToArray();
+            Vector2 posizionePartenza = quantum.getGUI().Tabellone.Tile2Pixel(casellaPartenza);
+            Vector2[] punti = new Vector2[] { posizionePartenza }.Concat(enumerablePunti).ToArray();
 
             quantum.getGestoreDiAzioni().ImpilaAzione(new Movimento(naveMossa, punti));
             Cleanup();

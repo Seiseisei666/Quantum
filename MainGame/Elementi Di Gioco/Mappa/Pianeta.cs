@@ -7,14 +7,20 @@ namespace Quantum_Game
 {
     public class Pianeta : Tile
     {
+        static Random rnd = new Random(); // TEMPORANEO!! ***************
         //costruttore
         public Pianeta(QuantumTile tipo)
         {
             _tipo = tipo;
             _colonizzazioni = new e_color[4];
+
+            
+            e_color prova = (e_color)rnd.Next(0, 3);
             for (int i = 0; i < _colonizzazioni.Length; i++)
             {
-                _colonizzazioni[i] = e_color.incolore;
+                // TODO:    1) ogni pianeta ha un numero diverso di mentine
+                //          2) queste righe sono provvisorie e servono per generare una mappa con mentine a caso
+                _colonizzazioni[i] = prova;
             }
         }
 
@@ -32,9 +38,14 @@ namespace Quantum_Game
             return _colonizzazioni.Any(x => x == 0) && !_colonizzazioni.Any(x => x == colore);
         }
         /// <summary> Restituisce True se sul pianeta c'è una mentina del giocatore argomento</summary>
-        public bool PresenzaGiocatore (Giocatore player)
+        public override bool PresenzaAlleata (Giocatore player)
         {
             return _colonizzazioni.Any(c => c == player.Colore);
+        }
+        /// <summary> Restituisce True se sul pianeta c'è una mentina del colore della nave</summary>
+        public override bool PresenzaAlleata(Nave nave)
+        {
+            return _colonizzazioni.Any(c => c == nave.Colore);
         }
         /// <summary>Determina se il giocatore argomento può colonizzare il pianeta.</summary>
         public bool Colonizzabile(Giocatore player)
