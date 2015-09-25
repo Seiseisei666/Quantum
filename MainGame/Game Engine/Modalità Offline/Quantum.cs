@@ -54,8 +54,8 @@ namespace Quantum_Game
 
             //Crea la mappa.
 
-            MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
-            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+            //MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
+            //Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             //carichiamo lo sfondo per la mappa
             Sfondo sfondo = new Sfondo(this);

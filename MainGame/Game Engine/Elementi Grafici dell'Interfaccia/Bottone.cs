@@ -11,7 +11,9 @@ namespace Quantum_Game.Interfaccia
         Passa,
         Ricerca,
         Opzioni,
-        Credits
+        Credits,
+        più,
+        meno
     }
 
     //TODO: rendere abstract bottone
@@ -77,6 +79,10 @@ namespace Quantum_Game.Interfaccia
                         return "Opzioni";
                     case bottone.Credits:
                         return "Credits";
+                    case bottone.più:
+                        return "+";
+                    case bottone.meno:
+                        return "-";
                    
                     default:
                         return "";
