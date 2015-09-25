@@ -29,8 +29,9 @@ namespace Quantum_Game.Azioni
 
             if (quantum.getGUI().Tabellone.TileClick as Pianeta != null)
             {
-                //AzioneSuccessiva = new SelezionePianeta(game);
-                return;
+
+                quantum.getGestoreDiAzioni().ImpilaAzione(new AzioneSelezionePianeta(quantum, (Pianeta)quantum.getGUI().Tabellone.TileClick));
+                    return;
             }
 
 
