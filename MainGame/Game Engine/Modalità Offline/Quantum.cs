@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quantum_Game.Interfaccia;
 using Quantum_Game.Mappa;
 using Quantum_Game.Azioni;
+using Quantum_Game.Schermate;
 
 namespace Quantum_Game
 {
@@ -12,6 +13,7 @@ namespace Quantum_Game
         //Componenti del motore di gioco
         private GestoreDiGiocatori gestoreDiGiocatori;
         private GestoreDiAzioni gestoreDiAzioni;
+        private SchermateDiGioco gestoreDiSchermate;
        
         //Componenti del motore grafico
         private GraphicsDeviceManager graphics;
@@ -25,7 +27,6 @@ namespace Quantum_Game
             //creazione dei gestori degli elementi di gioco
             gestoreDiGiocatori = new GestoreDiGiocatori();
             gestoreDiAzioni = new GestoreDiAzioni();
-
 
             //creazione motore grafico
             graphics = new GraphicsDeviceManager(this);
@@ -50,6 +51,7 @@ namespace Quantum_Game
 
             // TODO: creare menu apposito per caricare le  opzioni di partita (giocatori, mappa, etc) e sintetizzarlo con un metodo
 
+
             //Crea la mappa.
 
             MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
@@ -63,7 +65,7 @@ namespace Quantum_Game
             int numeroGiocatori = 2;
 
             //viene incodata un'azione che si occuperà di eseguire il setup di una partita offline con due giocatore
-            gestoreDiAzioni.IncodaAzione(new AzioneSetupPartitaOffLine(this, numeroGiocatori));
+          //  gestoreDiAzioni.IncodaAzione(new AzioneSetupPartitaOffLine(this, numeroGiocatori));
 
             base.Initialize();
 
@@ -74,47 +76,12 @@ namespace Quantum_Game
         {
             //Per qualche motivo mistorioso lo spriteBatch va preso in LoadContent()
             spriteBatch = Services.GetService<SpriteBatch>();
-            
+
+            /*   MENU INIZIALE   */
+            gestoreDiSchermate = new SchermateDiGioco(this);
+            gestoreDiSchermate.MenuPrincipale();
 
 
-            /*  ESEMPIO DEL SISTEMA RIQUADRI  */
-
-            var schermo = Riquadro.Main;
-            var barraSuperiore = schermo.Riga(5);
-
-            var main = schermo.Colonna(70);
-                var tabellone = main.Riga(100, 5,5);
-                
-
-            var laterale = schermo.Colonna(100, 5);
-
-            var info = laterale.Riga(50, 0,10);
-            var bott1 = laterale.Riga(10,35,5);
-
-            var bott3 = laterale.Riga(10,35,5);
-            var bott4 = laterale.Riga(10,35,5);
-            var msg = laterale.Riga(100, 0,15);
-
-            Tabellone tab2 = new Tabellone(this, tabellone);
-            Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
-
-            Bottone passaTurno = new Bottone(bottone.Passa, bott4);
-            Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
-
-            gui.Iscrivi(colonizza);
-            gui.Iscrivi(passaTurno);
-            gui.Iscrivi(ricerca);
-
-
-            gui.Iscrivi(tab2);
-
-
-            ConsoleMessaggi console = new ConsoleMessaggi(msg);
-            gui.Iscrivi(console);
-            Cimitero cim = new Cimitero(this, info);
-            gui.Iscrivi(cim);
-
-            
             base.LoadContent();
         } 
 

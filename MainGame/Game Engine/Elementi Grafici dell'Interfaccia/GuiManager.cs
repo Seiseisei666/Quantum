@@ -56,7 +56,12 @@ namespace Quantum_Game.Interfaccia
         {
             elemento.CaricaContenuti(this);
             elementi.Add(elemento);
-
+            elemento.GuiManager = this;
+        }
+        public void Iscrivi (params ElementoGrafico[] elementi)
+        {
+            foreach (var elemento in elementi)
+                Iscrivi(elemento);
         }
         public void Iscrivi (Widget elemento)
         {

@@ -15,7 +15,7 @@ namespace Quantum_Game.Interfaccia
         /// </summary>
         protected Riquadro contenitore;
 
-        private GuiManager gui;
+        public GuiManager GuiManager { get; set; }
 
         /// <summary>
         /// Costruttore
@@ -60,7 +60,7 @@ namespace Quantum_Game.Interfaccia
             Dispose();
         }
 
-        public virtual void CaricaContenuti(GuiManager gui) { this.gui = gui; }
+        public abstract void CaricaContenuti(GuiManager gui);
 
         public abstract void Draw(SpriteBatch spriteBatch);
 
@@ -77,7 +77,7 @@ namespace Quantum_Game.Interfaccia
         {
             RimuoviEventi();
             contenitore.Eliminazione -= Eliminazione;
-            gui.Rimuovi(this);
+            GuiManager.Rimuovi(this);
         }
 
         public void Dispose (bool chiamatoEsplicitamente)

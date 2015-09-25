@@ -68,6 +68,7 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialDestroyer.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialFlagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
+    <Compile Include="Game Engine\Modalità Offline\SchermateDiGioco.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoneInizioPartitaOffLine.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Game Engine\Modalità Offline\Quantum.cs" />
     <Compile Include="Elementi Di Gioco\Giocatore.cs" />
     <Compile Include="Elementi Di Gioco\Nave.cs" />
-    <Compile Include="Interfaccia\Dummy.cs" />
     <Compile Include="Main\Start.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Tile.cs" />
@@ -150,6 +150,7 @@
     <None Include="Main\settings.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Elementi Di Gioco\Schermate\" />
     <Folder Include="Game Engine\Input Devices Manager\Keybord\" />
     <Folder Include="Game Engine\Modalità Multiplayer\" />
   </ItemGroup>

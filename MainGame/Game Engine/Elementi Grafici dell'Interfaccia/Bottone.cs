@@ -10,9 +10,8 @@ namespace Quantum_Game.Interfaccia
         IniziaPartita,
         Passa,
         Ricerca,
-        UsaSpecial,
-        Riconfigura,
-        Colonizza,
+        Opzioni,
+        Credits
     }
 
     //TODO: rendere abstract bottone
@@ -69,17 +68,16 @@ namespace Quantum_Game.Interfaccia
                 switch (_tipoBottone)
                 {
                     case bottone.IniziaPartita:
-                        return "Inizia Partita";
+                        return "Nuova Partita";
                     case bottone.Passa:
                         return "Passa il turno";
                     case bottone.Ricerca:
                         return "Aumenta Ricerca";
-                    case bottone.UsaSpecial:
-                        return "Usa abilita speciale";
-                    case bottone.Riconfigura:
-                        return "Riconfigura";
-                    case bottone.Colonizza:
-                        return "Colonizza il Pianeta";
+                    case bottone.Opzioni:
+                        return "Opzioni";
+                    case bottone.Credits:
+                        return "Credits";
+                   
                     default:
                         return "";
                 }
