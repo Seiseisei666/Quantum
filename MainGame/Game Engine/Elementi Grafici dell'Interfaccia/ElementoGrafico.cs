@@ -8,15 +8,29 @@ using Quantum_Game.Interfaccia;
 
 namespace Quantum_Game.Interfaccia
 {
-    public abstract class ElementoGrafico : IDisposable
+    public abstract class ElementoGrafico
     {
+        /// <summary>
+        /// Riquadro che ospita l'elemento
+        /// </summary>
         protected Riquadro contenitore;
+
+        private GuiManager gui;
+
+        /// <summary>
+        /// Costruttore
+        /// </summary>
+        /// <param name="contenitore"></param>
         protected ElementoGrafico (Riquadro contenitore)
         {
             this.contenitore = contenitore;
+            contenitore.Eliminazione += Eliminazione;
             AssociaEventiMouse();
         }
 
+        /// <summary>
+        /// Iscrizione agli eventi del mouse
+        /// </summary>
         void AssociaEventiMouse ()
         {
             var mouse = Riquadro.Main.mouse;
@@ -24,6 +38,10 @@ namespace Quantum_Game.Interfaccia
             mouse.ClickDestro += ClickDestro;
             mouse.MouseOver += MouseOver;
         }
+
+        /// <summary>
+        /// Dissociazione dagli eventi del mouse, da chiamare quando l'oggetto va eliminato
+        /// </summary>
         void RimuoviEventi ()
         {
             var mouse = Riquadro.Main.mouse;
@@ -32,7 +50,17 @@ namespace Quantum_Game.Interfaccia
             mouse.MouseOver -= MouseOver;
         }
 
-        public abstract void CaricaContenuti(GuiManager gui);
+        /// <summary>
+        /// Chiamato dal Riquadro contenitore, quando viene distrutto
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Eliminazione (object sender, EventArgs e)
+        {
+            Dispose();
+        }
+
+        public virtual void CaricaContenuti(GuiManager gui) { this.gui = gui; }
 
         public abstract void Draw(SpriteBatch spriteBatch);
 
@@ -48,6 +76,13 @@ namespace Quantum_Game.Interfaccia
         public void Dispose()
         {
             RimuoviEventi();
+            contenitore.Eliminazione -= Eliminazione;
+            gui.Rimuovi(this);
+        }
+
+        public void Dispose (bool chiamatoEsplicitamente)
+        {
+
         }
     }
 }

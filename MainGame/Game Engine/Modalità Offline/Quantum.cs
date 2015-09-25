@@ -82,7 +82,7 @@ namespace Quantum_Game
             var schermo = Riquadro.Main;
             var barraSuperiore = schermo.Riga(5);
 
-            var main = schermo.Colonna(75);
+            var main = schermo.Colonna(70);
                 var tabellone = main.Riga(100, 5,5);
                 
 

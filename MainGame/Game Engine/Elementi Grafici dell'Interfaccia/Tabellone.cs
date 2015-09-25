@@ -108,6 +108,16 @@ namespace Quantum_Game
                 }
 
                 spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti);
+                string str = ((int)pianeta.Tipo).ToString();
+                Vector2 pos = Tile2Pixel(pianeta) + new Vector2(_latoCasella / 2, _latoCasella/2) - font.MeasureString(str) / 2;
+                spriteBatch.DrawString (
+                    font, 
+                    str,
+                    pos,
+                    Color.Gold, 
+                    0f, 
+                    Vector2.Zero,
+                    2f, SpriteEffects.None, 0f);
             }
 
             foreach (var casella in caselle)

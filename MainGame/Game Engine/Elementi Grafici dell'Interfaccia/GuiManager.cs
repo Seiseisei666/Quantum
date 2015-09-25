@@ -56,6 +56,7 @@ namespace Quantum_Game.Interfaccia
         {
             elemento.CaricaContenuti(this);
             elementi.Add(elemento);
+
         }
         public void Iscrivi (Widget elemento)
         {

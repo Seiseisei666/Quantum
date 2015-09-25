@@ -8,11 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Quantum_Game.Interfaccia
 {
-    public enum Allineamento
-    {
-        Sotto,
-        aDestra
-    }
+
     public class Riquadro
     {
         public Rectangle Superficie { get { return new Rectangle(xAbs, yAbs, larghezzaAbs, altezzaAbs); } }
@@ -153,6 +149,22 @@ namespace Quantum_Game.Interfaccia
                 figlio.calcolaDimensioniInPixel(xAbs, yAbs, larghezzaAbs, altezzaAbs);
         }
 
+        public event EventHandler Eliminazione;
+
+        /// <summary>
+        /// Cancella il riquadro e tutti i suoi figli, e avverte della cancellazione inviando l'evento Eliminazione
+        /// </summary>
+        protected void Elimina ()
+        {
+            foreach (Riquadro figlio in _figli)
+
+            {
+                figlio.Eliminazione?.Invoke(figlio, EventArgs.Empty);
+                figlio.Elimina();
+            }
+            _figli.Clear();
+        }
+
         private float _Xrelativa, _Yrelativa, _larghRelativa, _altRelativa;
         protected int xAbs, yAbs, larghezzaAbs, altezzaAbs;
 
@@ -187,6 +199,14 @@ namespace Quantum_Game.Interfaccia
 
             calcolaDimensioniInPixel(0, 0, finestra.ClientBounds.Width, finestra.ClientBounds.Height);
 
+        }
+
+        /// <summary>
+        /// Elimina tutti i figli, ovvero resetta la pagina dell'interfaccia
+        /// </summary>
+        public void Reset ()
+        {
+            Elimina();
         }
     }
 }

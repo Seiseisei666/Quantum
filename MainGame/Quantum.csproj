@@ -55,9 +55,6 @@
   <ItemGroup>
     <Compile Include="Elementi Di Gioco\Animazioni\IAnimazione.cs" />
     <Compile Include="Elementi Di Gioco\Animazioni\Movimento.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\AttesaAnimazione.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGioco.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\AzioneDiGiocoComplessa.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\Azione.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneFineTurno.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneInizioPartitaOffLine.cs" />
@@ -71,15 +68,6 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialDestroyer.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialFlagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\FineTurno.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\CheckSelezione.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\GiocaDaRiserva.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\Movimento_Attacco.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\SelezioneDestra.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\SelezionePianeta.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\Special_Battlestation.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\Special_Flagship.cs" />
-    <Compile Include="Elementi Di Gioco\Azioni\Special_Warp.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoneInizioPartitaOffLine.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
@@ -92,7 +80,6 @@
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Bottone.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\GuiManager.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ConsoleMessaggi.cs" />
-    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\RiquadroGui.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Vuoto.cs" />
     <Compile Include="Game Engine\Input Devices Manager\Mouse\MouseInput.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\MapGenerator.cs" />
