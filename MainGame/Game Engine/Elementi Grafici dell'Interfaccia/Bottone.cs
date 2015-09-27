@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quantum_Game;
 
 namespace Quantum_Game.Interfaccia
 {
@@ -14,11 +10,13 @@ namespace Quantum_Game.Interfaccia
         IniziaPartita,
         Passa,
         Ricerca,
-        UsaSpecial,
-        Riconfigura,
-        Colonizza,
+        Opzioni,
+        Credits,
+        più,
+        meno
     }
 
+    //TODO: rendere abstract bottone
     public class Bottone : ElementoGrafico
     {
         #region Costruttori
@@ -72,17 +70,20 @@ namespace Quantum_Game.Interfaccia
                 switch (_tipoBottone)
                 {
                     case bottone.IniziaPartita:
-                        return "Inizia Partita";
+                        return "Nuova Partita";
                     case bottone.Passa:
                         return "Passa il turno";
                     case bottone.Ricerca:
                         return "Aumenta Ricerca";
-                    case bottone.UsaSpecial:
-                        return "Usa abilita speciale";
-                    case bottone.Riconfigura:
-                        return "Riconfigura";
-                    case bottone.Colonizza:
-                        return "Colonizza il Pianeta";
+                    case bottone.Opzioni:
+                        return "Opzioni";
+                    case bottone.Credits:
+                        return "Credits";
+                    case bottone.più:
+                        return "+";
+                    case bottone.meno:
+                        return "-";
+                   
                     default:
                         return "";
                 }
@@ -115,6 +116,11 @@ namespace Quantum_Game.Interfaccia
         }
         #endregion
 
+        /* Istruzioni eseguite al click del bottone*/
+        public void associatedEvent(object bott, EventArgs a)
+        {
+            //mettere questo metodo astratto
+        }
 
         public event EventHandler Click;
 

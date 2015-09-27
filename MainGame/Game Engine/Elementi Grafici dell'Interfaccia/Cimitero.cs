@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Quantum_Game.Azioni;
 
 namespace Quantum_Game.Interfaccia
 {
     public class Cimitero: ElementoGrafico
     {
-        public Cimitero (Riquadro contenitore): base (contenitore)
+        Quantum quantum;
+
+        public Cimitero (Quantum quantum, Riquadro contenitore): base (contenitore)
         {
-            //non c'è niente da costruire in particolare
+            this.quantum = quantum;
         }
 
         public override void CaricaContenuti(GuiManager gui)
@@ -21,9 +24,10 @@ namespace Quantum_Game.Interfaccia
             _font = gui.Font;
         }
         /// <summary> Popola il cimitero con le navi della riserva del giocatore. Da chiamare a inizio turno e in casi speciali per aggiornare il cimitero durante il turno </summary>
-        public void Aggiorna (Giocatore giocatore)
+        public void Aggiorna ()
         {
             _naveSelezionata = null;
+            var giocatore = quantum.getGestoreDiGiocatori().getGiocatoreDiTurno();
             _rottami = new List<Nave>(giocatore.Rottami);
         }
        
@@ -32,8 +36,8 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw (SpriteBatch spriteBatch)
         {
-            // TODO: Disegnare lo sfondo
 
+            // TODO: la grafica del cimitero è completamente temporanea
             int i = 0;
             if (_rottami != null)
             foreach (Nave n in _rottami)
@@ -45,7 +49,6 @@ namespace Quantum_Game.Interfaccia
                 i++;
             }
 
-            // TODO: Disegnare i bordi
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
@@ -71,6 +74,10 @@ namespace Quantum_Game.Interfaccia
             {
                 ConsoleMessaggi.NuovoMessaggio(_rottami[_selezione].Tipo.ToString());
                 _naveSelezionata = _rottami[_selezione];
+                if (quantum.getGestoreDiAzioni().AnnullaAzioneCorrente())
+                {
+                    quantum.getGestoreDiAzioni().ImpilaAzione(AzionePiazzaNave.DaRiserva(quantum, _naveSelezionata));
+                }
             }
         }
 

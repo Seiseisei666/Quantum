@@ -19,18 +19,37 @@ namespace Quantum_Game
     /// <summary> Classe astratta da cui ereditano tutti i tile. Contiene metodi statici per gestire le caselle </summary>
     public abstract class Tile
     {
-        public Tile() { ID = _id++; }
+        public Tile() { }
 
-        static List<Tile> _caselle;
+        static Dictionary<int, Tile> _caselle = new Dictionary<int, Tile>(0);
+        public static event EventHandler MappaModificata;
+       // static List<Tile> _caselle;
         static int _colonne;
         static int _righe;
         static int _id = 0;
         public static int Righe {get {return _righe;} }
         public static int Colonne { get { return _colonne; } }
-
+        /// <summary>
+        /// Ho cambiato un po' il metodo CreaMappa e la gestione dei tile
+        /// </summary>
+        /// <param name="Lista"></param>
+        /// <param name="r"></param>
+        /// <param name="c"></param>
         public static void CreaMappa (List<Tile> Lista, int r, int c)
         {
-            _caselle = Lista; _righe = r; _colonne = c;
+            _caselle = new Dictionary<int, Tile>(r*c);
+            _righe = r; _colonne = c;
+
+            int id = 0;
+
+            foreach (Tile tile in Lista)
+            {
+                tile.ID = id;
+                _caselle.Add(id, tile);
+                id++;
+            }
+            // Avverto il tabellone che è stata creata una nuova mappa
+            MappaModificata?.Invoke(null, EventArgs.Empty);
         }
         /// <summary> Codice numerico del tile</summary>
         public int ID { get; private set; }
@@ -79,8 +98,8 @@ namespace Quantum_Game
                 case Direzioni.BassoASinistra:
                     return (tile + Direzioni.Sotto) + Direzioni.Sinistra;
             }
-
-            if (idValido(id)) return _caselle[id];
+            Tile risultato;
+            if (_caselle.TryGetValue(id, out risultato)) return risultato;
             else return null;
         }
 
@@ -134,8 +153,7 @@ namespace Quantum_Game
         public static Tile[] Tiles (Func<Tile,bool> filtro)
         {
             if (filtro == null) throw new ArgumentNullException("filtro");
-
-            return _caselle.Where(t => filtro(t)).ToArray();
+            return _caselle.Values.Where(t => filtro(t)).ToArray();
 
         }
         // NON USATO
@@ -163,9 +181,18 @@ namespace Quantum_Game
         ///<summary>Conversione da ID a Tile</summary>
         public static Tile id2Tile(int id)
         {
-            if (idValido (id))
-                return _caselle[id];
+            Tile risultato;
+            if  (_caselle.TryGetValue(id, out risultato)) return risultato;
             else return null;
+        }
+
+        public static void id2nm(int idCasella, out int n, out int m)
+        {
+            if (!idValido(idCasella))
+                throw new IndexOutOfRangeException("Indice non esistente");
+
+            n = idCasella % Colonne;
+            m = idCasella / Colonne;
         }
 
         public static bool idValido(int id)

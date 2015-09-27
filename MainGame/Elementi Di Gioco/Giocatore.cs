@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using System;
 
 namespace Quantum_Game {
 
-
+//TODO rifare la gestione dei colori!
 public class Giocatore
     {
 
@@ -35,11 +36,16 @@ public class Giocatore
         // restituisce, se ce n'è, una nave giocata ma non ancora posizionata sulla plancia
         public Nave NaveDaPiazzare { get { return _flotta.Find(x => x.InGioco == false); } } 
 
-        /// Lista delle navi del giocator nel cimitero
+        /// <summary>
+        /// Restituisce l'array delle navi che sono già state create ma non sono in gioco al momento
+        /// </summary>
+        public Nave [] NaviDaPiazzare { get { return _flotta.Where(nave => !nave.InGioco).ToArray(); } }
+
+        /// <summary>Lista delle navi del giocator nel cimitero. Uguale a NaviDaPiazzare, per ora teniamoli entrambi per sicurezza</summary>
         public List<Nave> Rottami { get { return _flotta.FindAll(n => !n.InGioco); } }
 
         public e_color Colore { get { return this._colore; } }
-        public Color SpriteColor { get { return GameSystem.QuantumColor[_colore]; } }
+        public Color SpriteColor { get { return GestoreDiGiocatori.QuantumColor[_colore]; } }
 
         public bool PuòAgire { get { return _azioni > 0; } }
         public bool PuòColonizzare { get { return _azioni > 1; } }
@@ -57,6 +63,11 @@ public class Giocatore
         }
 
         //METODI PUBBLICI 
+        /* Restituisce un ID (nome e/o colore) del giocatore */
+        public override String ToString()
+        {
+            return this.Colore.ToString();
+        }
         // inizializzazione globale
         public void GlobalInit() 
         {
@@ -100,12 +111,9 @@ public class Giocatore
         // Fine turno
         public void Cleanup()  
         {
-            if (_dominio >= 5)
-            {
-                //reset dominio
-                _dominio -= 5; 
-                // TODO: Piazzare la mentina
-            }
+            // TODO: probabilmente questo metodo non ha senso, lo lascio vuoto per sicurezza
+            // Sarà il flusso di gioco a controllare le condizioni e a gestire, quando necessario, il cleanup di fine turno
+
         }
         // METODI PRIVATI
         private void inizializzaFlotta(int NUMERO_NAVI_INIZIALI = 3)

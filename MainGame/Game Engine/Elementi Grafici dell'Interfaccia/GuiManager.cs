@@ -57,6 +57,12 @@ namespace Quantum_Game.Interfaccia
         {
             elemento.CaricaContenuti(this);
             elementi.Add(elemento);
+            elemento.GuiManager = this;
+        }
+        public void Iscrivi (params ElementoGrafico[] elementi)
+        {
+            foreach (var elemento in elementi)
+                Iscrivi(elemento);
         }
         public void Iscrivi (Widget elemento)
         {
@@ -116,6 +122,7 @@ namespace Quantum_Game.Interfaccia
         {
             foreach (var Widg in animati)
                 Widg.Update();
+            Tabellone?.Update();
         }
 
 
@@ -149,6 +156,8 @@ namespace Quantum_Game.Interfaccia
                 }
             ResettoneGlobale();
             }
+            _spriteBatch.Dispose();
+            _spriteSheet.Dispose();
         }
 
         // Campi privati

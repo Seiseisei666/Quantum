@@ -21,10 +21,10 @@ namespace Quantum_Game.Azioni
         public override bool Abort() { return false; }
         protected override void Cleanup()
         {
-            AzioneSuccessiva = null; 
-            gameSystem.NextTurn();
-            Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gameSystem.GiocatoreDiTurno.Colore, gameSystem.GiocatoreDiTurno.SpriteColor);
-            gui.Cimitero.Aggiorna(gameSystem.GiocatoreDiTurno);
+            AzioneSuccessiva = null;
+            gestoreDiGiocatori.aggiornaGiocatoreDiTurno();
+            Interfaccia.ConsoleMessaggi.NuovoMessaggio("Turno del giocatore" + gestoreDiGiocatori.getGiocatoreDiTurno().Colore, gestoreDiGiocatori.getGiocatoreDiTurno().SpriteColor);
+            gui.Cimitero.Aggiorna(gestoreDiGiocatori.getGiocatoreDiTurno());
         }
 
     }

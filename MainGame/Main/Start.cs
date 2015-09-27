@@ -11,7 +11,7 @@ namespace Quantum_Game
         public static void Main()
         {
             // TODO: creare un menu' di entrata
-            
+
             //modalità "single"player:   
             using (var game = new Quantum())
                 game.Run();

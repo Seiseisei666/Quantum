@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
-using System;
 using Quantum_Game.Interfaccia;
 using Quantum_Game.Mappa;
-
-
+using Quantum_Game.Azioni;
+using Quantum_Game.Schermate;
 
 namespace Quantum_Game
 {
@@ -13,8 +11,9 @@ namespace Quantum_Game
     public class Quantum : Game
     {
         //Componenti del motore di gioco
-        private GameSystem gameSystem;
-        private FlussoDiGioco flussoGioco;
+        private GestoreDiGiocatori gestoreDiGiocatori;
+        private GestoreDiAzioni gestoreDiAzioni;
+        private SchermateDiGioco gestoreDiSchermate;
        
         //Componenti del motore grafico
         private GraphicsDeviceManager graphics;
@@ -25,23 +24,19 @@ namespace Quantum_Game
         /* Costruttore di default che carica i settings salvati nel file settings.config  */
         public Quantum()
         {
-            //creazione motore di gioco
-            gameSystem = new GameSystem();
-            Services.AddService(gameSystem);
-
-            //TODO: perché gamesystem è un servizio e flussoDiGioco un componente?
-            flussoGioco = new FlussoDiGioco(this);
-            Components.Add(flussoGioco);
+            //creazione dei gestori degli elementi di gioco
+            gestoreDiGiocatori = new GestoreDiGiocatori();
+            gestoreDiAzioni = new GestoreDiAzioni();
 
             //creazione motore grafico
             graphics = new GraphicsDeviceManager(this);
 
             gui = new GuiManager(this);
-            gui = Services.GetService<GuiManager>();
             Components.Add(gui);
 
             //carichiamo i settings di default (o salvati)
             loadSettings();
+            
         }
 
         protected override void Initialize()
@@ -56,22 +51,21 @@ namespace Quantum_Game
 
             // TODO: creare menu apposito per caricare le  opzioni di partita (giocatori, mappa, etc) e sintetizzarlo con un metodo
 
-            /*Crea la mappa.
-            //TODO: Per ora il percorso del file sta qui, poi potrebbe essere una selezione tra vari preset,
-            o addirittura un map editor integrato nel gioco, basta fargli scrivere un txt con la mappa!
-            */
-            MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
-            Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
+
+            //Crea la mappa.
+
+            //MapGenerator generatore = new MapGenerator(@"Data Content\Mappe\mappaeasy.txt");
+            //Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             //carichiamo lo sfondo per la mappa
             Sfondo sfondo = new Sfondo(this);
             Components.Add(sfondo);
 
             // Imposta il numero di giocatori
-            this.gameSystem.AggiungiGiocatori(2);
+            int numeroGiocatori = 2;
 
-            //Mettiamo il gamesystem in attesa di un evento InizioPartita che viene generato dopo la disposizione delle pedine iniziali
-            gameSystem.InizioPartita += InizioPartita;
+            //viene incodata un'azione che si occuperà di eseguire il setup di una partita offline con due giocatore
+          //  gestoreDiAzioni.IncodaAzione(new AzioneSetupPartitaOffLine(this, numeroGiocatori));
 
             base.Initialize();
 
@@ -82,46 +76,10 @@ namespace Quantum_Game
         {
             //Per qualche motivo mistorioso lo spriteBatch va preso in LoadContent()
             spriteBatch = Services.GetService<SpriteBatch>();
-            
-          //TODO: da sistemare
 
-
-            /*  ESEMPIO DEL SISTEMA RIQUADRI  */
-
-            var schermo = Riquadro.Main;
-            var barraSuperiore = schermo.Riga(5);
-
-            var main = schermo.Colonna(75);
-                var tabellone = main.Riga(100, 5,5);
-                
-
-            var laterale = schermo.Colonna(100, 5);
-
-            var info = laterale.Riga(50, 0,10);
-            var bott1 = laterale.Riga(10,35,5);
-            var bott2 = laterale.Riga(10,35,5);
-            var bott3 = laterale.Riga(10,35,5);
-            var bott4 = laterale.Riga(10,35,5);
-            var msg = laterale.Riga(100, 0,15);
-
-            Tabellone tab2 = new Tabellone(this, tabellone);
-            Bottone colonizza = new Bottone(bottone.Colonizza, bott1);
-            Bottone iniziaPartita = new Bottone(bottone.IniziaPartita, bott2);
-            Bottone passaTurno = new Bottone(bottone.Passa, bott4);
-            Bottone ricerca = new Bottone(bottone.Ricerca, bott3) ;
-
-            gui.Iscrivi(colonizza);
-            gui.Iscrivi(passaTurno);
-            gui.Iscrivi(ricerca);
-            gui.Iscrivi(iniziaPartita);
-
-            gui.Iscrivi(tab2);
-
-
-            ConsoleMessaggi console = new ConsoleMessaggi(msg);
-            gui.Iscrivi(console);
-            Cimitero cim = new Cimitero(info);
-            gui.Iscrivi(cim);
+            /*   MENU INIZIALE   */
+            gestoreDiSchermate = new SchermateDiGioco(this);
+            gestoreDiSchermate.MenuPrincipale();
 
 
             base.LoadContent();
@@ -134,7 +92,8 @@ namespace Quantum_Game
         
         protected override void Update(GameTime gameTime)
         {
-            flussoGioco.Update();
+
+            gestoreDiAzioni.Update();
 
             base.Update(gameTime);
         }
@@ -157,14 +116,6 @@ namespace Quantum_Game
             spriteBatch.End();
         }
 
-        //trigger che si attiva ad inizio partita (?)
-
-        private void InizioPartita(object sender, EventArgs args)
-        {
-            ConsoleMessaggi.NuovoMessaggio("Partita iniziata!!");
-            Debug.WriteLine("Partita iniziata!!");
-        }       
-
         public void loadSettings()
         {
             //TODO: 1) mettere dei settings di default nel file settings.config; 
@@ -177,5 +128,9 @@ namespace Quantum_Game
             IsMouseVisible = true;
             graphics.ApplyChanges();
         }
+
+        public GuiManager getGUI() {return gui;}
+        public GestoreDiGiocatori getGestoreDiGiocatori() {return gestoreDiGiocatori; }
+        public GestoreDiAzioni getGestoreDiAzioni() {return gestoreDiAzioni;}
     }
 }
