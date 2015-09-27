@@ -11,9 +11,9 @@ namespace Quantum_Game
 {   
     public class Tabellone: ElementoGrafico, IElementoAnimato
     {
-        readonly Pianeta[] pianeti;
-        readonly Casella[] caselle;
-        readonly Vector2 scala;
+        Pianeta[] pianeti;
+        Casella[] caselle;
+        Vector2 scala;
 
         public Tabellone (Game game, Riquadro contenitore): base (contenitore)
         {
@@ -21,10 +21,21 @@ namespace Quantum_Game
             _idMouseOver = -1;
             _coordIlluminazione = new Vector2[0];
             MostraSelezione = true;
+            navi = new Nave[0];
+            pianeti = new Pianeta[0];
+            caselle = new Casella[0];
+            AggiornaMappa();
 
-            pianeti = Tile.Tiles(t => t is Pianeta).Select (p => (Pianeta) p ).ToArray();
-            caselle = Tile.Tiles(t => t.EunaCasella).Select(c => (Casella) c ).ToArray();
+            // Sto in ascolto di eventuali modifiche alla mappa, e reagisco aggiornando il tabellone
+            Tile.MappaModificata += onMappaModificata;
+        }
 
+        void onMappaModificata (object sender, EventArgs e) { AggiornaMappa(); }
+
+        public void AggiornaMappa()
+        {
+            pianeti = Tile.Tiles(t => t is Pianeta).Select(p => (Pianeta)p).ToArray();
+            caselle = Tile.Tiles(t => t.EunaCasella).Select(c => (Casella)c).ToArray();
             //Calcolo il lato delle caselle:
             float h = contenitore.Superficie.Height / (float)Tile.Righe; float w = contenitore.Superficie.Width / (float)Tile.Colonne;
             _latoCasella = (w <= h) ? (int)w : (int)h;
@@ -32,9 +43,16 @@ namespace Quantum_Game
             float s = _latoCasella / 100f;
             scala = new Vector2(s, s);
 
-            navi = new Nave[0];
-        }
+            // Calcolo l'offset rispetto al riquadro, in modo da posizionare il tabellone esattamente al centro
+            offset = new Vector2(
+                (contenitore.Superficie.Width - (_latoCasella * Tile.Colonne)) / 2,
+                (contenitore.Superficie.Height - (_latoCasella * Tile.Righe)) / 2
+                );
 
+            //rettangoli per lo spritebatch:
+            _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
+            _source = new Rectangle(0, 0, 100, 100);  // TODO: 100 è il lato del nostro tileset di prova!! 
+        }
         public override void CaricaContenuti(GuiManager gui)
         {
             // Questa inizializzazione è chiamata dal gui;
@@ -43,15 +61,6 @@ namespace Quantum_Game
             pennello = gui.Pennello;
             font = gui.Font;
 
-            // Calcolo l'offset rispetto al riquadro, in modo da posizionare il tabellone esattamente al centro
-            offset = new Vector2(
-                (contenitore.Superficie.Width - (_latoCasella * Tile.Colonne)) / 2,
-                (contenitore.Superficie.Height - (_latoCasella * Tile.Righe) ) / 2
-                );
-
-            //rettangoli per lo spritebatch:
-            _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
-            _source = new Rectangle(0, 0, 100, 100);  // TODO: 100 è il lato del nostro tileset di prova!! 
         }
 
         // PROPRIETA' PUBBLICHE
@@ -296,6 +305,12 @@ namespace Quantum_Game
                 nave.Update();
         }
 
+        protected override void Dispose()
+        {
+            // Devo dissociarmi dall'evento Tile.MappaModificata, perché sennò questo tabellone resterà per sempre in memoria
+            Tile.MappaModificata -= onMappaModificata;
+            base.Dispose();
+        }
         #endregion
         // CAMPI DELLA CLASSE
 
@@ -303,7 +318,7 @@ namespace Quantum_Game
         public Vector2 Posizione { get { return id2Pixel(0); } }
 
         // Per disegnare
-        readonly int _latoCasella;
+        int _latoCasella;
         private Vector2[] _coordIlluminazione; // Coordinate delle caselle da illuminare
         private Texture2D tileset;
         private Texture2D pennello;

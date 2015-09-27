@@ -15,6 +15,7 @@ namespace Quantum_Game.Schermate
     /// </summary>
     public class SchermateDiGioco
     {
+        Microsoft.Xna.Framework.Graphics.Effect effect;
         Quantum quantum;
         public SchermateDiGioco(Quantum quantum)
         {
@@ -44,7 +45,7 @@ namespace Quantum_Game.Schermate
             var msg = laterale.Riga(100, 0, 15);
 
             Tabellone tab2 = new Tabellone(quantum, tabellone);
-
+            tab2.AggiornaMappa();
 
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
             Bottone ricerca = new Bottone(bottone.Ricerca, bott3);
@@ -98,8 +99,13 @@ namespace Quantum_Game.Schermate
         {
             GuiManager gui = quantum.getGUI();
             Riquadro.Main.Reset();
-            Riquadro barraLogo = Riquadro.Main.Riga(18);
-            Riquadro vociMenu = Riquadro.Main.Riga(100, PaddingTopBottom: 20);
+            Riquadro spazioMenu = Riquadro.Main.Colonna(55, PaddingTopBottom:20);
+            Riquadro spazioMappa = Riquadro.Main.Colonna(45,20,10);
+            Riquadro barraLogo = spazioMenu.Riga(18);
+            
+               // Riquadro _vuoto = spazioMenu.Colonna(10);
+                Riquadro vociMenu = spazioMenu.Colonna(100);
+            anteprimaMappa = new Tabellone(quantum, spazioMappa) { MostraSelezione = false };
 
             //
             // Pulsanti x selezione del numero di giocatori
@@ -143,18 +149,36 @@ namespace Quantum_Game.Schermate
 
                 // variabili locali intrappolate
                 string[] mappeTrovate = Directory.GetFiles(@"Data Content\Mappe", "*.txt", SearchOption.TopDirectoryOnly);
+                if (!mappeTrovate.Any()) throw new Exception("mappeTrovate");
                 int IDmappa = 0;
-                int IDmappaMax = mappeTrovate.Length; if (!mappeTrovate.Any()) throw new Exception("mappeTrovate");
+                int IDmappaMax = mappeTrovate.Length;
 
-                Label labelFilenameMappe = new Label(riquadroFilename, mappeTrovate[0]);
+                // inizializzo la mappa
+                var generator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
+                Tile.CreaMappa(generator.GeneraMappa(), generator.Righe, generator.Colonne);
+                anteprimaMappa.AggiornaMappa();
+
+            Label labelFilenameMappe = new Label(riquadroFilename, mappeTrovate[0]);
 
             // Bottoni + e - con associati i metodi anonimi per farli funzionare
 
                 Bottone più2 = new Bottone(bottone.più, tastoPiù2);
                 Bottone meno2 = new Bottone(bottone.meno, tastoMeno2);
 
-                più2.Click += (s, e) => labelFilenameMappe.Caption = mappeTrovate[++IDmappa >= IDmappaMax ? IDmappa = 0 : IDmappa];
-                meno2.Click += (s, e) => labelFilenameMappe.Caption = mappeTrovate[--IDmappa < 0 ? IDmappa = IDmappaMax-1 : IDmappa];
+            più2.Click += (s, e) =>
+            {
+                labelFilenameMappe.Caption = mappeTrovate[++IDmappa >= IDmappaMax ? IDmappa = 0 : IDmappa];
+                var mapGenerator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
+                Tile.CreaMappa(mapGenerator.GeneraMappa(), mapGenerator.Righe, mapGenerator.Colonne);
+                anteprimaMappa.AggiornaMappa();
+            };
+            meno2.Click += (s, e) =>
+            {
+                labelFilenameMappe.Caption = mappeTrovate[--IDmappa < 0 ? IDmappa = IDmappaMax - 1 : IDmappa];
+                var mapGenerator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
+                Tile.CreaMappa(mapGenerator.GeneraMappa(), mapGenerator.Righe, mapGenerator.Colonne);
+                anteprimaMappa.AggiornaMappa();
+            };
 
 
             // Bottone per iniziare la partita, con metodo anonimo per farlo funzionare
@@ -162,15 +186,14 @@ namespace Quantum_Game.Schermate
             Bottone NewGame = new Bottone(bottone.IniziaPartita, posIniziaPartita);
             NewGame.Click += (s, e) =>
             {
-                int numeroGiocatori = (int)char.GetNumericValue(labelNumGiocatori.Caption.Last());
-                var mapGenerator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
-                Tile.CreaMappa(mapGenerator.GeneraMappa(), mapGenerator.Righe, mapGenerator.Colonne);
                 SchermataPartita();
-                quantum.getGestoreDiAzioni().ImpilaAzione(new Azioni.AzioneSetupPartitaOffLine(quantum, numeroGiocatori));
+                quantum.getGestoreDiAzioni().ImpilaAzione(new Azioni.AzioneSetupPartitaOffLine(quantum, numeroDiGiocatori));
             };
 
             // Ho fatto un nuovo overload di ManagerGui.Iscrivi che permette di condensare le iscrizioni in una sola riga :)
             gui.Iscrivi(più, meno, labelNumGiocatori, più2, meno2, labelFilenameMappe, NewGame);
+            gui.Iscrivi(anteprimaMappa);
         }
+        Tabellone anteprimaMappa;
     }
 }

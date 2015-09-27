@@ -24,8 +24,11 @@ namespace Quantum_Game.Interfaccia
         protected ElementoGrafico (Riquadro contenitore)
         {
             this.contenitore = contenitore;
-            contenitore.Eliminazione += Eliminazione;
             AssociaEventiMouse();
+
+            // Ascolta l'evento Eliminazione del contenitore, e reagisce chiamando il metodo Dispose
+            // che si occupa di gestire l'eliminazione di questo elemento grafico
+            contenitore.Eliminazione += (s, e) => Dispose();
         }
 
         /// <summary>
@@ -49,17 +52,7 @@ namespace Quantum_Game.Interfaccia
             mouse.ClickDestro -= ClickDestro;
             mouse.MouseOver -= MouseOver;
         }
-
-        /// <summary>
-        /// Chiamato dal Riquadro contenitore, quando viene distrutto
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void Eliminazione (object sender, EventArgs e)
-        {
-            Dispose();
-        }
-
+        
         public abstract void CaricaContenuti(GuiManager gui);
 
         public abstract void Draw(SpriteBatch spriteBatch);
@@ -73,16 +66,13 @@ namespace Quantum_Game.Interfaccia
         /// <summary>Da overrideare per rispondere al movimento del mouse</summary>
         protected virtual void MouseOver(object sender, MouseEvntArgs args) { }
 
-        public void Dispose()
+        /// <summary>
+        /// Chiamato dal Riquadro contenitore, quando viene distrutto
+        /// </summary>
+        protected virtual void Dispose()
         {
             RimuoviEventi();
-            contenitore.Eliminazione -= Eliminazione;
             GuiManager.Rimuovi(this);
-        }
-
-        public void Dispose (bool chiamatoEsplicitamente)
-        {
-
         }
     }
 }
