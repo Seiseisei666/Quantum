@@ -33,7 +33,7 @@ namespace Quantum_Game.Schermate
 
             var riquadroTabellone = Riquadro.Main.Colonna(70);
             var tabellone = riquadroTabellone.Riga(100, 5, 5);
-
+            //qwe
 
             var laterale = Riquadro.Main.Colonna(100, 5);
 
