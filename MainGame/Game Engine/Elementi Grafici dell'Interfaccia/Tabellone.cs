@@ -11,10 +11,6 @@ namespace Quantum_Game
 {   
     public class Tabellone: ElementoGrafico, IElementoAnimato
     {
-        Pianeta[] pianeti;
-        Casella[] caselle;
-        Vector2 scala;
-
         public Tabellone (Game game, Riquadro contenitore): base (contenitore)
         {
             _IdSelezione = -1;
@@ -24,16 +20,23 @@ namespace Quantum_Game
             navi = new Nave[0];
             pianeti = new Pianeta[0];
             caselle = new Casella[0];
-            AggiornaMappa();
+            Inizializzazione();
 
             // Sto in ascolto di eventuali modifiche alla mappa, e reagisco aggiornando il tabellone
             Tile.MappaModificata += onMappaModificata;
         }
+        // Eventhandler per aggiornare il tabellone ogni volta che la mappa viene cambiata.
+        // lo devo specificare per forza, dato che l'evento Tile.MappaModificata è statico;
+        // è indispensabile dissociarsi da esso, per permettere la distruzione di questa istanza di tabellone
+        void onMappaModificata (object sender, EventArgs e) { Inizializzazione(); }
 
-        void onMappaModificata (object sender, EventArgs e) { AggiornaMappa(); }
-
-        public void AggiornaMappa()
+        /// <summary>
+        /// Calcola il lato della casella, centra il tabellone nel suo riquadro contenitore, e si copia in memoria
+        /// pianeti e caselle per velocizzare la fase di Draw 
+        /// </summary>
+        void Inizializzazione()
         {
+            // Mi copio tutti i pianeti e le caselle, saltando le caselle vuote
             pianeti = Tile.Tiles(t => t is Pianeta).Select(p => (Pianeta)p).ToArray();
             caselle = Tile.Tiles(t => t.EunaCasella).Select(c => (Casella)c).ToArray();
             //Calcolo il lato delle caselle:
@@ -51,16 +54,14 @@ namespace Quantum_Game
 
             //rettangoli per lo spritebatch:
             _target = new Rectangle(0, 0, _latoCasella, _latoCasella);
-            _source = new Rectangle(0, 0, 100, 100);  // TODO: 100 è il lato del nostro tileset di prova!! 
+            _source = new Rectangle(0, 0, 100, 100);  
         }
         public override void CaricaContenuti(GuiManager gui)
         {
-            // Questa inizializzazione è chiamata dal gui;
-            // serve per prendere i riferimenti del tileset
+            // Per praticità il GuiManager carica tutti i contenuti, e noi ce li peschiamo da lui
             tileset = gui.SpriteSheet;
             pennello = gui.Pennello;
             font = gui.Font;
-
         }
 
         // PROPRIETA' PUBBLICHE
@@ -85,17 +86,21 @@ namespace Quantum_Game
         public bool MostraSelezione { get; set; }
 
         #region Metodi di Disegno
-        // disegna il tabellone e le navi
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Vector2 coordDraw;
             Point coordTile;
+
+            // Se vogliamo i pianegi ingrandibili sistemiamo questa cosa, sennò cancelliamola proprio
             Vector2 scalaPianeti = scala * 1.3f;
 
-            // Risistemare
-
+            // corregge la posizione del pianeta in modo da centrarlo
             Vector2 ofst = new Vector2 (_latoCasella/2, _latoCasella/2) - scalaPianeti*50;
 
+            /*                          */
+            /* DISEGNO I PIANETI        */
+            /*                          */
             foreach (var pianeta in pianeti)
             {
                 coordDraw = Tile2Pixel(pianeta) + ofst;
@@ -116,9 +121,16 @@ namespace Quantum_Game
                         break;
                 }
 
-                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle (coordTile, new Point (100,100)), scale: scalaPianeti);
+                spriteBatch.Draw (
+                    tileset, 
+                    position: coordDraw, 
+                    sourceRectangle: new Rectangle (coordTile, new Point (100,100)), 
+                    scale: scalaPianeti
+                    );
+
                 string str = ((int)pianeta.Tipo).ToString();
                 Vector2 pos = Tile2Pixel(pianeta) + new Vector2(_latoCasella / 2, _latoCasella/2) - font.MeasureString(str) / 2;
+
                 spriteBatch.DrawString (
                     font, 
                     str,
@@ -128,6 +140,10 @@ namespace Quantum_Game
                     Vector2.Zero,
                     2f, SpriteEffects.None, 0f);
             }
+
+            /*                          */
+            /* DISEGNO LE CASELLE       */
+            /*                          */
 
             foreach (var casella in caselle)
             {
@@ -150,10 +166,9 @@ namespace Quantum_Game
             foreach (Nave nave in navi)
             {
                 if (nave.InGioco)
-                    nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.Posizione), scala);
+                    nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.CasellaOccupata), scala);
             }
         }
-
 
             // illumina la casella su cui sta il mouse
         void DisegnaSelezione(SpriteBatch spriteBatch)
@@ -200,18 +215,15 @@ namespace Quantum_Game
             _coordIlluminazione = new Vector2[0];
         }
 
-        public void AggiungiNave (Nave nave)
+        /// <summary>
+        /// Restituisce il vettore che rappresenta le coordinate in pixel dell'angolo superiore sinistro del Tile argomento
+        /// </summary>
+        /// <param name="tile">Casella o pianeta</param>
+        /// <returns>L'angolo superiore sinistro (coordinate in Pixel)</returns>
+        public Vector2 Tile2Pixel(Tile tile)
         {
-            navi = new Nave[] { nave }.Concat(navi).ToArray();
+            return id2Pixel(tile.ID);
         }
-        //public void NuovaNave (Nave nave) { nave.MessaInGioco += aggiungiNave; }
-        //void aggiungiNave (object naveCreata, EventArgs e)
-        //{
-        //    Nave nave = (Nave)naveCreata;
-        //    navi = new Nave[] { nave }.Concat(navi).ToArray();
-        //    nave.MessaInGioco -= aggiungiNave;
-        //}
-
         // METODI PRIVATI
 
         /// <summary>
@@ -235,29 +247,11 @@ namespace Quantum_Game
             return new Vector2
                 (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
         }
-        /// <summary>
-        /// Restituisce il vettore che rappresenta le coordinate in pixel dell'angolo superiore sinistro del Tile argomento
-        /// </summary>
-        /// <param name="tile">Casella o pianeta</param>
-        /// <returns>L'angolo superiore sinistro (coordinate in Pixel)</returns>
-        public Vector2 Tile2Pixel (Tile tile)
-        {
-            return id2Pixel(tile.ID);
-        }
 
         #region Input Mouse
-        // PROTECTED OVERRIDE DI "RIQUADRO"
-        // relativi all'input del mouse
-        // calcola il tile su cui sta il mouse
+
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
-            //var casella = Tile.id2Tile(_IdSelezione) as Casella;
-            //if (casella?.Occupante != null)
-            //{
-            //    var diff = Tile2Pixel(casella) - new Vector2(args.Posizione.X, args.Posizione.Y);
-            //    casella.Occupante.Fase = -(float) Math.Atan2(diff.X, diff.Y);
-            //}
-
             if (contenitore.Superficie.Contains(args.Posizione.X, args.Posizione.Y))
             {
                 int X = args.Posizione.X;
@@ -275,7 +269,6 @@ namespace Quantum_Game
             _idMouseOver = -1; // mouse fuori dal tabellone o mouse su casella Vuoto
 
         }
-
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
@@ -299,11 +292,25 @@ namespace Quantum_Game
                 _IdSelezione = -1;              // sennò annulliamo la selezione attuale
         }
 
+        #endregion Input Mouse
+
+        #region Navi
+
+        /// <summary>
+        /// Aggiunge la nave alla lista delle navi da disegnare
+        /// </summary>
+        public void AggiungiNave(Nave nave)
+        {
+            navi = new Nave[] { nave }.Concat(navi).ToArray();
+            // Controllo se la nave viene piazzata; in quel caso calcolo dove deve essere visualizzata e aggiorno la sua posizione
+            nave.Piazzata += (s, e) => nave.Anima(Tile2Pixel(nave.CasellaOccupata), 0f);
+        }
         public void Update()
         {
             foreach (Nave nave in navi)
                 nave.Update();
         }
+        #endregion Navi
 
         protected override void Dispose()
         {
@@ -311,25 +318,34 @@ namespace Quantum_Game
             Tile.MappaModificata -= onMappaModificata;
             base.Dispose();
         }
-        #endregion
         // CAMPI DELLA CLASSE
 
-        Vector2 offset;
-        public Vector2 Posizione { get { return id2Pixel(0); } }
+        // Oggetti di gioco che il tabellone si copia in memoria
+        Pianeta[] pianeti;
+        Casella[] caselle;
+        Nave[] navi;
 
-        // Per disegnare
+        /// <summary>
+        /// Rapporto fra le dimensioni disegnate sullo schermo e quelle originali del PNG delle grafiche
+        /// </summary>
+        Vector2 scala;
+
+        /// <summary>
+        /// distanza dal riquadro contenitore, calcolata in modo da posizionare il tabellone esattamente al centro
+        /// </summary>
+        Vector2 offset;
+
         int _latoCasella;
         private Vector2[] _coordIlluminazione; // Coordinate delle caselle da illuminare
         private Texture2D tileset;
         private Texture2D pennello;
-        private Rectangle _source, _target;
         private SpriteFont font;
-        private Nave [] navi;
-
+        private Rectangle _source, _target;
+        
         // MEMBRI RELATIVI ALLE SELEZIONI FATTE CON CLICK DEL MOUSE
         private int _IdSelezione;
         private int _idMouseOver;
-        private Point _SelezPixCoord; //coordinate in pixel della casella selezionata col clk sinistro
+        private Point _SelezPixCoord; //coordinate in pixel della casella su cui sta il mouse
     }
 }
 

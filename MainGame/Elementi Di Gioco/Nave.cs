@@ -80,15 +80,16 @@ namespace Quantum_Game
         public void Piazza(Casella CasellaTarget)
         {
             CasellaTarget.Occupante = this;
-            Posizione = CasellaTarget;
+            CasellaOccupata = CasellaTarget;
             _ingioco = true;
+            Piazzata?.Invoke(this, EventArgs.Empty);
         }
         /// Muove la nave da una casella a un'altra.
         public void Muovi(Casella CasellaPartenza, Casella CasellaTarget)
         {
             CasellaPartenza.Occupante = null;
             CasellaTarget.Occupante = this;
-            Posizione = CasellaTarget;
+            CasellaOccupata = CasellaTarget;
             this._mossa = true;
         }
 
@@ -98,7 +99,7 @@ namespace Quantum_Game
         /// </summary>
         public void RimuoviDalGioco()
         {
-            Posizione.Occupante = null;
+            CasellaOccupata.Occupante = null;
             this._ingioco = false;
         }
 
@@ -144,34 +145,18 @@ namespace Quantum_Game
             if (_fase > 2.0) _fase = 2 - _fase;
             var seno = (float)(Math.Sin(_fase * Math.PI));
             offset = new Vector2(seno * 3.5f, 0);
-            
-            if (Animazione != null)
-            {
-                // l'oggetto Animazione contiene i punti del percorso della nave
-                rotazione = Animazione.Rotazione;
-            }
         }
-
-        /// <summary>
-        /// Probabilmente inutile, se decidiamo di usare il sistema mio (che utilizza l'oggetto Animazione)
-        /// </summary>
-        public float Fase { set { rotazione = value; } }
 
         /// <summary>
         /// Classico metodo Draw, con valori provvisori in attesa del tileset definitivo
         /// </summary>
-        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 posizione, Vector2 scala )
+        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 coordinate, Vector2 scala )
         {
-
-            Vector2 pos = Animazione != null 
-                ? Animazione.Posizione 
-                : posizione;
-
             if (_ingioco)
             {
                 spriteBatch.Draw(
                     texture,
-                    pos + ( offset ) + scala * 50, // posizione + offset per spisellamenti; "scala*50" serve a centrare la nave nella casella
+                    posizione + ( offset ) + scala * 50, // posizione + offset per spisellamenti; "scala*50" serve a centrare la nave nella casella
                     sourceRectangle: new Rectangle(300, 0, 100, 100),
                     scale: scala,
                     color: SpriteColor,
@@ -180,6 +165,16 @@ namespace Quantum_Game
                     );
             }
         }
+        /// <summary>
+        /// Metodo pubblico per aggiornare la posizione della nave sul tabellone
+        /// </summary>
+        public void Anima (Vector2 posizione, float rotazione)
+        {
+            this.posizione = posizione;
+            this.rotazione = rotazione;
+        }
+
+        public event EventHandler Piazzata;
 
         // CAMPI 
         private Giocatore _proprietario;
@@ -188,8 +183,15 @@ namespace Quantum_Game
         /// <summary>
         /// Usato solo dal ManagerNavi, per avere il riferimento di dove disegnare questa nave
         /// </summary>
-        public Casella Posizione { get; private set; }
-
+        public Casella CasellaOccupata { get; private set; }
+        /// <summary>
+        /// Posizione sul tabellone della nave
+        /// </summary>
+        private Vector2 posizione;
+        /// <summary>
+        /// Rotazione del muso della nave
+        /// </summary>
+        private float rotazione = 0f;
         /// <summary>
         /// Per gli effetti di spisellamento/ondulazione
         /// </summary>
@@ -202,14 +204,8 @@ namespace Quantum_Game
         /// incremento della fase ad ogni frame
         /// </summary>
         const float INCREMENTO = 0.007f;
-        /// <summary>
-        /// Rotazione del muso della nave
-        /// </summary>
-        float rotazione = 0f;
-        /// <summary>
-        /// Riferimento ad un oggetto che muove la nave
-        /// </summary>
-        public IAnimazione Animazione;
+
+
     }
 	
 	

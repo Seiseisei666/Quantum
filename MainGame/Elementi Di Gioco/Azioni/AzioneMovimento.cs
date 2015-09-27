@@ -128,16 +128,15 @@ namespace Quantum_Game.Azioni
         void lancioAnimazione()
         {
             // Prendo tutti i punti del percorso della nave
-            var enumerablePunti =
+            IEnumerable<Casella> casellePercorso =
                 pathFinder.PercorsoXCasella(casellaTarget).Select
                 (
-                    idCasella => quantum.getGUI().Tabellone.Tile2Pixel(Tile.id2Tile(idCasella))
+                    idCasella => (Casella)Tile.id2Tile(idCasella)
                 );
             //Aggiungo la casella di partenza della nave
-            Vector2 posizionePartenza = quantum.getGUI().Tabellone.Tile2Pixel(casellaPartenza);
-            Vector2[] punti = new Vector2[] { posizionePartenza }.Concat(enumerablePunti).ToArray();
+            Casella[] caselleDaPercorrere = new Casella[] { casellaPartenza }.Concat(casellePercorso).ToArray();
 
-            quantum.getGestoreDiAzioni().ImpilaAzione(new Movimento(naveMossa, punti));
+            quantum.getGestoreDiAzioni().ImpilaAzione(new Movimento(quantum, naveMossa, caselleDaPercorrere));
             Cleanup();
         }
     }

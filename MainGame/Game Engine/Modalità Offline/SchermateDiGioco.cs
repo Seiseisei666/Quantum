@@ -15,7 +15,6 @@ namespace Quantum_Game.Schermate
     /// </summary>
     public class SchermateDiGioco
     {
-        Microsoft.Xna.Framework.Graphics.Effect effect;
         Quantum quantum;
         public SchermateDiGioco(Quantum quantum)
         {
@@ -45,7 +44,6 @@ namespace Quantum_Game.Schermate
             var msg = laterale.Riga(100, 0, 15);
 
             Tabellone tab2 = new Tabellone(quantum, tabellone);
-            tab2.AggiornaMappa();
 
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
             Bottone ricerca = new Bottone(bottone.Ricerca, bott3);
@@ -54,7 +52,6 @@ namespace Quantum_Game.Schermate
             gui.Iscrivi(ricerca);
 
             gui.Iscrivi(tab2);
-
 
             ConsoleMessaggi console = new ConsoleMessaggi(msg);
             gui.Iscrivi(console);
@@ -156,7 +153,6 @@ namespace Quantum_Game.Schermate
                 // inizializzo la mappa
                 var generator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
                 Tile.CreaMappa(generator.GeneraMappa(), generator.Righe, generator.Colonne);
-                anteprimaMappa.AggiornaMappa();
 
             Label labelFilenameMappe = new Label(riquadroFilename, mappeTrovate[0]);
 
@@ -170,14 +166,12 @@ namespace Quantum_Game.Schermate
                 labelFilenameMappe.Caption = mappeTrovate[++IDmappa >= IDmappaMax ? IDmappa = 0 : IDmappa];
                 var mapGenerator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
                 Tile.CreaMappa(mapGenerator.GeneraMappa(), mapGenerator.Righe, mapGenerator.Colonne);
-                anteprimaMappa.AggiornaMappa();
             };
             meno2.Click += (s, e) =>
             {
                 labelFilenameMappe.Caption = mappeTrovate[--IDmappa < 0 ? IDmappa = IDmappaMax - 1 : IDmappa];
                 var mapGenerator = new Mappa.MapGenerator(mappeTrovate[IDmappa]);
                 Tile.CreaMappa(mapGenerator.GeneraMappa(), mapGenerator.Righe, mapGenerator.Colonne);
-                anteprimaMappa.AggiornaMappa();
             };
 
 

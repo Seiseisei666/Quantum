@@ -67,7 +67,6 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Elementi Di Gioco\Animazioni\IAnimazione.cs" />
     <Compile Include="Elementi Di Gioco\Animazioni\Movimento.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\Azione.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneFineTurno.cs" />

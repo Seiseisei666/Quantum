@@ -8,9 +8,10 @@ using Quantum_Game.Azioni;
 
 namespace Quantum_Game.Animazioni
 {
-    public class Movimento: Azione, IAnimazione
+    public class Movimento: Azione
     {
-        Nave nave;
+        Quantum quantum;
+        Nave naveMossa;
         Vector2[] _percorso;
         float pos = 0;
         int lungh;
@@ -18,7 +19,7 @@ namespace Quantum_Game.Animazioni
         //Curve percorsoX;
         //Curve percorsoY;
 
-        public Movimento (Nave nave, Vector2 [] percorso)
+        public Movimento (Quantum quantum, Nave naveMossa, Casella[] percorso)
         {
             // Avevo provato ad usare le curve, ma è un po' difficile (bisogna settare tutte le tangenti una per una)
             // e forse, con il tabellone quadrato, non viene nemmeno bene
@@ -36,10 +37,10 @@ namespace Quantum_Game.Animazioni
             //    i++;
 
             //}
-            _percorso = percorso;
+            this.quantum = quantum;
+            this.naveMossa = naveMossa;
+            _percorso = percorso.Select(casella => quantum.getGUI().Tabellone.Tile2Pixel(casella)).ToArray();
             lungh = percorso.Length;
-            this.nave = nave;
-            nave.Animazione = this;
         }
 
         protected override void Esegui()
@@ -57,20 +58,21 @@ namespace Quantum_Game.Animazioni
             // Interpolazione lineare fra 2 punti consecutivi del percorso
             x = MathHelper.Lerp ( _percorso[n].X, _percorso[n+1].X, xfade);
             y = MathHelper.Lerp (_percorso[n].Y, _percorso[n + 1].Y, xfade);
-            Posizione = new Vector2(x, y);
             // Calcolo la rotazione
             Vector2 differenza = _percorso[n + 1] - _percorso[n];
 
-            Rotazione = (float) Math.Atan2(differenza.X, - differenza.Y);
-            // Aggiorno la posizione della nave nel percorso
+            // Applico i valori alla nave
+            var posizione = new Vector2(x, y);
+            float rotazione = (float) Math.Atan2(differenza.X, - differenza.Y);
+            naveMossa.Anima(posizione, rotazione);
+
+            // Aggiorno la percentuale di posizione completata
             pos += INCREMENTO;
         }
-        protected override void Cleanup() { nave.Animazione = null; Terminata = true; }
+        protected override void Cleanup() {Terminata = true; }
         public override bool Abort() { return false; }
 
         const float INCREMENTO = 0.09f;
-        public Vector2 Posizione { get; private set; }
-        public float Rotazione { get; private set; }
 
     }
 }
