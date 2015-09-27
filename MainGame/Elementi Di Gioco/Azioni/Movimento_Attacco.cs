@@ -45,7 +45,7 @@ namespace Quantum_Game.Azioni
         {
             int dist = pathFinder.DistanzaCasella(casellaCliccata);
 
-            if (ultimoClick == TipoEventoMouse.ClkDx || (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata == null) || dist > naveMossa.Pwr || (dist == 0 && casellaCliccata?.Equals(_casellaPartenza) == false ))
+            if (ultimoClick == TipoEventoMouse.ClkDx || (ultimoClick == TipoEventoMouse.ClkSx && casellaCliccata == null) || dist > naveMossa.Pwr || (dist == 0 && casellaCliccata?.Equals(_casellaPartenza) == false ))
             {    // Deselezione
                 Cleanup();
                 return;

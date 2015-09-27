@@ -15,10 +15,11 @@ namespace Quantum_Game.Azioni
             ConsoleMessaggi.NuovoMessaggio("Selezionato Pianeta");
             _pianeta = (Pianeta)gui.Tabellone.TileClick;
 
-            Vector2 pos = gui.Tabellone.Tile2Pixel(_pianeta);
+            Point pos = gui.Tabellone.Tile2Pixel(_pianeta);
+            int offset = gui.Tabellone.LatoCasella / 10;
 
-            pos += new Vector2 (0, -gui.Tabellone.LatoCasella / 2);
-            colonizza = new Widget(pos, widget.Colonizza, _pianeta.Colonizzabile (giocatoreDiTurno));
+            pos += new Point(offset, offset);
+            colonizza = new Widget(pos, doveDisegnoWidget.sinistra, widget.Colonizza, _pianeta.Colonizzabile (giocatoreDiTurno));
 
             colonizza.Click += completaAzione;
             gui.Iscrivi(colonizza);

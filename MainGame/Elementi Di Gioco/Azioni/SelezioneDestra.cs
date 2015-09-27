@@ -10,30 +10,29 @@ namespace Quantum_Game.Azioni
 {
     public class SelezioneDestra: AzioneDiGioco
     {
-        Widget Riconfig, Special;
+        Widget SfondoWid, Riconfig, Special;
         public SelezioneDestra (Game game) : base (game)
         {
-            _casellaPartenza = casellaCliccata;
+            _casellaCliccata = casellaCliccata;
             gui.Tabellone.ResetSelezioneMouse();
             gui.Tabellone.MostraSelezione = false;
 
-            // HACK: gestire in maniera sensata  e più agile il posizionamento dei Widget
+            Point posTopSx = gui.Tabellone.Tile2Pixel(_casellaCliccata);
+
+            SfondoWid = new Widget(posTopSx, doveDisegnoWidget.centro, widget.SfondoWidget, false);
+
+            // TODO: gestire in maniera sensata  e più agile il posizionamento dei Widget
             // (magari con un costruttore nuovo a cui si passa invece di solo un punto qualche informazione in più per posizionarsi?)
-            Vector2 pos1 = gui.Tabellone.Tile2Pixel(_casellaPartenza);
-            Vector2 pos2 = pos1;
-            var lato = gui.Tabellone.LatoCasella;
-
-                pos1 -= new Vector2(20 - lato/2, 15);
-                pos2 += new Vector2(20 + lato/2, - 15);
-
+            //var lato = gui.Tabellone.LatoCasella; // lo prendo dal Carica Contenuti della classe Widget
             bool puòRiconfig = !naveUsata.Riconfigurata;
             bool puòUsareSpecial = !naveUsata.SpecialUsata && checkSpecial(naveUsata);
 
-            Riconfig = new Widget(pos1, widget.Riconfigura, puòRiconfig);
-            Special = new Widget(pos2, widget.UsaSpecial, puòUsareSpecial);
+            Riconfig = new Widget(posTopSx, doveDisegnoWidget.sinistra, widget.Riconfigura, puòRiconfig);
+            Special = new Widget(posTopSx, doveDisegnoWidget.destra, widget.UsaSpecial, puòUsareSpecial);
 
             Riconfig.Click += riconfigura;
             Special.Click += usaSpecial;
+            gui.Iscrivi(SfondoWid);
             gui.Iscrivi(Riconfig);
             gui.Iscrivi(Special);
 
@@ -44,7 +43,7 @@ namespace Quantum_Game.Azioni
         {
 
             // Chiude i menù con il click destro
-            if (ultimoClick == TipoEventoMouse.ClkDx)
+            if (ultimoClick == TipoEventoMouse.ClkSx || ultimoClick == TipoEventoMouse.ClkDx)
             {
                 Cleanup(true);
             }
@@ -66,7 +65,7 @@ namespace Quantum_Game.Azioni
         protected override void Cleanup()
         {
             Riconfig.Click -= riconfigura;
-            Special.Click -= usaSpecial;
+            //Special.Click -= usaSpecial;
             gui.RimuoviWidget();
             gui.Tabellone.ResetSelezioneMouse();
         }
@@ -90,13 +89,13 @@ namespace Quantum_Game.Azioni
             switch (naveUsata.Tipo)
             {
                 case e_nave.Battlestation:
-                    AzioneSuccessiva = new Special_Battlestation(game, _casellaPartenza);
+                    AzioneSuccessiva = new Special_Battlestation(game, _casellaCliccata);
                     break;
                 case e_nave.Flagship:
-                    AzioneSuccessiva = new Special_Flagship(game, _casellaPartenza);
+                    AzioneSuccessiva = new Special_Flagship(game, _casellaCliccata);
                     break;
                 case e_nave.Destroyer:
-                    AzioneSuccessiva = new Special_Warp(game, _casellaPartenza);
+                    AzioneSuccessiva = new Special_Warp(game, _casellaCliccata);
                     break;
                 case e_nave.Interceptor:
                     naveUsata.UsaSpecial();
@@ -133,7 +132,7 @@ namespace Quantum_Game.Azioni
                     {
                         if ((int)dir > 0 && (int)dir <= 4)   // considera solo alto, basso, sin, dx 
                         {
-                            casella = _casellaPartenza + (Direzioni)dir as Casella;
+                            casella = _casellaCliccata + (Direzioni)dir as Casella;
                             if (casella != null && casella.Occupante != null &&     // null check
                                 !casella.Occupante.Alleato(giocatoreDiTurno))
                                 return true; }
@@ -144,7 +143,7 @@ namespace Quantum_Game.Azioni
                     foreach (var dir in direzioni)
                     {
                         if ((int)dir <= 0) continue;
-                        casella = _casellaPartenza + (Direzioni)dir as Casella;
+                        casella = _casellaCliccata + (Direzioni)dir as Casella;
                         if (casella != null && casella.PresenzaAlleata(nave))
                             return true;
                     } break;
@@ -161,8 +160,8 @@ namespace Quantum_Game.Azioni
             return false;
     }
 
-        private readonly Casella _casellaPartenza;
-        private Nave naveUsata { get { return _casellaPartenza.Occupante; } }
+        private readonly Casella _casellaCliccata;
+        private Nave naveUsata { get { return _casellaCliccata.Occupante; } }
         #endregion
     }
 

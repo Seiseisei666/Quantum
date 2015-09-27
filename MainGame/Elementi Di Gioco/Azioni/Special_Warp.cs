@@ -22,7 +22,7 @@ namespace Quantum_Game.Azioni
 
         public override void Esegui()
         {
-            if (ultimoClick == TipoEventoMouse.ClkSin && casellaCliccata?.PresenzaAlleata(giocatoreDiTurno) == true)
+            if (ultimoClick == TipoEventoMouse.ClkSx && casellaCliccata?.PresenzaAlleata(giocatoreDiTurno) == true)
             {
                 completaAzione();
             }

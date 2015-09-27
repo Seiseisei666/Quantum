@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game.Interfaccia
 {
@@ -14,30 +14,60 @@ namespace Quantum_Game.Interfaccia
 
     public enum widget
     {
+        SfondoWidget,
         Riconfigura,
         UsaSpecial,
         Colonizza,
     }
 
+    public enum doveDisegnoWidget
+    {
+        centro,
+        sinistra,
+        destra,
+        sopra,
+        sotto
+    }
 
     public class Widget: ElementoGrafico, IElementoAnimato
     {
         public event EventHandler Click;
 
-        public Widget (Vector2 posizione, widget tipo, bool enabled): base (Riquadro.Main)
+        public Widget (Point posizione, doveDisegnoWidget doveW, widget tipo, bool enabled): base (Riquadro.Main)
         {
-            _posizione = posizione;
+            _posizione = new Vector2 (posizione.X, posizione.Y);
+            _doveWidget = doveW;
+            _enabled = enabled; 
 
-            // TODO: valore impostato ad occhio
-            // con le sprite definitive, in caso di bottoncino più o meno circolare, bisognerà assicurarsi che il valore sia giusto 
-            raggio_al_quadrato = Riquadro.Main.Superficie.Width * 0.4f;
-
-            _enabled = enabled;
+            _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
         }
+
 
         public override void CaricaContenuti(GuiManager gui)
         {
-            _spriteSheet = gui.SpriteSheet;
+            //_spriteSheet = gui.SpriteSheet;
+            _spritePalliniAzioni = gui.SpritePalliniAzioni;
+            _lunghLatoCasella = gui.Tabellone.LatoCasella;
+            raggio_al_quadrato = (float)Math.Pow(_lunghLatoCasella / 4f, 2);
+
+            switch (_doveWidget)
+            {
+                case doveDisegnoWidget.centro:
+                    _posizione.X += 0;
+                    _posizione.Y += 0;
+                    break;
+                case doveDisegnoWidget.sinistra:
+                    _posizione.X += -(_lunghLatoCasella/2)+5;
+                    _posizione.Y += 0; 
+                    break;
+                case doveDisegnoWidget.destra:
+                    _posizione.X += (_lunghLatoCasella / 2)-5;
+                    _posizione.Y += 0; 
+                    break;
+                default:
+                    Console.WriteLine("Non posso posizionare il widget qui!");
+                    break;
+            }
         }
 
         public void Update ()
@@ -46,45 +76,65 @@ namespace Quantum_Game.Interfaccia
 
             if (_mouseOver)
             {
-                _fase += INCREMENTO;
-                if (_fase > 2.0) _fase = 2 - _fase;
+                _fase += incrementoDiFase;
+                if (_fase > 1.0) _fase = 1 - _fase;
                 var seno = (float)(Math.Sin(_fase * Math.PI)) * 0.06f ;
 
-                _scala *=1.1f;
+                _scala *= velocitaCrescita;
                 if (_scala.X > MAX_ESPANSIONE) _scala = new Vector2(MAX_ESPANSIONE, MAX_ESPANSIONE);
                 _scala += new Vector2(seno, seno);
             }
             else
             {
                 _fase = 0;
-                _scala *= 0.8f;
-                if (_scala.X < 0.25f) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
+                _scala *= velocitaDecrescita;
+                if (_scala.X < MIN_ESPANSIONE) _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE); 
             }
             
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw
-                (_spriteSheet, 
-                _posizione - _scala*50,
-                sourceRectangle: new Rectangle(0, 0, 100, 100),
-                scale: _scala,
-                color: _enabled ? Color.White : Color.Gray);
+            //TODO: posso spostarli nella definizione della classe così da non istanziarli ogni volta?
+            Rectangle srcRect;
+            Rectangle destRect;
+            
+            if (_doveWidget == doveDisegnoWidget.centro) //disegno lo "sfondo" del widget
+            {
+                srcRect = new Rectangle(0, 0, 100, 100);
+                //faccio coincidere la posizione di partenza con quella della casella, e disegno per una lunghezza pari al lato della casella
+                destRect = new Rectangle((int)_posizione.X, (int)_posizione.Y, _lunghLatoCasella, _lunghLatoCasella);
+                spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
+            }
+            else // disegno i pallini
+            {
+                //NON BANALE: definendo il rettangolo di destinazione posso facilmente scalare le dimensioni width e heigth, 
+                //devo però spostare la sprite conseguentemente in modo da centrare l'immagine, che altrimenti si espanderebbe in basso a destra
+                //occhio ai cast, perché se _scala == 1 non parte l'animazione
+                int differenza = (int)( ((_lunghLatoCasella * _scala.X) - _lunghLatoCasella)/2 );
+                destRect = new Rectangle((int)_posizione.X - differenza , (int)_posizione.Y - differenza, (int)(_lunghLatoCasella *_scala.X), (int)(_lunghLatoCasella * _scala.Y));
+
+                srcRect = new Rectangle(100, 0, 100, 100);
+                spriteBatch.Draw(_spritePalliniAzioni, destRect, srcRect, Color.White);
+
+                /*
+                Console.Write("scala: " + _scala);
+                Console.Write("PosXdiPar: " + _posizione.X);
+                Console.Write("PosX: " + (_posizione.X - differenza));
+                Console.WriteLine("PosXcast: " + (int)(_posizione.X - differenza));
+                */
+            }
         }
 
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
             if (!_enabled) return;
-            double x =  Math.Pow( (args.Posizione.X - _posizione.X),2);
-            double y = Math.Pow((args.Posizione.Y - _posizione.Y),2);
 
-            if (x + y < raggio_al_quadrato)
+            //aggiungere _lunghLatoCasella/2 permette di posizionare correttamente il centro del mouseOver
+            double x =  Math.Pow( (args.Posizione.X - (_posizione.X + _lunghLatoCasella/2) ),2);
+            double y = Math.Pow((args.Posizione.Y - (_posizione.Y + _lunghLatoCasella/2) ), 2);
 
-            {
-                _mouseOver = true;
-            }
-
+            if (x + y < raggio_al_quadrato) _mouseOver = true;
             else _mouseOver = false;
         }
 
@@ -97,15 +147,21 @@ namespace Quantum_Game.Interfaccia
         readonly bool _enabled;
         float _fase = 0;
 
-        Texture2D _spriteSheet;
+        Texture2D _spritePalliniAzioni;
         Vector2 _posizione;
+        int _lunghLatoCasella;
+        doveDisegnoWidget _doveWidget;
         Vector2 _scala = new Vector2(MIN_ESPANSIONE, MIN_ESPANSIONE);
 
-        //valori provvisori calcolati con una sprite 100x100 pixel
-        readonly float raggio_al_quadrato;
-        const float  MAX_ESPANSIONE = 0.45f;
-        const float MIN_ESPANSIONE = 0.25f;
+        // TODO: valori provvisori calcolati con una sprite 100x100 pixel
+        float raggio_al_quadrato;
+        const float  MAX_ESPANSIONE = 1.65f;
+        const float MIN_ESPANSIONE = 1f;
 
-        const float INCREMENTO = 0.015f;
+        //per fluttuazioni
+        const float incrementoDiFase = 0.02f; 
+        //per zoom
+        const float velocitaCrescita = 1.1f;
+        const float velocitaDecrescita = 0.7f;
     }
 }
