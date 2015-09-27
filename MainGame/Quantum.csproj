@@ -166,6 +166,7 @@
   <ItemGroup>
     <None Include="Data Content\Font\Font.spritefont" />
     <None Include="Main\settings.config" />
+    <None Include="Quantum_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Elementi Di Gioco\Schermate\" />
