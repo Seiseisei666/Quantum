@@ -24,7 +24,7 @@ namespace Quantum_Game.Azioni
 
             pos += new Vector2(gui.Tabellone.LatoCasella / 2, - gui.Tabellone.LatoCasella / 3);
 
-            colonizza = new Widget(pos, widget.Colonizza, pianeta.Colonizzabile(quantum.getGestoreDiGiocatori().getGiocatoreDiTurno()));
+            colonizza = new Widget(pos, doveDisegnoWidget.destra, widget.Colonizza, pianeta.Colonizzabile(quantum.getGestoreDiGiocatori().getGiocatoreDiTurno()));
 
             colonizza.Click += Colonizza;
             gui.Iscrivi(colonizza);
