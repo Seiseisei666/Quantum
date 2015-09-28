@@ -69,6 +69,7 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialFlagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Label.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Textbox.cs" />
     <Compile Include="Game Engine\Modalità Offline\SchermateDiGioco.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoneInizioPartitaOffLine.cs" />
