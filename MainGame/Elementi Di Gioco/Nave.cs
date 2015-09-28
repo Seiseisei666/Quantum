@@ -161,7 +161,9 @@ namespace Quantum_Game
                     scale: scala,
                     color: SpriteColor,
                     rotation: rotazione,
-                    origin: scala * 100
+                    // PROMEMORIA: il vettore origine non va scalato! 
+                    // Fa riferimento alle dimensioni originali del png
+                    origin: new Vector2 (50f,50f)
                     );
             }
         }
