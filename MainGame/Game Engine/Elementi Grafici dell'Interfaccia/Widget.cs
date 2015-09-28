@@ -33,7 +33,7 @@ namespace Quantum_Game.Interfaccia
     {
         public event EventHandler Click;
 
-        public Widget (Point posizione, doveDisegnoWidget doveW, widget tipo, bool enabled): base (Riquadro.Main)
+        public Widget (Vector2 posizione, doveDisegnoWidget doveW, widget tipo, bool enabled): base (Riquadro.Main)
         {
             _posizione = new Vector2 (posizione.X, posizione.Y);
             _doveWidget = doveW;
