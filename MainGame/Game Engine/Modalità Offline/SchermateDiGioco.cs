@@ -33,8 +33,7 @@ namespace Quantum_Game.Schermate
 
             var riquadroTabellone = Riquadro.Main.Colonna(70);
             var tabellone = riquadroTabellone.Riga(100, 5, 5);
-            //qwe
-
+            
             var laterale = Riquadro.Main.Colonna(100, 5);
 
             var riquadroCimitero = laterale.Riga(50, 0, 10);
@@ -43,19 +42,28 @@ namespace Quantum_Game.Schermate
             var bott4 = laterale.Riga(10, 35, 5);
             var msg = laterale.Riga(100, 0, 15);
 
-            Tabellone tab2 = new Tabellone(quantum, tabellone);
-
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
+            passaTurno.Click += (s, e) =>
+            {
+                if (quantum.getGestoreDiAzioni().AnnullaAzioneCorrente())
+                    quantum.getGestoreDiAzioni().ImpilaAzione(new Azioni.AzioneFineTurno(quantum));
+            };
             Bottone ricerca = new Bottone(bottone.Ricerca, bott3);
-
-            gui.Iscrivi(passaTurno);
-            gui.Iscrivi(ricerca);
-
-            gui.Iscrivi(tab2);
+            ricerca.Click += (s,e) =>
+            {
+                if (quantum.getGestoreDiAzioni().AnnullaAzioneCorrente())
+                {
+                    Giocatore giocatore = quantum.getGestoreDiGiocatori().getGiocatoreDiTurno();
+                    giocatore.Ricerca(); giocatore.Azione();
+                }
+            };
 
             ConsoleMessaggi console = new ConsoleMessaggi(msg);
-            gui.Iscrivi(console);
+            Tabellone tab2 = new Tabellone(quantum, tabellone);
             Cimitero cim = new Cimitero(quantum, riquadroCimitero);
+
+            gui.Iscrivi(tab2);
+            gui.Iscrivi(passaTurno, ricerca, console);
             gui.Iscrivi(cim);
 
         }
