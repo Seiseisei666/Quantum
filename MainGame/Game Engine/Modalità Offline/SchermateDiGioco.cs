@@ -191,7 +191,7 @@ namespace Quantum_Game.Schermate
                 SchermataPartita();
                 quantum.getGestoreDiAzioni().ImpilaAzione(new Azioni.AzioneSetupPartitaOffLine(quantum, numeroDiGiocatori));
             };
-
+            Textbox txt = new Textbox(spazioMenu); gui.Iscrivi(txt);
             // Ho fatto un nuovo overload di ManagerGui.Iscrivi che permette di condensare le iscrizioni in una sola riga :)
             gui.Iscrivi(più, meno, labelNumGiocatori, più2, meno2, labelFilenameMappe, NewGame);
             gui.Iscrivi(anteprimaMappa);

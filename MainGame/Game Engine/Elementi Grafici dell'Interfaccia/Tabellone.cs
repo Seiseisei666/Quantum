@@ -40,7 +40,8 @@ namespace Quantum_Game
             pianeti = Tile.Tiles(t => t is Pianeta).Select(p => (Pianeta)p).ToArray();
             caselle = Tile.Tiles(t => t.EunaCasella).Select(c => (Casella)c).ToArray();
             //Calcolo il lato delle caselle:
-            float h = contenitore.Superficie.Height / (float)Tile.Righe; float w = contenitore.Superficie.Width / (float)Tile.Colonne;
+            float h = contenitore.Superficie.Height / (float)Tile.Righe;
+            float w = contenitore.Superficie.Width / (float)Tile.Colonne;
             _latoCasella = (w <= h) ? (int)w : (int)h;
             //Calcolo la scala:
             float s = _latoCasella / 100f;

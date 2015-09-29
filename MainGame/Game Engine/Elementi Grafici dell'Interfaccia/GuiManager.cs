@@ -58,22 +58,25 @@ namespace Quantum_Game.Interfaccia
             elemento.CaricaContenuti(this);
             elementi.Add(elemento);
             elemento.GuiManager = this;
+            if (elemento is IElementoAnimato) animati.Add((IElementoAnimato) elemento);
         }
         public void Iscrivi (params ElementoGrafico[] elementi)
         {
             foreach (var elemento in elementi)
                 Iscrivi(elemento);
         }
-        public void Iscrivi (Widget elemento)
-        {
-            animati.Add(elemento);
-            Iscrivi((ElementoGrafico)elemento);
-        }
+        //public void Iscrivi (Widget elemento)
+        //{
+        //    animati.Add(elemento);
+        //    Iscrivi((ElementoGrafico)elemento);
+        //}
         
         /// <summary>Rimuove un RiquadroGui dall'interfaccia </summary>
         public void Rimuovi(ElementoGrafico elemento)
         {
             elementi.Remove(elemento);
+            if (elemento is IElementoAnimato)
+                animati.Remove((IElementoAnimato)elemento);
         }
 
         public void RimuoviWidget ()
