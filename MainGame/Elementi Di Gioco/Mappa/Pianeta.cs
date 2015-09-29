@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quantum_Game
 {
@@ -82,7 +84,39 @@ namespace Quantum_Game
             }
             return false;
         }
+        /// <summary>
+        /// Disegna lo sprite corrispondente al pianeta
+        /// </summary>
+        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 coordinate, Vector2 scala)
+        {
+            Rectangle source = Rectangle.Empty;
+            switch (Tipo)
+            {
+                case QuantumTile.Pianeta7:
+                    source = new Rectangle(0, 100, 100,100);
+                    break;
+                case QuantumTile.Pianeta8:
+                    source = new Rectangle(100, 100,100, 100);
+                    break;
+                case QuantumTile.Pianeta9:
+                    source = new Rectangle(200, 100, 100, 100);
+                    break;
+                case QuantumTile.Pianeta10:
+                    source = new Rectangle(300, 100, 100, 100);
+                    break;
+            }
 
+            spriteBatch.Draw(texture, coordinate-scala*50, sourceRectangle: source, scale: scala);
+        }
+        /// <summary>
+        /// Disegna il numero che indica il valore del pianeta
+        /// </summary>
+        public void DrawValore (SpriteBatch spriteBatch, SpriteFont font, Vector2 coordinate)
+        {
+            string str = ((int)Tipo).ToString();
+            Vector2 pos = coordinate - font.MeasureString(str) / 2;
+            spriteBatch.DrawString(font, str, pos, Color.Gold, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+        }
 
         //campi propri
         private e_color[] _colonizzazioni;

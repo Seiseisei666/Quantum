@@ -150,13 +150,13 @@ namespace Quantum_Game
         /// <summary>
         /// Classico metodo Draw, con valori provvisori in attesa del tileset definitivo
         /// </summary>
-        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 coordinate, Vector2 scala )
+        public void Draw (SpriteBatch spriteBatch, Texture2D texture, Vector2 scala )
         {
             if (_ingioco)
             {
                 spriteBatch.Draw(
                     texture,
-                    posizione + ( offset ) + scala * 50, // posizione + offset per spisellamenti; "scala*50" serve a centrare la nave nella casella
+                    posizione + offset + scala*50, // La posizione, la nave, se la gestisce da sola! Non gliela passa il tabellone
                     sourceRectangle: new Rectangle(300, 0, 100, 100),
                     scale: scala,
                     color: SpriteColor,

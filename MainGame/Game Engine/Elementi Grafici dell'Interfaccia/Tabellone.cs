@@ -85,115 +85,55 @@ namespace Quantum_Game
 
         public bool MostraSelezione { get; set; }
 
-        #region Metodi di Disegno
+        #region DRAW
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 coordDraw;
-            Point coordTile;
+            // utility
+            Vector2 scalaPianeti = scala * 1.3f; // Se vogliamo i pianegi ingrandibili sistemiamo questa cosa, sennò cancelliamola proprio
 
-            // Se vogliamo i pianegi ingrandibili sistemiamo questa cosa, sennò cancelliamola proprio
-            Vector2 scalaPianeti = scala * 1.3f;
-
-            // corregge la posizione del pianeta in modo da centrarlo
-            Vector2 ofst = new Vector2 (_latoCasella/2, _latoCasella/2) - scalaPianeti*50;
-
-            /*                          */
-            /* DISEGNO I PIANETI        */
-            /*                          */
+            // DISEGNO I PIANETI
             foreach (var pianeta in pianeti)
             {
-                coordDraw = Tile2Pixel(pianeta) + ofst;
-
-                switch (pianeta.Tipo)
-                {
-                    case QuantumTile.Pianeta7:
-                        coordTile = new Point(0, 100);
-                        break;
-                    case QuantumTile.Pianeta8:
-                        coordTile = new Point(100, 100);
-                        break;
-                    case QuantumTile.Pianeta9:
-                        coordTile = new Point(200, 100);
-                        break;
-                    default:
-                        coordTile = new Point(300, 100);
-                        break;
-                }
-
-                spriteBatch.Draw (
-                    tileset, 
-                    position: coordDraw, 
-                    sourceRectangle: new Rectangle (coordTile, new Point (100,100)), 
-                    scale: scalaPianeti
-                    );
-
-                string str = ((int)pianeta.Tipo).ToString();
-                Vector2 pos = Tile2Pixel(pianeta) + new Vector2(_latoCasella / 2, _latoCasella/2) - font.MeasureString(str) / 2;
-
-                spriteBatch.DrawString (
-                    font, 
-                    str,
-                    pos,
-                    Color.Gold, 
-                    0f, 
-                    Vector2.Zero,
-                    2f, SpriteEffects.None, 0f);
+                Vector2 coordinate = Tile2Pixel(pianeta) + scala*50;
+                pianeta.Draw(spriteBatch, tileset, coordinate, scalaPianeti);
+                pianeta.DrawValore(spriteBatch, font, coordinate);
             }
 
-            /*                          */
-            /* DISEGNO LE CASELLE       */
-            /*                          */
-
+            // DISEGNO LE CASELLE
             foreach (var casella in caselle)
             {
-
-                coordDraw = Tile2Pixel(casella);
-
-                if (casella.Orbita)
-                    coordTile = new Point(100, 0);
-                else
-                    coordTile = Point.Zero;
-
-                spriteBatch.Draw(tileset, position: coordDraw, sourceRectangle: new Rectangle(coordTile, new Point(100, 100)), scale: scala);
+                casella.Draw(spriteBatch, tileset, Tile2Pixel(casella), scala);
             }
 
-            DisegnaSelezione(spriteBatch);
+            // Selezione del mouse (quadrato rossastro)
+            if (_idMouseOver >= 0 && MostraSelezione)
+            {
+                spriteBatch.Draw(pennello, id2Pixel(_idMouseOver), scale: Vector2.One*_latoCasella, color: Color.IndianRed * 0.5f);
+            }
 
-            disegnaIlluminaCaselle(spriteBatch);
+            // Caselle illuminate (percorsi disponibili, dove piazzare la nave, ecc)
+            if (_coordIlluminazione.Any())
+            {
+                foreach (var p in _coordIlluminazione)
+                {
+                    spriteBatch.Draw
+                        (pennello, p, scale: Vector2.One*_latoCasella, color: Color.LightGoldenrodYellow * 0.3f);
+                }
+            }
 
-            // Infine disegno le navi
+            // DISEGNO LE NAVI
             foreach (Nave nave in navi)
             {
                 if (nave.InGioco)
-                    nave.Draw(spriteBatch, tileset, Tile2Pixel(nave.CasellaOccupata), scala);
-            }
-        }
-
-            // illumina la casella su cui sta il mouse
-        void DisegnaSelezione(SpriteBatch spriteBatch)
-        {
-            if (_idMouseOver >= 0 && MostraSelezione)
-            {
-                _target.X = _SelezPixCoord.X; _target.Y = _SelezPixCoord.Y;
-                spriteBatch.Draw(pennello, _target, Color.IndianRed*0.5f);
-            }
-        }
-
-        void disegnaIlluminaCaselle (SpriteBatch spriteBatch)
-        {
-            if (_coordIlluminazione.Any())
-            { 
-            Color colore = Color.LightGoldenrodYellow;
-            foreach (var p in _coordIlluminazione)
                 {
-                    spriteBatch.Draw
-                        (pennello, p, scale: new Vector2(_latoCasella,_latoCasella), color: colore * 0.3f);
+                    nave.Draw(spriteBatch, tileset, scala);
                 }
+                    
             }
         }
 
-        #endregion
+        #endregion DRAW
 
         /// <summary>Definisce le caselle che devono essere illuminate sul tabellone.
         /// null o array vuoto "spegne" l'illuminazione</summary>
