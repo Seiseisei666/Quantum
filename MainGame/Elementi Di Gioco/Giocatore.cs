@@ -22,6 +22,11 @@ public class Giocatore
             _colore = colore;
         }
 
+        public Giocatore (string nome, e_color colore)
+        {
+            _colore = colore; this.nome = nome;
+        }
+
         // PROPRIETA' PUBBLICHE
         public int AzioniDisponibili { get { return _azioni; } }
 
@@ -64,10 +69,17 @@ public class Giocatore
 
         //METODI PUBBLICI 
         /* Restituisce un ID (nome e/o colore) del giocatore */
+        [Obsolete ("Meglio usare Giocatore.Nome")]
         public override String ToString()
         {
-            return this.Colore.ToString();
+            if (string.IsNullOrEmpty(nome)) return this.Colore.ToString();
+            else return nome;
         }
+        public string Nome { get
+            {
+                if (string.IsNullOrEmpty(nome)) return this.Colore.ToString();
+                else return nome;
+            } }
         // inizializzazione globale
         public void GlobalInit() 
         {
@@ -126,6 +138,7 @@ public class Giocatore
 		private int _ricerca, _dominio, _punti=0;
         private List<Nave> _flotta = new List<Nave>();
         private e_color _colore;
+        private string nome;
 
         // contatori statici
         static byte _count; // num giocatori

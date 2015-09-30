@@ -11,7 +11,9 @@ namespace Quantum_Game
 		Blu,
 		Rosso,
 		Giallo,
-		Verde
+		Verde,
+        Arancione,
+        Viola
 		
 	}
 	

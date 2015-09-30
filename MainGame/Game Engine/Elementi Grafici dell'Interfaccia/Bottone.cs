@@ -13,7 +13,8 @@ namespace Quantum_Game.Interfaccia
         Opzioni,
         Credits,
         più,
-        meno
+        meno,
+        Annulla
     }
 
     //TODO: rendere abstract bottone
@@ -29,6 +30,8 @@ namespace Quantum_Game.Interfaccia
         }
 
         #endregion
+        public Color Colore { get { return _colSfondo; } set { _colSfondo = value; } }
+        public bool Enabled { get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
@@ -60,7 +63,6 @@ namespace Quantum_Game.Interfaccia
             spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
         }
 
-        public bool Enabled { get; set; }
 
         // proprietà pubbliche
         public string Caption
@@ -83,6 +85,8 @@ namespace Quantum_Game.Interfaccia
                         return "+";
                     case bottone.meno:
                         return "-";
+                    case bottone.Annulla:
+                        return "Annulla";
                    
                     default:
                         return "";
@@ -90,11 +94,6 @@ namespace Quantum_Game.Interfaccia
             }
         }   
 
-        public bottone TipoBottone { get { return _tipoBottone; } }
-        /// <summary>True se il bottone è stato cliccato dopo l'ultimo Reset. </summary>
-        public bool Cliccato { get { return _cliccato; } }
-        /// <summary>Resetta il bottone</summary>
-        public void Reset() { _cliccato = false;}
 
         #region MouseInput
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
@@ -123,6 +122,7 @@ namespace Quantum_Game.Interfaccia
         }
 
         public event EventHandler Click;
+
 
         #region Campi
         Vector2 posScritta;

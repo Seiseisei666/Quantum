@@ -25,6 +25,9 @@ namespace Quantum_Game
             QuantumColor.Add(e_color.Rosso, Color.Red);
             QuantumColor.Add(e_color.Giallo, Color.Yellow);
             QuantumColor.Add(e_color.Verde, Color.Green);
+            QuantumColor.Add(e_color.Arancione, Color.Orange);
+            QuantumColor.Add(e_color.Viola, Color.Purple);
+            QuantumColor.Add(e_color.incolore, Color.LightGray);
         }
 
         /*riferimento alla lista di giocatori*/
@@ -39,6 +42,7 @@ namespace Quantum_Game
             // USA LE PROPRIETA', MALEDETTO PROGRAMMATORE DI JAVA!!!
             return giocatoreDiTurno;
         }
+        // public Giocatore GiocatoreDiTurno { get { return giocatoreDiTurno; } }
 
         // Aggiunge giocatori fino ad arrivare ad int numGiocatori
         //Costruttore implicito dei giocatori 
@@ -54,6 +58,16 @@ namespace Quantum_Game
 
             giocatoreDiTurno = giocatori[0];
          }
+        /// <summary>
+        /// Costruttore per N giocatori, ciascuno con un nome e un colore specifico
+        /// </summary>
+        /// <param name="nuoviGiocatori"></param>
+        public void creaGiocatori (Dictionary<e_color, string> nuoviGiocatori)
+        {
+            if (nuoviGiocatori.Count < 2 || nuoviGiocatori.Count > 6) throw new ArgumentOutOfRangeException("giocatori");
+            foreach (var g in nuoviGiocatori)
+                giocatori.Add(new Giocatore(g.Value, g.Key));
+        }
        
         /* Metodo che aggiorna il giocatore attivo */
         public void aggiornaGiocatoreDiTurno()

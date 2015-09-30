@@ -23,6 +23,10 @@ namespace Quantum_Game.Interfaccia
         {
             Stringa = "DAJE FORTE!!";
         }
+        public Textbox(Riquadro contenitore, string predef) : base(contenitore)
+        {
+            Stringa = predef;
+        }
 
         public string Stringa { get; private set; }
 
