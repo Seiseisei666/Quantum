@@ -68,9 +68,13 @@
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialDestroyer.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneSpecialFlagship.cs" />
     <Compile Include="Elementi Di Gioco\Azioni\AzioneStampaAConsole.cs" />
+    <Compile Include="Elementi Di Gioco\Schermate\Schermata.cs" />
+    <Compile Include="Elementi Di Gioco\Schermate\SchermataMenu.cs" />
+    <Compile Include="Elementi Di Gioco\Schermate\SchermataOpzioniPartita.cs" />
+    <Compile Include="Elementi Di Gioco\Schermate\SchermataPartitaInCorso.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Label.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Textbox.cs" />
-    <Compile Include="Game Engine\Modalità Offline\SchermateDiGioco.cs" />
+    <Compile Include="Game Engine\Modalità Offline\GestoreDiSchermate.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Cimitero.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoneInizioPartitaOffLine.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\ElementoGrafico.cs" />
@@ -97,7 +101,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elementi Di Gioco\Mappa\Tile.cs" />
     <Compile Include="Game Engine\util.cs" />
-    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Schermata.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -152,7 +155,6 @@
     <None Include="Main\settings.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Elementi Di Gioco\Schermate\" />
     <Folder Include="Game Engine\Input Devices Manager\Keybord\" />
     <Folder Include="Game Engine\Modalità Multiplayer\" />
   </ItemGroup>

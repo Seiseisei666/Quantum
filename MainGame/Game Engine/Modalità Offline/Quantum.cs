@@ -13,7 +13,7 @@ namespace Quantum_Game
         //Componenti del motore di gioco
         private GestoreDiGiocatori gestoreDiGiocatori;
         private GestoreDiAzioni gestoreDiAzioni;
-        private SchermateDiGioco gestoreDiSchermate;
+        private GestoreDiSchermate gestoreDiSchermate;
        
         //Componenti del motore grafico
         private GraphicsDeviceManager graphics;
@@ -78,8 +78,8 @@ namespace Quantum_Game
             spriteBatch = Services.GetService<SpriteBatch>();
 
             /*   MENU INIZIALE   */
-            gestoreDiSchermate = new SchermateDiGioco(this);
-            gestoreDiSchermate.MenuPrincipale();
+            gestoreDiSchermate = new GestoreDiSchermate(this);
+            gestoreDiSchermate.CaricaSchermata(new SchermataMenu(this));
 
 
             base.LoadContent();
@@ -132,5 +132,6 @@ namespace Quantum_Game
         public GuiManager getGUI() {return gui;}
         public GestoreDiGiocatori getGestoreDiGiocatori() {return gestoreDiGiocatori; }
         public GestoreDiAzioni getGestoreDiAzioni() {return gestoreDiAzioni;}
+        public GestoreDiSchermate schermateDiGioco { get { return gestoreDiSchermate; } }
     }
 }
