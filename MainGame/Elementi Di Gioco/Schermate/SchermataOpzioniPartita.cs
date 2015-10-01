@@ -35,13 +35,13 @@ namespace Quantum_Game.Schermate
 
             #region Definizione Riquadri
 
-            var _parteSinistra = Riquadro.Main.Colonna(60); var _parteDestra = Riquadro.Main.Colonna(40);
+            var _parteSinistra = Riquadro.Main.Colonna(60,10,10); var _parteDestra = Riquadro.Main.Colonna(40,10,10);
 
             // Costanti di posizionamento
             const float Y_RIGA_GRANDE = 15.2f;
             const float Y_RIGA_ = (100f - (Y_RIGA_GRANDE * 2)) / MAX_GIOCATORI;
-            const float X_BOTT_COLOR = 100 / 6f;
-            const float PAD_Y_LABEL = 2.5f;
+            const float X_BOTT_COLOR = 10f;
+            const float PAD_Y_LABEL = 15f;
 
             // PARTE SINISTRA
 
@@ -50,20 +50,20 @@ namespace Quantum_Game.Schermate
             // Spazio per il selettore del num giocatori
             var _nGiocatori = _parteSinistra.Riga(Y_RIGA_GRANDE);
 
-            var labelNumeroGiocatori = _nGiocatori.Colonna(100 - X_BOTT_COLOR); var _selNGiocatori = _nGiocatori.Colonna(100);
+            var labelNumeroGiocatori = _nGiocatori.Colonna(30, 10); var _selNGiocatori = _nGiocatori.Colonna(12,15);
 
-            var bottonePiùGiocatori = _selNGiocatori.Riga(50);
-            var bottoneMenoGiocatori = _selNGiocatori.Riga(50);
+            var bottonePiùGiocatori = _selNGiocatori.Riga(50,40,2);
+            var bottoneMenoGiocatori = _selNGiocatori.Riga(50,40,2);
 
             // Spazio per selezione colore e nomi dei giocatori
             Riquadro[] _giocatori = new Riquadro[MAX_GIOCATORI];
             for (int i = 0; i < MAX_GIOCATORI; i++)
-                _giocatori[i] = _parteSinistra.Riga(Y_RIGA_);
+                _giocatori[i] = _parteSinistra.Riga(Y_RIGA_,5);
 
             // Bottoni colore
             Riquadro[] bottoniColore = new Riquadro[MAX_GIOCATORI];
             for (int i = 0; i < MAX_GIOCATORI; i++)
-                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR, 2.5f, PAD_Y_LABEL);
+                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR,50, PAD_Y_LABEL);
 
             // textbox nomi dei giocatori
             Riquadro[] textboxNome = new Riquadro[MAX_GIOCATORI];
@@ -83,8 +83,8 @@ namespace Quantum_Game.Schermate
             var __ = _parteDestra.Riga(10f); // spazio vuoto intenzionale
 
             var _okCancel = _parteDestra.Riga(100);
-            var bottoneAnnulla = _okCancel.Colonna(50);
-            var bottoneOk = _okCancel.Colonna(50);
+            var bottoneAnnulla = _okCancel.Colonna(50,15,20);
+            var bottoneOk = _okCancel.Colonna(50,15,20);
 
             #endregion Definizione Riquadri
 
@@ -96,10 +96,10 @@ namespace Quantum_Game.Schermate
             /*-----------------------------------------------------------------------------------------------------*/
 
             Label NumeroGiocatori = new Label(labelNumeroGiocatori, "Numero Giocatori: " + numeroDiGiocatori);
-            Bottone PiùGiocatori = new Bottone(bottone.più, bottonePiùGiocatori);
-            Bottone MenoGiocatori = new Bottone(bottone.meno, bottoneMenoGiocatori);
-            PiùGiocatori.Click += (s, e) => NumeroGiocatori.Caption = "Numero Giocatori: " + (++NumeroDiGiocatori);
-            MenoGiocatori.Click += (s, e) => NumeroGiocatori.Caption = "Numero Giocatori: " + (--NumeroDiGiocatori);
+            Bottone PiùGiocatori = new Bottone(bottonePiùGiocatori, "+", true);
+            Bottone MenoGiocatori = new Bottone(bottoneMenoGiocatori, "-", true);
+            PiùGiocatori.Click += (s, e) => { NumeroDiGiocatori++; NumeroGiocatori.Caption = "Numero Giocatori: " + NumeroDiGiocatori; };
+            MenoGiocatori.Click += (s, e) => { NumeroDiGiocatori--; NumeroGiocatori.Caption = "Numero Giocatori: " + NumeroDiGiocatori; };
 
             /*-----------------------------------------------------------------------------------------------------*/
 
@@ -108,7 +108,7 @@ namespace Quantum_Game.Schermate
             GestoreDiGiocatori.QuantumColor.TryGetValue(e_color.incolore, out coloreDefault);
             for (int i = 0; i < MAX_GIOCATORI; i++)
             {
-                colori[i] = new Bottone(bottone.nessuno, bottoniColore[i]) { Colore = coloreDefault };
+                colori[i] = new Bottone(bottoniColore[i], quadrato: true) { Colore = coloreDefault };
                 colori[i].Click += sceltaColore;
                 // Popolo un dizionario che associa ciascuno dei colori del gioco al bottone che è di quel colore
                 coloriGiocatori.Add(colori[i], 0);
@@ -144,7 +144,7 @@ namespace Quantum_Game.Schermate
             #endregion
 
             gui.Iscrivi(colori);
-            gui.Iscrivi(nomi);
+            foreach (Textbox n in nomi) gui.Iscrivi(n);
             gui.Iscrivi(Titolo, NumeroGiocatori, FileMappa, PiùMappa, PiùGiocatori, MenoMappa, MenoGiocatori, Ok, Annulla, anteprimaMappa);
 
         }
@@ -190,9 +190,7 @@ namespace Quantum_Game.Schermate
             get { return numeroDiGiocatori; }
             set
             {
-                if (value > MAX_GIOCATORI) numeroDiGiocatori = 6;
-                else if (value < 2) numeroDiGiocatori = 2;
-                else numeroDiGiocatori = value;
+                numeroDiGiocatori = MathHelper.Clamp(value, 2, MAX_GIOCATORI);
             }
         }
 

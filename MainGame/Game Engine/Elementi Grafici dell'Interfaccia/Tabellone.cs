@@ -48,7 +48,7 @@ namespace Quantum_Game
             scala = new Vector2(s, s);
 
             // Calcolo l'offset rispetto al riquadro, in modo da posizionare il tabellone esattamente al centro
-            offset = new Vector2(
+            Offset = new Vector2(
                 (contenitore.Superficie.Width - (_latoCasella * Tile.Colonne)) / 2,
                 (contenitore.Superficie.Height - (_latoCasella * Tile.Righe)) / 2
                 );
@@ -174,7 +174,7 @@ namespace Quantum_Game
         private bool coordinatePixel2Casella(ref int x, ref int y)
         {
             float tempX = x; float tempY = y;
-            tempX -= (contenitore.Superficie.Location.X+offset.X); tempY -= (contenitore.Superficie.Location.Y + offset.Y);
+            tempX -= (contenitore.Superficie.Location.X+Offset.X); tempY -= (contenitore.Superficie.Location.Y + Offset.Y);
             x = (int)Math.Floor(tempX / _latoCasella);
             y = (int)Math.Floor(tempY / _latoCasella);
             if (x < 0 || x > Tile.Colonne - 1 || y < 0 || y > Tile.Righe - 1)
@@ -186,7 +186,7 @@ namespace Quantum_Game
             int n, m;
             Tile.id2nm(id, out n, out m);
             return new Vector2
-                (n * _latoCasella + contenitore.Superficie.Location.X + offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + offset.Y);
+                (n * _latoCasella + contenitore.Superficie.Location.X + Offset.X, m * _latoCasella + contenitore.Superficie.Location.Y + Offset.Y);
         }
 
         #region Input Mouse
@@ -202,8 +202,8 @@ namespace Quantum_Game
                     Tile.id2Tile(_idMouseOver = (X + Y * Tile.Colonne)).Esistente)
                 {
                     Tile.id2nm(_idMouseOver, out X, out Y);
-                    _SelezPixCoord.X = (int) (X*_latoCasella + contenitore.Superficie.Location.X + offset.X);
-                    _SelezPixCoord.Y = (int) (Y*_latoCasella + contenitore.Superficie.Location.Y + offset.Y);
+                    _SelezPixCoord.X = (int) (X*_latoCasella + contenitore.Superficie.Location.X + Offset.X);
+                    _SelezPixCoord.Y = (int) (Y*_latoCasella + contenitore.Superficie.Location.Y + Offset.Y);
                     return;
                 }
             }
@@ -270,11 +270,6 @@ namespace Quantum_Game
         /// Rapporto fra le dimensioni disegnate sullo schermo e quelle originali del PNG delle grafiche
         /// </summary>
         Vector2 scala;
-
-        /// <summary>
-        /// distanza dal riquadro contenitore, calcolata in modo da posizionare il tabellone esattamente al centro
-        /// </summary>
-        Vector2 offset;
 
         int _latoCasella;
         private Vector2[] _coordIlluminazione; // Coordinate delle caselle da illuminare

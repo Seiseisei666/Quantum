@@ -31,6 +31,8 @@ namespace Quantum_Game.Interfaccia
             contenitore.Eliminazione += (s, e) => Dispose();
         }
 
+        protected Vector2 Offset;
+
         /// <summary>
         /// Iscrizione agli eventi del mouse
         /// </summary>

@@ -17,7 +17,7 @@ namespace Quantum_Game.Interfaccia
         private int contatoreCursoreOn;
         bool cursoreOn;
         private int delayRimozioneBkspace;
-
+        bool èSelezionato;
 
         public Textbox (Riquadro contenitore): base (contenitore)
         {
@@ -35,10 +35,12 @@ namespace Quantum_Game.Interfaccia
             font = gui.Font;
             font.DefaultCharacter = '?';
             texture = gui.Pennello;
+            xMax = font.MeasureString(MAX_STR).X;
         }
 
         public void Update()
         {
+            if (!èSelezionato) return;
             if (contatoreCursoreOn++ > 25)
             {
                 cursoreOn = !cursoreOn;
@@ -89,7 +91,7 @@ namespace Quantum_Game.Interfaccia
         {
             spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), Color.White);
 
-            if (cursoreOn)
+            if (èSelezionato && cursoreOn)
                 spriteBatch.Draw
                     (
                     texture,
@@ -101,9 +103,14 @@ namespace Quantum_Game.Interfaccia
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
         {
-
+            if (contenitore.Superficie.Contains(args.Posizione) &&
+                args.Posizione.X - contenitore.Superficie.X <= xMax)
+                èSelezionato = true;
+            else èSelezionato = false;
         }
 
         const int MAX_LUNGH = 18;
+        const string MAX_STR = "__________________";
+        static float xMax;
     }
 }

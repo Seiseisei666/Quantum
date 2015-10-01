@@ -12,6 +12,10 @@ namespace Quantum_Game.Interfaccia
     public class Riquadro
     {
         public Rectangle Superficie { get { return new Rectangle(xAbs, yAbs, larghezzaAbs, altezzaAbs); } }
+        public void ModificaSuperficie (int x, int y)
+        {
+            larghezzaAbs = x; altezzaAbs = y;
+        }
 
         private readonly float _paddingLaterale;
         private readonly float _paddingTopBottom;

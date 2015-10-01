@@ -28,10 +28,24 @@ namespace Quantum_Game.Interfaccia
             _cliccato = _mouseover = false;
             Enabled = true;
         }
+        public Bottone (Riquadro contenitore): base (contenitore) { _tipoBottone = bottone.nessuno; Enabled = true; }
+        public Bottone (Riquadro contenitore, string caption = "", bool quadrato = false): this (contenitore)
+        {
+            this.caption = caption;
+            if (quadrato)
+            {
+                int alt = contenitore.Superficie.Height; int larg = contenitore.Superficie.Width;
+                bool largo = contenitore.Superficie.Width >= contenitore.Superficie.Height;
+                if (largo) larg = alt; else alt = larg;
+                contenitore.ModificaSuperficie(larg, alt);
+            }
+        }
 
         #endregion
-        public Color Colore { get { return _colSfondo; } set { _colSfondo = value; } }
-        public bool Enabled { get; set; }
+        public Color Colore { set { _colSfondo = value; } }
+        public bool Enabled { private get; set; }
+        public bool èQuadrato { private get; set; }
+        public bool èCentrato { private get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
@@ -51,19 +65,21 @@ namespace Quantum_Game.Interfaccia
             Color color = _colSfondo;
             if (_contatoreIllumin > 0)
             { color = Color.OrangeRed; _contatoreIllumin--; }
-            else if (_mouseover) color = _colMouseOver;
 
             if (!Enabled) color = Color.Gray;
 
             //bordo
             spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), _colBordo);
             //sfondo
-            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 3, contenitore.Superficie.Location.Y + 3, contenitore.Superficie.Width - 6, contenitore.Superficie.Height - 6), color);
+            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width -4, contenitore.Superficie.Height - 4), color);
             //scritta
             spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
+            // effetto mouseover
+            if (_mouseover)
+                spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width - 4, contenitore.Superficie.Height - 4), Color.Black*0.3f);
         }
 
-
+        private readonly string caption;
         // proprietà pubbliche
         public string Caption
         {
@@ -89,7 +105,7 @@ namespace Quantum_Game.Interfaccia
                         return "Annulla";
                    
                     default:
-                        return "";
+                        return caption;
                 }
             }
         }   
