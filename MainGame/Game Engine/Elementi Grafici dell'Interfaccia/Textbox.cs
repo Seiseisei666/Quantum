@@ -29,18 +29,20 @@ namespace Quantum_Game.Interfaccia
         }
 
         public string Stringa { get; private set; }
+        public bool Enabled { private get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
             font = gui.Font;
             font.DefaultCharacter = '?';
             texture = gui.Pennello;
-            xMax = font.MeasureString(MAX_STR).X;
+            vMax = font.MeasureString(MAX_STR);
+            xMax = vMax.X;
         }
 
         public void Update()
         {
-            if (!èSelezionato) return;
+            if (! ( èSelezionato && Enabled)) return;
             if (contatoreCursoreOn++ > 25)
             {
                 cursoreOn = !cursoreOn;
@@ -56,6 +58,12 @@ namespace Quantum_Game.Interfaccia
 
             foreach (Keys tasto in newState.GetPressedKeys())
             {
+                if (tasto == Keys.Enter)
+                {
+                    èSelezionato = false;
+                    return;
+                }
+
                 if (tasto == Keys.Back && Stringa.Any())
                 {
                     delayRimozioneBkspace++;
@@ -89,7 +97,7 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), Color.White);
+            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), Enabled ? Color.White : new Color(0x22,0x22,0x22));
 
             if (èSelezionato && cursoreOn)
                 spriteBatch.Draw
@@ -99,6 +107,13 @@ namespace Quantum_Game.Interfaccia
                     scale: new Vector2(4, font.MeasureString(Stringa).Y),
                     color: Color.White
                     );
+            //if (!Enabled)
+            //    spriteBatch.Draw
+            //        (
+            //        texture,
+            //        new Vector2(contenitore.Superficie.X, contenitore.Superficie.Y),
+            //        scale: vMax,
+            //        color: Color.Gray);
         }
 
         protected override void ClickSinistro(object sender, MouseEvntArgs args)
@@ -111,6 +126,7 @@ namespace Quantum_Game.Interfaccia
 
         const int MAX_LUNGH = 18;
         const string MAX_STR = "__________________";
+        static Vector2 vMax;
         static float xMax;
     }
 }

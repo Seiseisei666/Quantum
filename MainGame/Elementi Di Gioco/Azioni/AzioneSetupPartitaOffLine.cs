@@ -1,6 +1,6 @@
 ﻿using System;
 using Quantum_Game.Interfaccia;
-
+using System.Collections.Generic;
 namespace Quantum_Game.Azioni
 {
     class AzioneSetupPartitaOffLine : Azione
@@ -8,20 +8,25 @@ namespace Quantum_Game.Azioni
 
         private Quantum quantum;
 
-        private int numeroGiocatori;
-
+        [Obsolete]
         public AzioneSetupPartitaOffLine(Quantum quantum, int numeroGiocatori)
         {
             this.quantum = quantum;
-            this.numeroGiocatori = numeroGiocatori;
+            quantum.getGestoreDiGiocatori().creaGiocatori(numeroGiocatori);
         }
 
+        
+        public AzioneSetupPartitaOffLine (Quantum quantum, Dictionary<e_color, string> GiocatoriDaCreare)
+        {
+            this.quantum = quantum;
+            quantum.getGestoreDiGiocatori().creaGiocatori(GiocatoriDaCreare);
+
+        }
         /*Viene eseguito il setum della partita */
         protected override void Esegui()
         {
             ConsoleMessaggi.NuovoMessaggio("Setup partita in corso...");
 
-            quantum.getGestoreDiGiocatori().creaGiocatori(numeroGiocatori);
 
             //inizializza il giocatore e gli piazza tre navi
             foreach (Giocatore giocatore in quantum.getGestoreDiGiocatori().getGiocatori())

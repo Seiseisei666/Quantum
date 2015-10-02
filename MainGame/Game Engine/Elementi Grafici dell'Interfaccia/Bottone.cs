@@ -131,16 +131,11 @@ namespace Quantum_Game.Interfaccia
         }
         #endregion
 
-        /* Istruzioni eseguite al click del bottone*/
-        public void associatedEvent(object bott, EventArgs a)
-        {
-            //mettere questo metodo astratto
-        }
-
         public event EventHandler Click;
 
 
         #region Campi
+        //Vector2 offset = Vector2.Zero;
         Vector2 posScritta;
         Texture2D _texture;
         SpriteFont font;

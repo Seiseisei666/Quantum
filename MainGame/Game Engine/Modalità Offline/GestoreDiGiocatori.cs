@@ -13,21 +13,21 @@ namespace Quantum_Game
         private List<Giocatore> giocatori;
 
         // soluzione non molto elegante. Cmq converte i nostri colori nel formato System.Color
-        public static Dictionary<e_color, Color> QuantumColor = new Dictionary<e_color, Color>();
+        public static readonly Dictionary<e_color, Color> QuantumColor = new Dictionary<e_color, Color>()
+        {
+            {e_color.Blu, Color.Blue},
+            {e_color.Rosso, Color.Red },
+            {e_color.Giallo, Color.Yellow },
+            {e_color.Verde, Color.Green },
+            {e_color.Arancione, Color.Orange },
+            {e_color.Viola, Color.Purple },
+            {e_color.incolore, new Color(0x25,0x25,0x25)}
+        };
 
         public GestoreDiGiocatori()
         {
             giocatoreDiTurno = null;
             giocatori = new List<Giocatore>();
-
-            //Definizione dei colori dei giocatore
-            QuantumColor.Add(e_color.Blu, Color.Blue);
-            QuantumColor.Add(e_color.Rosso, Color.Red);
-            QuantumColor.Add(e_color.Giallo, Color.Yellow);
-            QuantumColor.Add(e_color.Verde, Color.Green);
-            QuantumColor.Add(e_color.Arancione, Color.Orange);
-            QuantumColor.Add(e_color.Viola, Color.Purple);
-            QuantumColor.Add(e_color.incolore, Color.LightGray);
         }
 
         /*riferimento alla lista di giocatori*/
@@ -67,8 +67,10 @@ namespace Quantum_Game
             if (nuoviGiocatori.Count < 2 || nuoviGiocatori.Count > 6) throw new ArgumentOutOfRangeException("giocatori");
             foreach (var g in nuoviGiocatori)
                 giocatori.Add(new Giocatore(g.Value, g.Key));
+            giocatoreDiTurno = giocatori[0];
+
         }
-       
+
         /* Metodo che aggiorna il giocatore attivo */
         public void aggiornaGiocatoreDiTurno()
         {

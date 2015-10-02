@@ -17,12 +17,11 @@ namespace Quantum_Game
             _colonizzazioni = new e_color[4];
 
             
-            e_color prova = (e_color)rnd.Next(1, 5);
             for (int i = 0; i < _colonizzazioni.Length; i++)
             {
                 // TODO:    1) ogni pianeta deve avere un numero diverso di mentine
                 //          2) questa inizializzazione è provvisoria, genera una mappa con mentine un po' a caso
-                _colonizzazioni[i] = prova;
+                _colonizzazioni[i] = (e_color)rnd.Next(1, 7);
             }
         }
 

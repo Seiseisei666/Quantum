@@ -18,10 +18,6 @@ namespace Quantum_Game.Azioni
 
             quantum.getGestoreDiAzioni().IncodaAzione(new AzioneStampaAConsole("Partita iniziata!"));
 
-            foreach (Bottone b in quantum.getGUI().Bottoni)
-            {
-                b.Click += b.associatedEvent;
-            }
             //probabilmente ha senso creare un'azione di inizio turno (che verrà usata anche dal bottone passa turno)
             quantum.getGestoreDiGiocatori().getGiocatoreDiTurno().Init();
             quantum.getGestoreDiAzioni().IncodaAzione(new AzioneSelezione(quantum));
