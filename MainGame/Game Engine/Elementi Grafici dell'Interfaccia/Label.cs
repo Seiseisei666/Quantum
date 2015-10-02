@@ -33,7 +33,7 @@ namespace Quantum_Game.Interfaccia
         public override void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.Draw(pennello, new Rectangle(contenitore.Superficie.X, contenitore.Superficie.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), Color.Black);
-            spriteBatch.DrawString(font, Caption, new Vector2(contenitore.Superficie.X, contenitore.Superficie.Y + dimensioni.Y), Color.White );
+            spriteBatch.DrawString(font, Caption, new Vector2(contenitore.Superficie.X, contenitore.Superficie.Y + (contenitore.Superficie.Height -  dimensioni.Y)/2f), Color.White );
         }
     }
 }

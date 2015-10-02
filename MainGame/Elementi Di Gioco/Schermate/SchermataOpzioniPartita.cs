@@ -57,7 +57,7 @@ namespace Quantum_Game.Schermate
 
             #region Definizione Riquadri
 
-            var _parteSinistra = Riquadro.Main.Colonna(60,10,10); var _parteDestra = Riquadro.Main.Colonna(40,10,10);
+            var _parteSinistra = Riquadro.Main.Colonna(30,10,10); var _parteDestra = Riquadro.Main.Colonna(70,10,10);
 
             // Costanti di posizionamento
             const float Y_RIGA_GRANDE = 15.2f;
@@ -72,10 +72,10 @@ namespace Quantum_Game.Schermate
             // Spazio per il selettore del num giocatori
             var _nGiocatori = _parteSinistra.Riga(Y_RIGA_GRANDE);
 
-            var labelNumeroGiocatori = _nGiocatori.Colonna(30, 10); var _selNGiocatori = _nGiocatori.Colonna(12,15);
+            var labelNumeroGiocatori = _nGiocatori.Colonna(70, 10); //var _selNGiocatori = _nGiocatori.Colonna(16);
 
-            var bottonePiùGiocatori = _selNGiocatori.Riga(50,40,2);
-            var bottoneMenoGiocatori = _selNGiocatori.Riga(50,40,2);
+            var bottoneMenoGiocatori = _nGiocatori.Colonna(10,10,33);
+            var bottonePiùGiocatori = _nGiocatori.Colonna(10,10,33);
 
             // Spazio per selezione colore e nomi dei giocatori
             Riquadro[] _giocatori = new Riquadro[MAX_GIOCATORI];
@@ -212,7 +212,7 @@ namespace Quantum_Game.Schermate
             set
             {
                 contatoreGiocatori = MathHelper.Clamp(value, 2, MAX_GIOCATORI);
-                numeroGiocatori.Caption = "Numero di Giocatori: " + contatoreGiocatori;
+                numeroGiocatori.Caption = "Numero Giocatori: " + contatoreGiocatori;
                 for (int i = 0; i < MAX_GIOCATORI; i++)
                 {
                     colori[i].Enabled = i < contatoreGiocatori;

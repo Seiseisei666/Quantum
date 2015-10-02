@@ -38,6 +38,7 @@ namespace Quantum_Game.Interfaccia
             texture = gui.Pennello;
             vMax = font.MeasureString(MAX_STR);
             xMax = vMax.X;
+            pos = contenitore.Superficie.Y + ((contenitore.Superficie.Height - vMax.Y) / 2f);
         }
 
         public void Update()
@@ -97,13 +98,13 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), Enabled ? Color.White : new Color(0x22,0x22,0x22));
+            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, pos), Enabled ? Color.White : new Color(0x22,0x22,0x22));
 
             if (èSelezionato && cursoreOn)
                 spriteBatch.Draw
                     (
                     texture,
-                    new Vector2 (font.MeasureString(Stringa).X + contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y),
+                    new Vector2 (font.MeasureString(Stringa).X + contenitore.Superficie.X, pos),
                     scale: new Vector2(4, font.MeasureString(Stringa).Y),
                     color: Color.White
                     );
@@ -128,5 +129,6 @@ namespace Quantum_Game.Interfaccia
         const string MAX_STR = "__________________";
         static Vector2 vMax;
         static float xMax;
+        float pos;
     }
 }

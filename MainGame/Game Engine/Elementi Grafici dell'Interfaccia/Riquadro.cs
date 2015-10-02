@@ -16,6 +16,13 @@ namespace Quantum_Game.Interfaccia
         {
             larghezzaAbs = x; altezzaAbs = y;
         }
+        public void SpecificaPosizioneAssoluta (int offsetx, int offsety, int w, int h)
+        {
+            larghezzaAbs = w;
+            xAbs += offsetx;
+            altezzaAbs = h;
+            yAbs += offsety;
+        }
 
         private readonly float _paddingLaterale;
         private readonly float _paddingTopBottom;

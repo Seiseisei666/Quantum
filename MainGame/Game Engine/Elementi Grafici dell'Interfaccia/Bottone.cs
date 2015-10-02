@@ -35,17 +35,30 @@ namespace Quantum_Game.Interfaccia
             if (quadrato)
             {
                 int alt = contenitore.Superficie.Height; int larg = contenitore.Superficie.Width;
-                bool largo = contenitore.Superficie.Width >= contenitore.Superficie.Height;
-                if (largo) larg = alt; else alt = larg;
-                contenitore.ModificaSuperficie(larg, alt);
+                bool largo = larg >= alt;
+
+                int x, y, h, w;
+
+                if (largo)
+                {
+                    x = (int)((larg - alt) / 2f);
+                    y = 0;
+                    w = h = alt;
+                }
+                else
+                {
+                    x = 0;
+                    y = (int)((alt - larg) / 2f);
+                    w = h = larg;
+                }
+
+                contenitore.SpecificaPosizioneAssoluta(x, y, w, h);
             }
         }
 
         #endregion
         public Color Colore { set { _colSfondo = value; } }
         public bool Enabled { private get; set; }
-        public bool èQuadrato { private get; set; }
-        public bool èCentrato { private get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
@@ -135,7 +148,7 @@ namespace Quantum_Game.Interfaccia
 
 
         #region Campi
-        //Vector2 offset = Vector2.Zero;
+        Vector2 offset = Vector2.Zero;
         Vector2 posScritta;
         Texture2D _texture;
         SpriteFont font;
