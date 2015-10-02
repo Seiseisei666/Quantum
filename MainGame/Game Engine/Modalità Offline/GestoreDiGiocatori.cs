@@ -21,7 +21,11 @@ namespace Quantum_Game
             {e_color.Verde, Color.Green },
             {e_color.Arancione, Color.Orange },
             {e_color.Viola, Color.Purple },
-            {e_color.incolore, new Color(0x25,0x25,0x25)}
+            {e_color.Ciano, Color.Cyan },
+            {e_color.Rosa, Color.Pink },
+            {e_color.Bianco, Color.White },
+            {e_color.Grigio, Color.Gray },
+            {e_color.incolore, new Color(0x20,0x20,0x35)}
         };
 
         public GestoreDiGiocatori()

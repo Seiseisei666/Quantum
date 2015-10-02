@@ -13,7 +13,18 @@ namespace Quantum_Game.Interfaccia
         SpriteFont font;
         Texture2D texture;
         KeyboardState newState, oldState;
-        
+
+        private int _posCursore;
+        private int posCursore {
+            get
+            {
+                return _posCursore;
+            }
+            set
+            {
+                _posCursore = MathHelper.Clamp(value, 0, Stringa.Length);
+            }
+        }
         private int contatoreCursoreOn;
         bool cursoreOn;
         private int delayRimozioneBkspace;
@@ -38,7 +49,7 @@ namespace Quantum_Game.Interfaccia
             texture = gui.Pennello;
             vMax = font.MeasureString(MAX_STR);
             xMax = vMax.X;
-            pos = contenitore.Superficie.Y + ((contenitore.Superficie.Height - vMax.Y) / 2f);
+            offsetY = contenitore.Superficie.Y + ((contenitore.Superficie.Height - vMax.Y) / 2f);
         }
 
         public void Update()
@@ -65,31 +76,35 @@ namespace Quantum_Game.Interfaccia
                     return;
                 }
 
-                if (tasto == Keys.Back && Stringa.Any())
+                if (tasto == Keys.Back && Stringa.Substring(0,posCursore).Any())
                 {
                     delayRimozioneBkspace++;
                     if (oldState.IsKeyUp (Keys.Back) || ( oldState.IsKeyDown (Keys.Back) && delayRimozioneBkspace > 35))
-                    Stringa = Stringa.Remove(Stringa.Length - 1, 1);
+                        Stringa = Stringa.Remove(--posCursore, 1);
                 }
 
                 if (oldState.IsKeyUp (tasto))
                 {
                     if (tasto == Keys.Space)
-                        Stringa = Stringa.Insert(Stringa.Length, " ");
+                        Stringa = Stringa.Insert(posCursore++, " ");
 
                     else
                     {
                         // Lettera o numero
                         c = (char)tasto;
                         if (char.IsLetterOrDigit(c))
-                            Stringa += 
+                        {
+                            Stringa = Stringa.Insert(posCursore,
                                 newState.IsKeyDown(Keys.LeftShift)
-                                ? char.ToUpper(c)
-                                : char.ToLower(c);
+                                ? c.ToString()
+                                : char.ToLower(c).ToString()
+                                );
+                            posCursore++;
+                            if (posCursore > MAX_LUNGH) posCursore = MAX_LUNGH;
+                        }
                     }
                 }
             }
-            
             if (Stringa.Length > MAX_LUNGH)
                 Stringa = Stringa.Remove(MAX_LUNGH);
 
@@ -98,13 +113,13 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, pos), Enabled ? Color.White : new Color(0x22,0x22,0x22));
+            spriteBatch.DrawString(font, Stringa, new Vector2 (contenitore.Superficie.X, offsetY), Enabled ? Color.White : new Color(0x22,0x22,0x22));
 
             if (èSelezionato && cursoreOn)
                 spriteBatch.Draw
                     (
                     texture,
-                    new Vector2 (font.MeasureString(Stringa).X + contenitore.Superficie.X, pos),
+                    new Vector2 (font.MeasureString(Stringa.Substring(0, posCursore)).X + contenitore.Superficie.X, offsetY),
                     scale: new Vector2(4, font.MeasureString(Stringa).Y),
                     color: Color.White
                     );
@@ -121,14 +136,31 @@ namespace Quantum_Game.Interfaccia
         {
             if (contenitore.Superficie.Contains(args.Posizione) &&
                 args.Posizione.X - contenitore.Superficie.X <= xMax)
+            {
                 èSelezionato = true;
+                string txt; int i = 0;
+
+                while (i <= Stringa.Length)
+                {
+                    txt = Stringa.Substring(0, i);
+                    if (font.MeasureString(txt).X <
+                        args.Posizione.X - contenitore.Superficie.X)
+                        i++;
+                    else break;
+                }
+                posCursore = i;
+            }
             else èSelezionato = false;
+
         }
 
         const int MAX_LUNGH = 18;
         const string MAX_STR = "__________________";
         static Vector2 vMax;
         static float xMax;
-        float pos;
+        /// <summary>
+        /// Offset verticale per centrare il textbox all'interno del riquadro contenitore
+        /// </summary>
+        float offsetY;
     }
 }

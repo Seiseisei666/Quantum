@@ -12,16 +12,16 @@ namespace Quantum_Game.Interfaccia
     {
         public ConsoleMessaggi (Riquadro contenitore): base (contenitore)
         {
-            _messaggi = new List<MessaggioDiGioco>(CAPACITA);
+            _messaggi = new List<Tuple<string, Color>>(CAPACITA);
             for (int i = 0; i < CAPACITA; i++)
-                _messaggi.Add(new MessaggioDiGioco("", Color.White));
+                _messaggi.Add(new Tuple<string,Color>("", Color.White));
         }
 
         
         /// <summary>Aggiunge un messaggio colorato alla console</summary>
         public static void NuovoMessaggio(string messaggio, Color colore)
         {
-            _messaggi[N] = new MessaggioDiGioco(messaggio, colore); N++;
+            _messaggi[N] = new Tuple<string, Color>(messaggio, colore); N++;
         }
         /// <summary>Aggiunge un messaggio bianco alla console </summary>
         public static void NuovoMessaggio(string messaggio)
@@ -31,9 +31,9 @@ namespace Quantum_Game.Interfaccia
         /// <summary> Inutile</summary>
         public static void Aggiunta(string messaggio, Color colore)
         {
-            string s = _messaggi[N].Messaggio;
+            string s = _messaggi[N].Item1;
             s = s + ' ' + messaggio;
-            _messaggi[N] = new MessaggioDiGioco(s, colore);
+            _messaggi[N] = new Tuple<string, Color>(s, colore);
         }
 
         
@@ -43,7 +43,7 @@ namespace Quantum_Game.Interfaccia
             font = gui.Font;
             pennello = gui.Pennello;
 
-            _altezzaRiga = font.MeasureString("A").Y* 1.25f;
+            _altezzaRiga = font.MeasureString("A").Y * 1.25f;
 
             _righe = (int)(contenitore.Superficie.Height / _altezzaRiga);
 
@@ -57,8 +57,8 @@ namespace Quantum_Game.Interfaccia
             for (int i = 0; i < _righe; i++)
             {
                 int n = wrap(N - _righe + i);
-                string messaggio = _messaggi[n].Messaggio;
-                Color colore = _messaggi[n].Colore;
+                string messaggio = _messaggi[n].Item1;
+                Color colore = _messaggi[n].Item2;
                 spriteBatch.DrawString (font, messaggio, new Vector2(contenitore.Superficie.Location.X + 10, contenitore.Superficie.Location.Y + _altezzaRiga * i), colore);
 
             }
@@ -82,23 +82,12 @@ namespace Quantum_Game.Interfaccia
 
             set { if (++_contatore >= CAPACITA) _contatore = 0; } }
 
-        static List<MessaggioDiGioco> _messaggi;
+        static List<Tuple<string, Color>> _messaggi;
 
         static int _contatore = 0;
         
         const int CAPACITA = 20;
-        /// <summary>Coppia string-color che rappresenta i messaggi </summary>
-        private class MessaggioDiGioco
-        {
-            public string Messaggio { get; set; }
-            public Color Colore { get; set; }
-
-            public MessaggioDiGioco(string testo, Color colore)
-            {
-                Messaggio = testo;
-                Colore = colore;
-            }
-        }
+        
 
     }
 }

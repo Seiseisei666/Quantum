@@ -29,36 +29,14 @@ namespace Quantum_Game.Interfaccia
             Enabled = true;
         }
         public Bottone (Riquadro contenitore): base (contenitore) { _tipoBottone = bottone.nessuno; Enabled = true; }
-        public Bottone (Riquadro contenitore, string caption = "", bool quadrato = false): this (contenitore)
+        public Bottone (Riquadro contenitore, string caption = " "): this (contenitore)
         {
             this.caption = caption;
-            if (quadrato)
-            {
-                int alt = contenitore.Superficie.Height; int larg = contenitore.Superficie.Width;
-                bool largo = larg >= alt;
-
-                int x, y, h, w;
-
-                if (largo)
-                {
-                    x = (int)((larg - alt) / 2f);
-                    y = 0;
-                    w = h = alt;
-                }
-                else
-                {
-                    x = 0;
-                    y = (int)((alt - larg) / 2f);
-                    w = h = larg;
-                }
-
-                contenitore.SpecificaPosizioneAssoluta(x, y, w, h);
-            }
         }
 
         #endregion
-        public Color Colore { set { _colSfondo = value; } }
-        public bool Enabled { private get; set; }
+        public Color Colore { get { return _colSfondo; } set { _colSfondo = value; } }
+        public bool Enabled { get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
@@ -80,16 +58,13 @@ namespace Quantum_Game.Interfaccia
             { color = Color.OrangeRed; _contatoreIllumin--; }
 
             if (!Enabled) color = Color.Gray;
-
+            float bright = _mouseover ? 0.6f : 1;
             //bordo
-            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), _colBordo);
+            spriteBatch.Draw(_texture, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), scale: new Vector2 (contenitore.Superficie.Width, contenitore.Superficie.Height), color: _colBordo);
             //sfondo
-            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width -4, contenitore.Superficie.Height - 4), color);
+            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width -4, contenitore.Superficie.Height - 4), color*bright);
             //scritta
             spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
-            // effetto mouseover
-            if (_mouseover)
-                spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width - 4, contenitore.Superficie.Height - 4), Color.Black*0.3f);
         }
 
         private readonly string caption;

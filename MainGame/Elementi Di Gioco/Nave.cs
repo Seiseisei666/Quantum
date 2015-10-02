@@ -13,8 +13,11 @@ namespace Quantum_Game
 		Giallo,
 		Verde,
         Arancione,
-        Viola
-		
+        Viola,
+        Ciano,
+        Bianco,
+        Rosa,
+        Grigio	
 	}
 	
     /// Tipi di nave

@@ -12,10 +12,7 @@ namespace Quantum_Game.Interfaccia
     public class Riquadro
     {
         public Rectangle Superficie { get { return new Rectangle(xAbs, yAbs, larghezzaAbs, altezzaAbs); } }
-        public void ModificaSuperficie (int x, int y)
-        {
-            larghezzaAbs = x; altezzaAbs = y;
-        }
+
         public void SpecificaPosizioneAssoluta (int offsetx, int offsety, int w, int h)
         {
             larghezzaAbs = w;
@@ -27,6 +24,7 @@ namespace Quantum_Game.Interfaccia
         private readonly float _paddingLaterale;
         private readonly float _paddingTopBottom;
         private readonly bool _eUnaColonna;
+        private readonly bool _quadrato;
 
         protected List<Riquadro> _figli;
 
@@ -44,7 +42,7 @@ namespace Quantum_Game.Interfaccia
         /// <summary>
         /// Costruttore privato dei riquadri, chiamato dai metodi Riga e Colonna
         /// </summary>
-        private Riquadro( Riquadro parent, float xRel, float yRel, float larghezza,float altezza, bool èUnaColonna, float padX = 0, float padY = 0)
+        private Riquadro( Riquadro parent, float xRel, float yRel, float larghezza,float altezza, bool èUnaColonna, float padX = 0, float padY = 0, bool quadrato = false)
         {
             _figli = new List<Riquadro>();
             _eUnaColonna = èUnaColonna;
@@ -53,6 +51,7 @@ namespace Quantum_Game.Interfaccia
             _Xrelativa = xRel;
             _Yrelativa = yRel;
             _paddingLaterale = padX; _paddingTopBottom = padY;
+            _quadrato = quadrato;
         }
         /// <summary>
         /// Restituisce un oggetto Riquadro Colonna, Figlia dell'istanza che ha chiamato questo metodo.
@@ -61,7 +60,7 @@ namespace Quantum_Game.Interfaccia
         /// <param name="PaddingLaterale">in 100esimi</param>
         /// <param name="PaddingTopBottom">in 100esimi</param>
         /// <returns></returns>
-        public Riquadro Colonna (float LarghezzaRelativa, float PaddingLaterale = 0, float PaddingTopBottom = 0)
+        public Riquadro Colonna (float LarghezzaRelativa, float PaddingLaterale = 0, float PaddingTopBottom = 0, bool forzaQuadrato = false)
         {
             Riquadro figlio;
             float xRel = 0, yRel = 0;
@@ -86,7 +85,7 @@ namespace Quantum_Game.Interfaccia
                 if (xClippata > LarghezzaRelativa) xClippata = LarghezzaRelativa;
 
             }
-            figlio = new Riquadro(this, xRel, yRel, xClippata, yClippata, èUnaColonna: true, padX: PaddingLaterale, padY: PaddingTopBottom );
+            figlio = new Riquadro(this, xRel, yRel, xClippata, yClippata, èUnaColonna: true, padX: PaddingLaterale, padY: PaddingTopBottom, quadrato: forzaQuadrato );
             iscriviFiglio(figlio);
             return figlio;
         }
@@ -97,7 +96,7 @@ namespace Quantum_Game.Interfaccia
         /// <param name="PaddingLaterale">in 100esimi</param>
         /// <param name="PaddingTopBottom">in 100esimi</param>
         /// <returns></returns>
-        public Riquadro Riga(float AltezzaRelativa, float PaddingLaterale = 0, float PaddingTopBottom = 0)
+        public Riquadro Riga(float AltezzaRelativa, float PaddingLaterale = 0, float PaddingTopBottom = 0, bool forzaQuadrato = false)
         {
             Riquadro figlio;
             float xRel = 0, yRel = 0;
@@ -124,7 +123,7 @@ namespace Quantum_Game.Interfaccia
 
             }
 
-            figlio = new Riquadro(this, xRel, yRel, xClippata, yClippata, èUnaColonna: false, padX: PaddingLaterale, padY: PaddingTopBottom);
+            figlio = new Riquadro(this, xRel, yRel, xClippata, yClippata, èUnaColonna: false, padX: PaddingLaterale, padY: PaddingTopBottom, quadrato: forzaQuadrato);
             iscriviFiglio(figlio);
             return figlio;
         }
@@ -149,6 +148,22 @@ namespace Quantum_Game.Interfaccia
             yAbs += padH / 2;
             larghezzaAbs -= padW;
             altezzaAbs -= padH;
+
+            // Correzione delle misure in caso di riquadro quadrato
+            if (_quadrato)
+            {
+                if (larghezzaAbs >= altezzaAbs)
+                {
+                    xAbs += (int)((larghezzaAbs - altezzaAbs) / 2f);
+                    larghezzaAbs = altezzaAbs;
+                }
+                else
+                {
+                    yAbs += (int)((altezzaAbs - larghezzaAbs) / 2f);
+                    altezzaAbs = larghezzaAbs;
+                }
+            }
+
             // Chiamata ricorsiva ai figli (in caso di ridimensionamento in corso d'opera i figli vengono ridimensionati anch'essi)
             if (_figli.Any())
                 foreach (var figlio in _figli) figlio.calcolaDimensioniInPixel(xAbs, yAbs, larghezzaAbs, altezzaAbs);

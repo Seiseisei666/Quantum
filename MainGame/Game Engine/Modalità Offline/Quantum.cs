@@ -122,8 +122,8 @@ namespace Quantum_Game
             //TODO: 2) sostituire tutto quello con una istruzione che carica il contenuto di settings.config.
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1366;
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 576;
             graphics.IsFullScreen = false;
             IsMouseVisible = true;
             graphics.ApplyChanges();

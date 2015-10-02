@@ -74,8 +74,8 @@ namespace Quantum_Game.Schermate
 
             var labelNumeroGiocatori = _nGiocatori.Colonna(70, 10); //var _selNGiocatori = _nGiocatori.Colonna(16);
 
-            var bottoneMenoGiocatori = _nGiocatori.Colonna(10,10,33);
-            var bottonePiùGiocatori = _nGiocatori.Colonna(10,10,33);
+            var bottoneMenoGiocatori = _nGiocatori.Colonna(10,10,33, forzaQuadrato: true);
+            var bottonePiùGiocatori = _nGiocatori.Colonna(10,10,33, forzaQuadrato: true);
 
             // Spazio per selezione colore e nomi dei giocatori
             Riquadro[] _giocatori = new Riquadro[MAX_GIOCATORI];
@@ -85,7 +85,7 @@ namespace Quantum_Game.Schermate
             // Bottoni colore
             Riquadro[] bottoniColore = new Riquadro[MAX_GIOCATORI];
             for (int i = 0; i < MAX_GIOCATORI; i++)
-                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR,50, PAD_Y_LABEL);
+                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR,50, PAD_Y_LABEL, forzaQuadrato: true);
 
             // textbox nomi dei giocatori
             Riquadro[] textboxNome = new Riquadro[MAX_GIOCATORI];
@@ -119,8 +119,8 @@ namespace Quantum_Game.Schermate
             /*-----------------------------------------------------------------------------------------------------*/
 
             numeroGiocatori = new Label(labelNumeroGiocatori, "Numero Giocatori: " + contatoreGiocatori);
-            Bottone PiùGiocatori = new Bottone(bottonePiùGiocatori, "+", true);
-            Bottone MenoGiocatori = new Bottone(bottoneMenoGiocatori, "-", true);
+            Bottone PiùGiocatori = new Bottone(bottonePiùGiocatori, "+");
+            Bottone MenoGiocatori = new Bottone(bottoneMenoGiocatori, "-");
             PiùGiocatori.Click += (s, e) => ContatoreGiocatori++; //numeroGiocatori.Caption = "Numero Giocatori: " + NumeroDiGiocatori; };
             MenoGiocatori.Click += (s, e) => ContatoreGiocatori--; // numeroGiocatori.Caption = "Numero Giocatori: " + NumeroDiGiocatori; };
 
@@ -131,14 +131,15 @@ namespace Quantum_Game.Schermate
             nomi = new Textbox[MAX_GIOCATORI];
 
             Color coloreDefault;
-            GestoreDiGiocatori.QuantumColor.TryGetValue(e_color.incolore, out coloreDefault);
 
             for (int i = 0; i < MAX_GIOCATORI; i++)
             {
-                colori[i] = new Bottone(bottoniColore[i], quadrato: true) { Colore = coloreDefault, Enabled = i<2 };
+                GestoreDiGiocatori.QuantumColor.TryGetValue((e_color)i+1, out coloreDefault);
+
+                colori[i] = new Bottone(bottoniColore[i], " ") { Colore = coloreDefault, Enabled = i < 2 };
                 colori[i].Click += sceltaColore;
                 // Popolo un dizionario che associa ciascuno dei colori del gioco al bottone che è di quel colore
-                coloriGiocatori.Add(colori[i], 0);
+                coloriGiocatori.Add(colori[i], i < 2 ? (e_color)i + 1 : 0);
 
                 // COSTRUZIONE CASELLE TESTO NOME
                 nomi[i] = new Textbox(textboxNome[i], "Giocatore " + (i + 1)) { Enabled = i < 2 };
@@ -170,29 +171,34 @@ namespace Quantum_Game.Schermate
 
         }
 
-
-        void sceltaColore (object sender, EventArgs e)
+        void sceltaColore (Bottone bottone)
         {
-            var bottone = (Bottone)sender;
             e_color coloreAttuale;
             int numColori = Enum.GetValues(typeof(e_color)).Length;
 
             // trovo il colore che ha il bottone in questo momento
 
             coloriGiocatori.TryGetValue(bottone, out coloreAttuale);
-            coloriGiocatori.Remove(bottone);
 
-            do
+            // Continuo a cambiarlo finché non ne trovo uno libero
+            while (coloriGiocatori.ContainsValue(coloreAttuale) || coloreAttuale == e_color.incolore) 
             {
                 coloreAttuale = (e_color)(((int)coloreAttuale + 1) % numColori);
             }
-            while (coloriGiocatori.ContainsValue(coloreAttuale));
 
-            coloriGiocatori.Add(bottone, coloreAttuale);
+            // Aggiorno il dizionario
+            coloriGiocatori[bottone] = coloreAttuale;
+            System.Diagnostics.Debug.WriteLine(coloreAttuale.ToString());
+            // Aggiorno la proprietà Colore del bottone
             Color nuovoColore;
             GestoreDiGiocatori.QuantumColor.TryGetValue(coloreAttuale, out nuovoColore);
 
             bottone.Colore = nuovoColore;
+        }
+
+        void sceltaColore (object sender, EventArgs e)
+        {
+            sceltaColore ((Bottone)sender);
         }
 
         int IdMappa { get { return idMappa; }
@@ -215,8 +221,22 @@ namespace Quantum_Game.Schermate
                 numeroGiocatori.Caption = "Numero Giocatori: " + contatoreGiocatori;
                 for (int i = 0; i < MAX_GIOCATORI; i++)
                 {
-                    colori[i].Enabled = i < contatoreGiocatori;
-                    nomi[i].Enabled = i < contatoreGiocatori;
+                    bool rigaAttiva = i < contatoreGiocatori;
+                    nomi[i].Enabled = rigaAttiva;
+
+                    Bottone b = colori[i];
+                    if (rigaAttiva && !b.Enabled)
+                    {
+                        b.Enabled = true;
+                        sceltaColore(b);
+                    }
+
+                    else if (!rigaAttiva && b.Enabled)
+                    {
+                        b.Enabled = false;
+                        coloriGiocatori[b] = e_color.incolore;
+                    }
+                    
                 }
             }
         }
