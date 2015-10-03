@@ -47,13 +47,13 @@ namespace Quantum_Game.Interfaccia
         {
             Color color = _colSfondo;
             if (_contatoreIllumin > 0)
-            { color = Color.OrangeRed; _contatoreIllumin--; }
+            { color = Color.GhostWhite; _contatoreIllumin--; }
             else if (_mouseover) color = _colMouseOver;
 
             if (!Enabled) color = Color.Gray;
 
             //bordo
-            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), _colBordo);
+            //spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X, contenitore.Superficie.Location.Y, contenitore.Superficie.Width, contenitore.Superficie.Height), _colBordo);
             //sfondo
             spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 3, contenitore.Superficie.Location.Y + 3, contenitore.Superficie.Width - 6, contenitore.Superficie.Height - 6), color);
             //scritta
@@ -128,9 +128,9 @@ namespace Quantum_Game.Interfaccia
         Vector2 posScritta;
         Texture2D _texture;
         SpriteFont font;
-        Color _colBordo = Color.White;
-        Color _colSfondo = Color.Gold;
-        Color _colMouseOver = Color.Azure;
+        Color _colBordo = Color.GhostWhite;
+        Color _colSfondo = Color.MediumVioletRed;
+        Color _colMouseOver = Color.Magenta;
 
         private readonly bottone _tipoBottone;
         private bool _cliccato;

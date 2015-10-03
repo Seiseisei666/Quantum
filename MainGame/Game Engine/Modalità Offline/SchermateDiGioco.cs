@@ -27,10 +27,6 @@ namespace Quantum_Game.Schermate
         public void SchermataPartita()
 
         {
-            quantum.InGioco = true;
-            Sfondo sfondoInGioco = new Sfondo(quantum);
-            quantum.Components.Add(sfondoInGioco);
-
             GuiManager gui = quantum.getGUI();
             Riquadro.Main.Reset();
             var barraSuperiore = Riquadro.Main.Riga(5);
@@ -82,15 +78,15 @@ namespace Quantum_Game.Schermate
             //Sfondo sfondoMenu = new Sfondo(quantum, false);
             // var = Riquadro
             // spazio superiore per mettere un logo
-            var barraLogo = Riquadro.Main.Riga(18);
+            var barraLogo = Riquadro.Main.Riga(50);
 
-            var vociMenu = Riquadro.Main.Riga(100, PaddingTopBottom: 20);
+            var vociMenu = Riquadro.Main.Riga(100, PaddingTopBottom: 10);
 
             // Pulsanti del menu
 
-            var voce1 = vociMenu.Riga(15, 70, 5);
-            var voce2 = vociMenu.Riga(15, 70, 5);
-            var voce3 = vociMenu.Riga(15, 70, 5);
+            var voce1 = vociMenu.Riga(20, 70, 15);
+            var voce2 = vociMenu.Riga(20, 70, 15);
+            var voce3 = vociMenu.Riga(20, 70, 15);
 
             Bottone Opzioni = new Bottone(bottone.Opzioni, voce2);
             Bottone Credits = new Bottone(bottone.Credits, voce3);
@@ -107,6 +103,11 @@ namespace Quantum_Game.Schermate
         /// </summary>
         public void OpzioniPartita()
         {
+            // applico il menu in gioco
+            quantum.InGioco = true;
+            Sfondo sfondoInGioco = new Sfondo(quantum);
+            quantum.Components.Add(sfondoInGioco);
+
             GuiManager gui = quantum.getGUI();
             Riquadro.Main.Reset();
             Riquadro spazioMenu = Riquadro.Main.Colonna(55, PaddingTopBottom:20);
