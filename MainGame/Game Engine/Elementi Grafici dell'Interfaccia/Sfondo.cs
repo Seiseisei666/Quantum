@@ -14,7 +14,7 @@ namespace Quantum_Game.Interfaccia
     {
         public Sfondo (Game game): base (game)
         {
-            _game = game;
+            _game = (Quantum)game;
         }
 
         public override void Initialize()
@@ -22,12 +22,11 @@ namespace Quantum_Game.Interfaccia
             var schermo = _game.GraphicsDevice.Viewport;
             _w = schermo.Width;
             _h = schermo.Height;
-
-            spriteBatch = _game.Services.GetService<SpriteBatch>();
-            _texture = _game.Services.GetService<GuiManager>().SpriteSheet;
-
             _n = (int)_w / 400; _m = (int)_h / 100; _n++; _m++;
 
+            spriteBatch = _game.Services.GetService<SpriteBatch>();
+            if (_game.InGioco) _texture = _game.Services.GetService<GuiManager>().SpriteSheet;
+            else _texture = _game.Content.Load<Texture2D>(@"img\schermataIniziale_sfondo_2.1");
         }
 
         public override void Update(GameTime gameTime)
@@ -39,18 +38,23 @@ namespace Quantum_Game.Interfaccia
 
         public void Draw ()
         {
-            // Disegno minimale con le stelle in ordine
-            for (int righe = 0; righe< _m; righe++)
-            {
-                for (int col = 0; col < _n; col++)
-                {
 
-                    spriteBatch.Draw(_texture, new Rectangle(col * 400 , righe * 100 , 400, 100), new Rectangle(0, 200, 400, 100), Color.White);
+            if (_game.InGioco)
+            {
+                // Disegno minimale con le stelle in ordine
+                for (int righe = 0; righe < _m; righe++)
+                {
+                    for (int col = 0; col < _n; col++)
+                    {
+
+                        spriteBatch.Draw(_texture, new Rectangle(col * 400, righe * 100, 400, 100), new Rectangle(0, 200, 400, 100), Color.White);
+                    }
                 }
             }
+            else { spriteBatch.Draw(_texture, new Rectangle(0, 0, _game.Window.ClientBounds.Width, _game.Window.ClientBounds.Height), Color.White); }
         }
 
-        Game _game;
+        Quantum _game;
         SpriteBatch spriteBatch;
         Texture2D _texture;
         float _w, _h; // larghezza e altezza schermo

@@ -41,6 +41,9 @@ namespace Quantum_Game
 
         protected override void Initialize()
         {
+            // Ancora non siamo partiti davvero
+            InGioco = false;
+
             //colleghiamo periferiche I/O
 
             Schermo schermo = new Schermo(this);
@@ -132,5 +135,6 @@ namespace Quantum_Game
         public GuiManager getGUI() {return gui;}
         public GestoreDiGiocatori getGestoreDiGiocatori() {return gestoreDiGiocatori; }
         public GestoreDiAzioni getGestoreDiAzioni() {return gestoreDiAzioni;}
+        public bool InGioco { get; set; }
     }
 }

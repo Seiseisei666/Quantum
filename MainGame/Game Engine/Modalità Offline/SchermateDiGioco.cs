@@ -27,6 +27,10 @@ namespace Quantum_Game.Schermate
         public void SchermataPartita()
 
         {
+            quantum.InGioco = true;
+            Sfondo sfondoInGioco = new Sfondo(quantum);
+            quantum.Components.Add(sfondoInGioco);
+
             GuiManager gui = quantum.getGUI();
             Riquadro.Main.Reset();
             var barraSuperiore = Riquadro.Main.Riga(5);
@@ -75,6 +79,7 @@ namespace Quantum_Game.Schermate
         {
             GuiManager gui = quantum.getGUI();
             Riquadro.Main.Reset();
+            //Sfondo sfondoMenu = new Sfondo(quantum, false);
             // var = Riquadro
             // spazio superiore per mettere un logo
             var barraLogo = Riquadro.Main.Riga(18);
