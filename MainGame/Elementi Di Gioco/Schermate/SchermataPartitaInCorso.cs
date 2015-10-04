@@ -25,6 +25,10 @@ namespace Quantum_Game.Schermate
             var bott4 = laterale.Riga(10, 35, 5);
             var msg = laterale.Riga(100, 0, 15);
 
+            Sfondo sfondo = new Sfondo(quantum);
+            sfondo.DrawOrder = -1;
+            quantum.Components.Add(sfondo);
+
             Bottone passaTurno = new Bottone(bottone.Passa, bott4);
             passaTurno.Click += (s, e) =>
             {

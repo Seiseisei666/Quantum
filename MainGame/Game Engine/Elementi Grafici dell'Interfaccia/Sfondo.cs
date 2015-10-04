@@ -37,7 +37,7 @@ namespace Quantum_Game.Interfaccia
 
         }
 
-        public void Draw ()
+        public override void Draw(GameTime gameTime)
         {
             // Disegno minimale con le stelle in ordine
             for (int righe = 0; righe< _m; righe++)

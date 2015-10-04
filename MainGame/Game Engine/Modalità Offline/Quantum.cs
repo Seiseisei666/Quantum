@@ -58,8 +58,8 @@ namespace Quantum_Game
             //Tile.CreaMappa(generatore.GeneraMappa(), generatore.Righe, generatore.Colonne);
 
             //carichiamo lo sfondo per la mappa
-            Sfondo sfondo = new Sfondo(this);
-            Components.Add(sfondo);
+            //Sfondo sfondo = new Sfondo(this);
+            //Components.Add(sfondo);
 
             // Imposta il numero di giocatori
             int numeroGiocatori = 2;
@@ -101,15 +101,8 @@ namespace Quantum_Game
         protected override void Draw(GameTime gameTime)
         {
            spriteBatch.Begin();
-           
-            //fa uno scan delle componenti in cerca di cose da fare
-           foreach (IGameComponent component in Components)
-            {
 
-                //disegna lo sfondo
-                if (component is Sfondo) ((Sfondo)component).Draw();
-                
-            }
+            GraphicsDevice.Clear(Color.Black);
                
             base.Draw(gameTime);
 
@@ -122,8 +115,8 @@ namespace Quantum_Game
             //TODO: 2) sostituire tutto quello con una istruzione che carica il contenuto di settings.config.
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 576;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             graphics.IsFullScreen = false;
             IsMouseVisible = true;
             graphics.ApplyChanges();

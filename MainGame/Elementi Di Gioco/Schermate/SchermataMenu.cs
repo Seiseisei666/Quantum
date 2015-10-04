@@ -19,17 +19,24 @@ namespace Quantum_Game.Schermate
 
             // Pulsanti del menu
 
-            var voce1 = vociMenu.Riga(15, 70, 5);
-            var voce2 = vociMenu.Riga(15, 70, 5);
-            var voce3 = vociMenu.Riga(15, 70, 5);
+            var voce1 = vociMenu.Riga(15, 75, 5);
+            var voce2 = vociMenu.Riga(15, 75, 5);
+            var voce3 = vociMenu.Riga(15, 75, 5);
+            var voce4 = vociMenu.Riga(15, 75, 5);
+            var voce5 = vociMenu.Riga(15, 75, 5);
 
-            Bottone Opzioni = new Bottone(bottone.Opzioni, voce2);
-            Bottone Credits = new Bottone(bottone.Credits, voce3);
-            Bottone NewGame = new Bottone(bottone.IniziaPartita, voce1);
+            Bottone NewGame = new Bottone(voce1, "Nuova Partita");
+            Bottone Multiplayer = new Bottone(voce2, "Partita Multiplayer");
+            Bottone Opzioni = new Bottone(voce3, "Preferenze");
+            Bottone Credits = new Bottone(voce4, "Credits");
+            Bottone Esci = new Bottone(voce5, "Esci dal gioco");
+
             NewGame.Click += (s, e) => quantum.schermateDiGioco.CaricaSchermata(new SchermataOpzioniPartita(quantum));
             // per chiarezza: (s, e) sono i parametri di questo EventHandler anonimo (object sender, EventArgs e); ma tanto non li usiamo
 
-            quantum.getGUI().Iscrivi(NewGame, Opzioni, Credits);
+            Esci.Click += (s, e) => quantum.Exit();
+
+            quantum.getGUI().Iscrivi(NewGame, Opzioni, Credits, Esci, Multiplayer);
 
         }
     }

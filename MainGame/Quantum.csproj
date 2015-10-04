@@ -72,6 +72,8 @@
     <Compile Include="Elementi Di Gioco\Schermate\SchermataMenu.cs" />
     <Compile Include="Elementi Di Gioco\Schermate\SchermataOpzioniPartita.cs" />
     <Compile Include="Elementi Di Gioco\Schermate\SchermataPartitaInCorso.cs" />
+    <Compile Include="Elementi Di Gioco\Schermate\SchermataPreferenze.cs" />
+    <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\BottoniRadio.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Label.cs" />
     <Compile Include="Game Engine\Elementi Grafici dell%27Interfaccia\Textbox.cs" />
     <Compile Include="Game Engine\Modalità Offline\GestoreDiSchermate.cs" />

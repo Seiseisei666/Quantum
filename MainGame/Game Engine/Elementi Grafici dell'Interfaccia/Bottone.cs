@@ -25,7 +25,7 @@ namespace Quantum_Game.Interfaccia
         public Bottone (bottone TipoBottone, Riquadro contenitore): base (contenitore)
         {
             _tipoBottone = TipoBottone;
-            _cliccato = _mouseover = false;
+            mouseover = false;
             Enabled = true;
         }
         public Bottone (Riquadro contenitore): base (contenitore) { _tipoBottone = bottone.nessuno; Enabled = true; }
@@ -35,12 +35,12 @@ namespace Quantum_Game.Interfaccia
         }
 
         #endregion
-        public Color Colore { get { return _colSfondo; } set { _colSfondo = value; } }
+        public Color Colore { get { return colSfondo; } set { colSfondo = value; } }
         public bool Enabled { get; set; }
 
         public override void CaricaContenuti(GuiManager gui)
         {
-            _texture = gui.Pennello;
+            texture = gui.Pennello;
             font = gui.Font;
 
 
@@ -53,16 +53,16 @@ namespace Quantum_Game.Interfaccia
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Color color = _colSfondo;
+            Color color = colSfondo;
             if (_contatoreIllumin > 0)
             { color = Color.OrangeRed; _contatoreIllumin--; }
 
             if (!Enabled) color = Color.Gray;
-            float bright = _mouseover ? 0.6f : 1;
+            float bright = mouseover ? 0.6f : 1;
             //bordo
-            spriteBatch.Draw(_texture, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), scale: new Vector2 (contenitore.Superficie.Width, contenitore.Superficie.Height), color: _colBordo);
+            spriteBatch.Draw(texture, new Vector2 (contenitore.Superficie.X, contenitore.Superficie.Y), scale: new Vector2 (contenitore.Superficie.Width, contenitore.Superficie.Height), color: colBordo);
             //sfondo
-            spriteBatch.Draw(_texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width -4, contenitore.Superficie.Height - 4), color*bright);
+            spriteBatch.Draw(texture, new Rectangle(contenitore.Superficie.Location.X + 2, contenitore.Superficie.Location.Y + 2, contenitore.Superficie.Width -4, contenitore.Superficie.Height - 4), color*bright);
             //scritta
             spriteBatch.DrawString(font, Caption, posScritta, Enabled ? Color.Black : Color.DarkGray);
         }
@@ -104,7 +104,6 @@ namespace Quantum_Game.Interfaccia
         {
             if (Enabled && contenitore.Superficie.Contains(args.Posizione.X, args.Posizione.Y))
             {
-                _cliccato = true;
                 _contatoreIllumin = FRAME_ILLUMINATO;
                 Click?.Invoke(this, EventArgs.Empty);
                 //return;
@@ -114,26 +113,24 @@ namespace Quantum_Game.Interfaccia
         protected override void MouseOver(object sender, MouseEvntArgs args)
         {
             if (Enabled && contenitore.Superficie.Contains(args.Posizione))
-                _mouseover = true;
-            else _mouseover = false;
+                mouseover = true;
+            else mouseover = false;
         }
         #endregion
 
-        public event EventHandler Click;
+        public virtual event EventHandler Click;
 
 
         #region Campi
-        Vector2 offset = Vector2.Zero;
-        Vector2 posScritta;
-        Texture2D _texture;
-        SpriteFont font;
-        Color _colBordo = Color.White;
-        Color _colSfondo = Color.Gold;
-        Color _colMouseOver = Color.Azure;
+        protected Vector2 posScritta;
+        protected Texture2D texture;
+        protected SpriteFont font;
+        protected Color colBordo = Color.White;
+        protected Color colSfondo = Color.Gold;
+        protected Color colMouseOver = Color.Azure;
 
         private readonly bottone _tipoBottone;
-        private bool _cliccato;
-        private bool _mouseover;
+        protected bool mouseover;
         private int _contatoreIllumin;
         const int FRAME_ILLUMINATO = 10;
         // Costanti dei bottoni standard
