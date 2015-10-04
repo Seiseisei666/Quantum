@@ -74,7 +74,7 @@ namespace Quantum_Game.Interfaccia
         protected virtual void Dispose()
         {
             RimuoviEventi();
-            GuiManager.Rimuovi(this);
+            GuiManager?.Rimuovi(this);
         }
     }
 }

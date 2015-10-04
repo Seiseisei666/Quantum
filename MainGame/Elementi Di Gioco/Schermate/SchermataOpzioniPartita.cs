@@ -85,7 +85,7 @@ namespace Quantum_Game.Schermate
             // Bottoni colore
             Riquadro[] bottoniColore = new Riquadro[MAX_GIOCATORI];
             for (int i = 0; i < MAX_GIOCATORI; i++)
-                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR,50, PAD_Y_LABEL, forzaQuadrato: true);
+                bottoniColore[i] = _giocatori[i].Colonna (X_BOTT_COLOR,0, PAD_Y_LABEL, forzaQuadrato: true);
 
             // textbox nomi dei giocatori
             Riquadro[] textboxNome = new Riquadro[MAX_GIOCATORI];

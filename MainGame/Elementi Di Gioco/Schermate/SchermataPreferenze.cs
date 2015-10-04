@@ -16,25 +16,48 @@ namespace Quantum_Game.Schermate
             var barraLogo = Riquadro.Main.Riga(18);
 
         var vociMenu = Riquadro.Main.Riga(100, PaddingTopBottom: 20);
+            var vociMenuDx = vociMenu.Colonna(50,20);
+            var vociMenuDxLabel = vociMenuDx.Riga(20,0,15);
+            var vociMenuDxRisol = vociMenuDx.Riga(40,25);
+
+            var vociMenuSn = vociMenu.Colonna(50);
+
 
         // Pulsanti del menu
 
-        var voce1 = vociMenu.Riga(15, 75, 5);
-        var voce2 = vociMenu.Riga(15, 75, 5);
-        var voce3 = vociMenu.Riga(15, 75, 5);
-        var voce4 = vociMenu.Riga(15, 75, 5);
+        var voce1 = vociMenuSn.Riga(15, 40, 5);
+        var voce2 = vociMenuSn.Riga(15, 40, 5);
+        var voce3 = vociMenuSn.Riga(15, 40, 5);
+        var voce4 = vociMenuSn.Riga(15, 40, 5);
 
-        Bottone Opzioni = new Bottone(voce2, "Preferenze");
-        Bottone Credits = new Bottone(bottone.Credits, voce3);
-        Bottone NewGame = new Bottone(bottone.IniziaPartita, voce1);
-        Bottone Esci = new Bottone(voce4, "Esci dal gioco");
-        NewGame.Click += (s, e) => quantum.schermateDiGioco.CaricaSchermata(new SchermataOpzioniPartita(quantum));
-            // per chiarezza: (s, e) sono i parametri di questo EventHandler anonimo (object sender, EventArgs e); ma tanto non li usiamo
 
-            Esci.Click += (s, e) => quantum.Exit();
+            Label Risoluzione = new Label(vociMenuDxLabel, "Risoluzione");
+            GruppoBottoniRadio radioRisoluzione = new GruppoBottoniRadio(vociMenuDxRisol, true, risoluzioni.Keys.ToArray());
 
-            quantum.getGUI().Iscrivi(NewGame, Opzioni, Credits, Esci);
+        Bottone Indietro = new Bottone(voce4, "Torna al menu principale");
+
+            quantum.getGUI().Iscrivi(Risoluzione, radioRisoluzione, Indietro);
+
+            radioRisoluzione.onValoreCambiato += (s, e) => RidimensionaSchermo(((Bottone)s).Caption, false);
+
+            Indietro.Click += (s, e) => quantum.schermateDiGioco.CaricaSchermata(new SchermataMenu(quantum));
 
     }
-}
+
+        void RidimensionaSchermo (string risoluzione, bool fullscreen)
+        {
+            Tuple<int, int> ris;
+            if (risoluzioni.TryGetValue(risoluzione, out ris))
+                quantum.RidimensionaSchermo(ris.Item1, ris.Item2, false);
+            else throw new Exception(risoluzione);
+        }
+
+        Dictionary<string, Tuple<int, int>> risoluzioni = new Dictionary<string, Tuple<int, int>>()
+        {
+            { "800 x 600", Tuple.Create (800,600) },
+            { "1024 x 768", Tuple.Create (1024, 768) },
+            { "1280 x 768", Tuple.Create (1280, 768) },
+            { "1360 x 768", Tuple.Create (1360, 768) }
+        };
+    }
 }

@@ -122,6 +122,15 @@ namespace Quantum_Game
             graphics.ApplyChanges();
         }
 
+        public void RidimensionaSchermo (int larghezza, int altezza, bool fullscreen)
+        {
+            graphics.PreferredBackBufferWidth = larghezza;
+            graphics.PreferredBackBufferHeight = altezza;
+            graphics.IsFullScreen = fullscreen;
+            graphics.ApplyChanges();
+
+        }
+
         public GuiManager getGUI() {return gui;}
         public GestoreDiGiocatori getGestoreDiGiocatori() {return gestoreDiGiocatori; }
         public GestoreDiAzioni getGestoreDiAzioni() {return gestoreDiAzioni;}

@@ -34,6 +34,8 @@ namespace Quantum_Game.Schermate
             NewGame.Click += (s, e) => quantum.schermateDiGioco.CaricaSchermata(new SchermataOpzioniPartita(quantum));
             // per chiarezza: (s, e) sono i parametri di questo EventHandler anonimo (object sender, EventArgs e); ma tanto non li usiamo
 
+            Opzioni.Click += (s, e) => quantum.schermateDiGioco.CaricaSchermata(new SchermataPreferenze(quantum));
+
             Esci.Click += (s, e) => quantum.Exit();
 
             quantum.getGUI().Iscrivi(NewGame, Opzioni, Credits, Esci, Multiplayer);
